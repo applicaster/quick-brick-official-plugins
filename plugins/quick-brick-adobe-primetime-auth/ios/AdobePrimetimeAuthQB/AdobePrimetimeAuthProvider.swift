@@ -19,16 +19,7 @@ enum AdobeFlow {
 public class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, EntitlementStatus {
     
     private var flow = AdobeFlow.none
-    private var webLoginViewController: WebLoginViewController {
-        let viewController = WebLoginViewController.instantiateVC()
-        viewController.accessEnabler = accessEnabler
-        viewController.modalPresentationStyle = .fullScreen
-        viewController.cancelAction = { [weak self] in
-            self?.finishFlow()
-        }
-        return viewController
-    }
-    private var loginViewController: WebLoginViewController?
+    private var webLoginViewController: WebLoginViewController?
     private var pluginConfig = [String: String]()
     private var additionalParameters = [String: Any]()
     private var accessEnabler = AccessEnabler()
@@ -117,17 +108,23 @@ public class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, E
                 finishFlow()
                 return
             }
-            loginViewController = webLoginViewController
+            let viewController = WebLoginViewController.instantiateVC()
+            webLoginViewController = viewController
+            viewController.accessEnabler = accessEnabler
+            viewController.modalPresentationStyle = .fullScreen
+            viewController.cancelAction = { [weak self] in
+                self?.finishFlow()
+            }
             let topViewController = UIViewController.topmostViewController()
-            topViewController?.present(loginViewController!, animated: true, completion: {
-                self.loginViewController?.webView.load(URLRequest(url: url))
+            topViewController?.present(viewController, animated: true, completion: {
+                viewController.webView.load(URLRequest(url: url))
             })
         }
     }
     
     private func dismissWebView() {
-        loginViewController?.dismiss(animated: true, completion: {
-            self.loginViewController = nil
+        webLoginViewController?.dismiss(animated: true, completion: {
+            self.webLoginViewController = nil
         })
     }
     
