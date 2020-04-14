@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.adobe.adobepass.accessenabler.api.AccessEnabler;
 import com.applicaster.adobe.login.pluginconfig.PluginDataRepository;
+import com.applicaster.plugin_manager.login.LoginContract;
+import com.facebook.react.bridge.Callback;
 
 import java.util.ArrayList;
 
@@ -11,6 +13,7 @@ public enum AccessEnablerHandler {
     INSTANCE;
 
     private AccessEnabler accessEnabler;
+    private Flow flow = Flow.UNDEFINED;
 
     String resourceId;
     String itemTitle;
@@ -24,20 +27,23 @@ public enum AccessEnablerHandler {
         this.accessEnabler = accessEnabler;
     }
 
-    public void setRequestor(String baseUrl, String requestorId, String itemTitle, String itemId) {
+    public void setRequestor(String baseUrl, String requestorId) {
         if (accessEnabler != null) {
             if (!"".equals(requestorId)) {
                 // request configuration data
                 ArrayList<String> spUrls = new ArrayList<String>();
                 spUrls.add(baseUrl);
-                this.resourceId = PluginDataRepository.INSTANCE.getPluginConfig().getResourceID();
-                this.itemTitle = itemTitle;
-                this.itemId = itemId;
                 accessEnabler.setRequestor(PluginDataRepository.INSTANCE.getPluginConfig().getRequestorID(), spUrls);
             } else {
                 Log.d("AdobePass", "Enter a valid requestor id.");
             }
         }
+    }
+
+    public void setItemData(String itemTitle, String itemId) {
+        this.resourceId = PluginDataRepository.INSTANCE.getPluginConfig().getResourceID();
+        this.itemTitle = itemTitle;
+        this.itemId = itemId;
     }
 
     public void checkAuthentication() {
@@ -70,9 +76,18 @@ public enum AccessEnablerHandler {
                 "</guid></item></channel></rss>", resourceId, itemTitle, itemId);
     }
 
-    public void logout() {
+    public void logout(Callback callback) {
         if (accessEnabler != null) {
+            ReactSession.INSTANCE.setReactAuthCallback(callback);
             accessEnabler.logout();
         }
+    }
+
+    public Flow getFlow() {
+        return flow;
+    }
+
+    public void setFlow(Flow flow) {
+        this.flow = flow;
     }
 }

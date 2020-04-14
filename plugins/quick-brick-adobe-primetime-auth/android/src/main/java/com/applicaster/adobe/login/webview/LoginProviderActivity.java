@@ -3,13 +3,14 @@ package com.applicaster.adobe.login.webview;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 import com.applicaster.adobe.login.R;
 import com.applicaster.adobe.login.ReactSession;
 
-public class LoginProviderActivity extends AppCompatActivity implements LoginFinishCallback {
+public class LoginProviderActivity extends AppCompatActivity implements ActionCallback {
 
     private static final String ARG_URL = "url";
 
@@ -28,13 +29,20 @@ public class LoginProviderActivity extends AppCompatActivity implements LoginFin
         ProgressBar pbLoadingProgress = findViewById(R.id.web_view_loading_progress);
 
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebViewClient(new LoginWebViewClient(this, this));
+        webView.setWebViewClient(new AuthWebViewClient(this, this));
         webView.setWebChromeClient(new LoginWebChromeClient(pbLoadingProgress));
         webView.loadUrl(url);
     }
 
     @Override
-    public void onLoginFinished() {
+    public void onFinished() {
+        Log.i(this.getClass().getSimpleName(), "Login action performed on WebView");
+        finish();
+    }
+
+    @Override
+    public void onError() {
+        Log.i(this.getClass().getSimpleName(), "Login action failed on WebView");
         finish();
     }
 

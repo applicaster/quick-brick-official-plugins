@@ -38,13 +38,23 @@ public class AdobePassContract extends ReactContextBaseJavaModule {
         Log.d(TAG, "Call from RN: setupAccessEnabler " + pluginConfig);
         createHandlers();
         setPluginConfigurationParams(pluginConfig);
-        adobePassLoginHandler.initializeAccessEnabler();
+        if (getCurrentActivity() != null) {
+            getCurrentActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adobePassLoginHandler.initializeAccessEnabler();
+                }
+            });
+        }
     }
 
     private void createHandlers() {
         pluginRepository = PluginDataRepository.INSTANCE;
         accessEnablerHandler = AccessEnablerHandler.INSTANCE;
-        adobePassLoginHandler = new AdobePassLoginHandler(pluginRepository, accessEnablerHandler, reactSession);
+        adobePassLoginHandler = new AdobePassLoginHandler(getCurrentActivity(),
+                pluginRepository,
+                accessEnablerHandler,
+                reactSession);
     }
 
     private void setPluginConfigurationParams(ReadableMap params) {
@@ -61,8 +71,8 @@ public class AdobePassContract extends ReactContextBaseJavaModule {
             getCurrentActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    adobePassLoginHandler.login(getCurrentActivity(),
-                            itemTitle,
+                    accessEnablerHandler.setFlow(Flow.LOGIN);
+                    adobePassLoginHandler.login(itemTitle,
                             itemID,
                             rnCallback);
                 }
@@ -77,8 +87,9 @@ public class AdobePassContract extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void logout() {
+    public void logout(final Callback rnCallback) {
         Log.d(TAG, "Call from RN: logout");
-        accessEnablerHandler.logout();
+        accessEnablerHandler.setFlow(Flow.LOGOUT);
+        accessEnablerHandler.logout(rnCallback);
     }
 }

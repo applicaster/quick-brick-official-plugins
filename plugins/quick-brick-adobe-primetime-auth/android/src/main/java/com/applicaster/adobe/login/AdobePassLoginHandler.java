@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
@@ -12,7 +13,9 @@ import com.adobe.adobepass.accessenabler.api.AccessEnabler;
 import com.adobe.adobepass.accessenabler.api.AccessEnablerException;
 import com.adobe.adobepass.accessenabler.models.Mvpd;
 import com.applicaster.adobe.login.pluginconfig.PluginRepository;
+import com.applicaster.adobe.login.util.LocalStorageHelper;
 import com.applicaster.adobe.login.webview.LoginProviderActivity;
+import com.applicaster.adobe.login.webview.LogoutProvider;
 import com.applicaster.app.CustomApplication;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
@@ -54,9 +57,11 @@ class AdobePassLoginHandler {
             new MessageHandler() { public void handle(Bundle bundle) { noOps(bundle); } },   //  9 PREAUTHORIZED_RESOURCES
     };
 
-    AdobePassLoginHandler(PluginRepository pluginRepository,
+    AdobePassLoginHandler(Context context,
+                          PluginRepository pluginRepository,
                           AccessEnablerHandler accessEnablerHandler,
                           ReactSession reactSession) {
+        this.context = context;
         this.pluginRepository = pluginRepository;
         this.accessEnablerHandler = accessEnablerHandler;
         this.reactSession = reactSession;
@@ -87,16 +92,16 @@ class AdobePassLoginHandler {
             accessEnabler.useHttps(true);
 
             accessEnablerHandler.setAccessEnabler(accessEnabler);
+            accessEnablerHandler.setRequestor(pluginRepository.getPluginConfig().getBaseUrl(),
+                    pluginRepository.getPluginConfig().getRequestorID());
         } else {
             Log.d(TAG, "Failed to configure the AccessEnabler library. ");
             // finish();
         }
     }
 
-    void login(Context context, String itemTitle, String itemId, Callback callback) {
-        this.context = context;
-        accessEnablerHandler.setRequestor(pluginRepository.getPluginConfig().getBaseUrl(),
-                pluginRepository.getPluginConfig().getRequestorID(), itemTitle, itemId);
+    void login(String itemTitle, String itemId, Callback callback) {
+        accessEnablerHandler.setItemData(itemTitle, itemId);
         accessEnablerHandler.checkAuthentication();
         reactSession.setReactAuthCallback(callback);
     }
@@ -130,12 +135,23 @@ class AdobePassLoginHandler {
         switch (status) {
             case (AccessEnabler.ACCESS_ENABLER_STATUS_SUCCESS): {
                 Log.d(TAG, "Authentication success");
+                LocalStorageHelper.setDefaultToken();
                 accessEnablerHandler.getAuthorization();
             }
             break;
             case (AccessEnabler.ACCESS_ENABLER_STATUS_ERROR): {
                 Log.d(TAG, "Authentication failed: " + errCode);
-                accessEnablerHandler.getAuthentication();
+                if (errCode != null
+                        && !errCode.isEmpty()
+                        && errCode.equals(AccessEnabler.USER_NOT_AUTHENTICATED_ERROR)
+                        && accessEnablerHandler.getFlow() == Flow.LOGOUT) {
+                    LocalStorageHelper.setEmptyToken();
+                    accessEnablerHandler.setFlow(Flow.UNDEFINED);
+                    reactSession.triggerCallbackSuccess(new WritableNativeMap());
+                    Log.d(TAG, "User was successfully logged out");
+                } else {
+                    accessEnablerHandler.getAuthentication();
+                }
             }
             break;
             default: {
@@ -149,6 +165,7 @@ class AdobePassLoginHandler {
         String resourceId = bundle.getString("resource_id");
         String token = bundle.getString("token");
         Log.d(TAG, "Token: " + token + "resId" + resourceId);
+        accessEnablerHandler.setFlow(Flow.UNDEFINED);
 
         WritableMap callbackParams = new WritableNativeMap();
         callbackParams.putString("token", token);
@@ -177,11 +194,28 @@ class AdobePassLoginHandler {
     }
 
     private void handleNavigateToUrl(Bundle bundle) {
-        String url = bundle.getString("url");
+        final String url = bundle.getString("url");
         if (context != null && url != null && !url.isEmpty()) {
-            Intent intent = new Intent(context, LoginProviderActivity.class);
-            intent.putExtra("url", url);
-            context.startActivity(intent);
+            switch (accessEnablerHandler.getFlow()) {
+                case LOGIN:
+                    Intent intent = new Intent(context, LoginProviderActivity.class);
+                    intent.putExtra("url", url);
+                    context.startActivity(intent);
+                    break;
+                case LOGOUT:
+                    new Handler(Looper.getMainLooper()).post(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    LogoutProvider logoutProvider = new LogoutProvider();
+                                    logoutProvider.startLogout(context, url);
+                                }
+                            }
+                    );
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
