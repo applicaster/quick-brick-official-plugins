@@ -13,10 +13,10 @@ import com.adobe.adobepass.accessenabler.api.AccessEnabler;
 import com.adobe.adobepass.accessenabler.api.AccessEnablerException;
 import com.adobe.adobepass.accessenabler.models.Mvpd;
 import com.applicaster.adobe.login.pluginconfig.PluginRepository;
+import com.applicaster.adobe.login.util.LocalStorageHelper;
 import com.applicaster.adobe.login.webview.LoginProviderActivity;
 import com.applicaster.adobe.login.webview.LogoutProvider;
 import com.applicaster.app.CustomApplication;
-import com.applicaster.storage.LocalStorage;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.WritableArray;
@@ -135,7 +135,7 @@ class AdobePassLoginHandler {
         switch (status) {
             case (AccessEnabler.ACCESS_ENABLER_STATUS_SUCCESS): {
                 Log.d(TAG, "Authentication success");
-                LocalStorage.INSTANCE.set("idToken", "authToken");
+                LocalStorageHelper.setDefaultToken();
                 accessEnablerHandler.getAuthorization();
             }
             break;
@@ -145,7 +145,7 @@ class AdobePassLoginHandler {
                         && !errCode.isEmpty()
                         && errCode.equals(AccessEnabler.USER_NOT_AUTHENTICATED_ERROR)
                         && accessEnablerHandler.getFlow() == Flow.LOGOUT) {
-                    LocalStorage.INSTANCE.set("idToken", "\"{}\"");
+                    LocalStorageHelper.setEmptyToken();
                     accessEnablerHandler.setFlow(Flow.UNDEFINED);
                     reactSession.triggerCallbackSuccess(new WritableNativeMap());
                     Log.d(TAG, "User was successfully logged out");
