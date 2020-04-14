@@ -16,17 +16,26 @@ enum AdobeFlow {
 }
 
 @objc(AdobePrimetimeAuthProvider)
-class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, EntitlementStatus {
+public class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, EntitlementStatus {
     
-    var flow = AdobeFlow.none
-    var webLoginViewController: WebLoginViewController?
-    var pluginConfig: [String: String]?
-    var additionalParameters: [String: Any]?
-    var accessEnabler = AccessEnabler()
-    var resourceID: String?
-    var authCompletion: RCTResponseSenderBlock?
-
-    @objc func setupAccessEnabler(_ pluginConfig: [String: String]) {
+    private var flow = AdobeFlow.none
+    private var webLoginViewController: WebLoginViewController {
+        let viewController = WebLoginViewController.instantiateVC()
+        viewController.accessEnabler = accessEnabler
+        viewController.modalPresentationStyle = .fullScreen
+        viewController.cancelAction = { [weak self] in
+            self?.finishFlow()
+        }
+        return viewController
+    }
+    private var loginViewController: WebLoginViewController?
+    private var pluginConfig = [String: String]()
+    private var additionalParameters = [String: Any]()
+    private var accessEnabler = AccessEnabler()
+    private var resourceID: String?
+    private var authCompletion: RCTResponseSenderBlock?
+    
+    @objc public func setupAccessEnabler(_ pluginConfig: [String: String]) {
         self.pluginConfig = pluginConfig
         accessEnabler = AccessEnabler(pluginConfig["software_statement"] ?? "")
         accessEnabler.delegate = self
@@ -35,31 +44,29 @@ class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, Entitlem
         self.resourceID = pluginConfig["resource_id"]
     }
     
-    @objc func startLoginFlow(_ additionalParameters: [String: Any], callback: @escaping RCTResponseSenderBlock) {
+    @objc public func startLoginFlow(_ additionalParameters: [String: Any], callback: @escaping RCTResponseSenderBlock) {
         flow = .login
         self.authCompletion = callback
         self.additionalParameters = additionalParameters
         self.accessEnabler.checkAuthentication()
     }
     
-    @objc func logout(_ callback: @escaping RCTResponseSenderBlock) {
+    @objc public func logout(_ callback: @escaping RCTResponseSenderBlock) {
         flow = .logout
         self.authCompletion = callback
         self.accessEnabler.logout()
         let cookieStorage = HTTPCookieStorage.shared
-        if let cookies = cookieStorage.cookies {
-            for cookie in cookies {
-                cookieStorage.deleteCookie(cookie as HTTPCookie)
-            }
-        }
+        cookieStorage.cookies?.forEach({ (cookie) in
+            cookieStorage.deleteCookie(cookie)
+        })
         accessEnabler.checkAuthentication()
     }
     
-    @objc func setProviderID(_ providerID: String) {
+    @objc private func setProviderID(_ providerID: String) {
         self.accessEnabler.setSelectedProvider(providerID)
     }
     
-    func setAuthenticationStatus(_ status: Int32, errorCode code: String!) {
+    public func setAuthenticationStatus(_ status: Int32, errorCode code: String!) {
         switch status {
         case ACCESS_ENABLER_STATUS_SUCCESS:
             _ = FacadeConnector.connector?.storage?.localStorageSetValue(for: "idToken", value: "authToken", namespace: nil)
@@ -80,11 +87,11 @@ class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, Entitlem
         }
     }
     
-    func setToken(_ token: String!, forResource resource: String!) {
+    public func setToken(_ token: String!, forResource resource: String!) {
         finishFlow(token)
     }
     
-    func tokenRequestFailed(_ resource: String!, errorCode code: String!, errorDescription description: String!) {
+    public func tokenRequestFailed(_ resource: String!, errorCode code: String!, errorDescription description: String!) {
         if flow == .login {
             let message = "This content is not included in your package"
             let okText = "OK"
@@ -97,47 +104,39 @@ class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, Entitlem
         }
     }
     
-    func displayProviderDialog(_ mvpds: [Any]!) {
+    public func displayProviderDialog(_ mvpds: [Any]!) {
         guard let providers = mvpds as? [MVPD] else {
             return
         }
         sendEvent(withName: "showProvidersList", body: providers.toJSONObjects())
     }
     
-    func navigate(toUrl url: String!) {
+    public func navigate(toUrl url: String!) {
         if flow == .login  {
-            webLoginViewController = WebLoginViewController.instantiateVC()
-            webLoginViewController?.accessEnabler = accessEnabler
-            webLoginViewController?.modalPresentationStyle = .fullScreen
-            webLoginViewController?.cancelAction = { [weak self] in
-                self?.finishFlow()
+            guard let url = URL(string: url) else {
+                finishFlow()
+                return
             }
-            showWebView(url: url)
+            loginViewController = webLoginViewController
+            let topViewController = UIViewController.topmostViewController()
+            topViewController?.present(loginViewController!, animated: true, completion: {
+                self.loginViewController?.webView.load(URLRequest(url: url))
+            })
         }
     }
     
-    func dismissWebView() {
-        webLoginViewController?.dismiss(animated: true, completion: {
-            self.webLoginViewController = nil
+    private func dismissWebView() {
+        loginViewController?.dismiss(animated: true, completion: {
+            self.loginViewController = nil
         })
     }
     
-    func showWebView(url: String) {
-        guard let viewController = webLoginViewController else {
-            return
-        }
-        let topViewController = UIViewController.topmostViewController()
-        topViewController?.present(viewController, animated: true, completion: {
-            guard let url = URL(string: url) else {return}
-            viewController.webView.load(URLRequest(url: url))
-        })
-    }
-    
-    func finishFlow(_ token: String? = nil) {
+    private func finishFlow(_ token: String? = nil) {
         dismissWebView()
-        if flow == .login {
+        switch flow {
+        case .login:
             token == nil ? authCompletion?([]) : authCompletion?([["token": token]])
-        } else {
+        default:
             authCompletion?([])
         }
         authCompletion = nil
@@ -146,43 +145,28 @@ class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, Entitlem
     
     //MARK:- Unused Delegate methods
     
-    func setRequestorComplete(_ status: Int32) {
-        //empty
-    }
+    public func setRequestorComplete(_ status: Int32) {}
     
-    func selectedProvider(_ mvpd: MVPD!) {
-        //empty
-    }
+    public func selectedProvider(_ mvpd: MVPD!) {}
     
-    func sendTrackingData(_ data: [Any]!, forEventType event: Int32) {
-        //empty
-    }
+    public func sendTrackingData(_ data: [Any]!, forEventType event: Int32) {}
     
-    func setMetadataStatus(_ metadata: Any!, encrypted: Bool, forKey key: Int32, andArguments arguments: [AnyHashable : Any]!) {
-        //empty
-    }
+    public func setMetadataStatus(_ metadata: Any!, encrypted: Bool, forKey key: Int32, andArguments arguments: [AnyHashable : Any]!) {}
     
-    func presentTvProviderDialog(_ viewController: UIViewController!) {
-        //empty
-    }
+    public func presentTvProviderDialog(_ viewController: UIViewController!) {}
     
-    func dismissTvProviderDialog(_ viewController: UIViewController!) {
-        //empty
-    }
+    public func dismissTvProviderDialog(_ viewController: UIViewController!) {}
     
-    func status(_ statusDictionary: [AnyHashable : Any]!) {
-        //empty
-    }
+    public func status(_ statusDictionary: [AnyHashable : Any]!) {}
     
-    func preauthorizedResources(_ resources: [Any]!) {
-        //empty
-    }
+    public func preauthorizedResources(_ resources: [Any]!) {}
     
     //MARK:- helper method to get resourceId string
+    
     private func getResourceStringForAuthorization() -> String? {
         guard let resourceID = self.resourceID,
-              let itemID = additionalParameters?["itemID"] as? String,
-              let itemTitle = additionalParameters?["itemTitle"] as? String
+              let itemID = additionalParameters["itemID"] as? String,
+              let itemTitle = additionalParameters["itemTitle"] as? String
             else {
             return nil
         }
@@ -195,11 +179,11 @@ class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, Entitlem
         return DispatchQueue.main
     }
     
-    override class func requiresMainQueueSetup() -> Bool {
+    override public class func requiresMainQueueSetup() -> Bool {
         return true
     }
     
-    override func supportedEvents() -> [String]! {
+    override public func supportedEvents() -> [String]! {
       return ["showProvidersList"]
     }
 }
