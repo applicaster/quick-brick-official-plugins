@@ -53,7 +53,7 @@ public class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, E
         accessEnabler.checkAuthentication()
     }
     
-    @objc private func setProviderID(_ providerID: String) {
+    @objc public func setProviderID(_ providerID: String) {
         self.accessEnabler.setSelectedProvider(providerID)
     }
     
