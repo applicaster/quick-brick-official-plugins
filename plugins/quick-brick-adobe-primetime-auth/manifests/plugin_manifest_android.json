@@ -58,12 +58,6 @@
           },
           {
             "type": "text_input",
-            "key": "url_scheme",
-            "label": "URL Scheme (iOS)",
-            "label_tooltip": "URL Scheme issued by Adobe for the specific client’s application."
-          },
-          {
-            "type": "text_input",
             "key": "deep_link",
             "label": "Deep Link (Android)",
             "label_tooltip": "Redirect uri assigned by adobe for the specific client's application"
