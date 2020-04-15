@@ -16,9 +16,7 @@ import {
   isTriggerOnAppLaunch,
   isHook,
   goBack,
-  setToLocalStorage,
   isTokenInStorage,
-  removeFromLocalStorage,
   hideMenu
 } from './Utils';
 
@@ -117,12 +115,11 @@ class AdobeComponent extends Component {
     this.accessEnabler.startLoginFlow(additionalParams, this.handleResponseFromLogin);
   };
 
-  handleResponseFromLogin = async (response) => {
+  handleResponseFromLogin = (response) => {
     try {
       this.setState({ loading: true });
 
       if (response && response.token) {
-        await setToLocalStorage('idToken', response.token);
         this.setState({ loading: false });
         this.successHook();
       } else {
@@ -134,13 +131,14 @@ class AdobeComponent extends Component {
     }
   };
 
-  logOut = async (navigator) => {
+  logOut = (navigator) => {
     try {
       this.setState({ loading: true });
-      this.accessEnabler.logout();
-      await removeFromLocalStorage('idToken');
-      this.setState({ loading: false });
-      goBack(navigator);
+
+      this.accessEnabler.logout(() => {
+        this.setState({ loading: false });
+        goBack(navigator);
+      });
     } catch (err) {
       console.log(err);
     }
