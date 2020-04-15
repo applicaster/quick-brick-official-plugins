@@ -50,16 +50,8 @@ const goBack = (navigator) => {
   }
 };
 
-async function setToLocalStorage(key, value, namespace) {
-  return storage.setItem(key, value, namespace);
-}
-
 async function getFromLocalStorage(key, namespace) {
   return storage.getItem(key, namespace);
-}
-
-async function removeFromLocalStorage(key, namespace) {
-  return storage.setItem(key, JSON.stringify({}), namespace);
 }
 
 async function isTokenInStorage(key, namespace) {
@@ -93,9 +85,7 @@ export {
   getPluginData,
   isHook,
   goBack,
-  setToLocalStorage,
   getFromLocalStorage,
-  removeFromLocalStorage,
   isTokenInStorage,
   hideMenu
 };
