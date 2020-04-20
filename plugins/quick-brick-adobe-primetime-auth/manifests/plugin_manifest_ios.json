@@ -22,7 +22,7 @@
   "unsupported_since_zapp_sdk": "",
   "preload": true,
   "platform": "ios",
-  "dependency_version": "0.0.6",
+  "dependency_version": "0.0.7",
   "manifest_version": "0.0.1",
   "min_zapp_sdk": "20.0.0",
   "general": {
@@ -57,12 +57,6 @@
             "key": "resource_id",
             "label": "Resource ID",
             "label_tooltip": "The ID assigned for the client’s resource by Adobe."
-          },
-          {
-            "type": "text_input",
-            "key": "url_scheme",
-            "label": "URL Scheme (iOS)",
-            "label_tooltip": "URL Scheme issued by Adobe for the specific client’s application."
           },
           {
             "type": "text_input",
