@@ -31,7 +31,11 @@ public class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, E
         accessEnabler = AccessEnabler(pluginConfig["software_statement"] ?? "")
         accessEnabler.delegate = self
         accessEnabler.statusDelegate = self
-        accessEnabler.setRequestor(pluginConfig["requestor_id"] ?? "")
+        var providers = [String]()
+        if let url = pluginConfig["base_url"] {
+            providers.append(url)
+        }
+        accessEnabler.setRequestor(pluginConfig["requestor_id"] ?? "", serviceProviders: providers)
         self.resourceID = pluginConfig["resource_id"]
     }
     
