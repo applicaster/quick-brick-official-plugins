@@ -1,0 +1,30 @@
+{
+  "api": {},
+  "dependency_repository_url": [],
+  "dependency_name": "@applicaster/quick-brick-google-admob-interstitials",
+  "author_name": "",
+  "author_email": "",
+  "name": "",
+  "description": "",
+  "type": "general",
+  "screen": true,
+  "react_native": true,
+  "identifier": "google-admob-interstitials-qb",
+  "ui_builder_support": true,
+  "whitelisted_account_ids": [],
+  "deprecated_since_zapp_sdk": "",
+  "unsupported_since_zapp_sdk": "",
+  "preload": true,
+  "platform": "ios",
+  "dependency_version": "0.0.1",
+  "manifest_version": "0.0.1",
+  "min_zapp_sdk": "",
+  "general": {},
+  "custom_configuration_fields": [],
+  "ui_frameworks": [
+    "quickbrick"
+  ],
+  "targets": [
+    "mobile"
+  ]
+}
