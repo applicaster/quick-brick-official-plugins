@@ -167,9 +167,8 @@ class AdobePassLoginHandler {
         Log.d(TAG, "Token: " + token + "resId" + resourceId);
         accessEnablerHandler.setFlow(Flow.UNDEFINED);
 
-        WritableMap callbackParams = new WritableNativeMap();
-        callbackParams.putString("token", token);
-        reactSession.triggerCallbackSuccess(callbackParams);
+        LocalStorageHelper.setToken(token);
+        reactSession.triggerCallbackSuccess(new WritableNativeMap());
     }
 
     private void noOps(Bundle bundle) {

@@ -20,7 +20,7 @@
   "dependency_name": "@applicaster/quick-brick-adobe-primetime-auth",
   "whitelisted_account_ids": [],
   "preload": true,
-  "dependency_version": "0.0.6",
+  "dependency_version": "0.0.8",
   "manifest_version": "0.0.1",
   "min_zapp_sdk": "12.0.0",
   "general": {
@@ -35,8 +35,7 @@
             "key": "base_url",
             "label": "Base URL",
             "label_tooltip": "Determines which Adobe’s backend environment the plugin should use.",
-            "placeholder": "sp.auth.adobe.com/adobe-services",
-            "initial_value": "sp.auth.adobe.com/adobe-services"
+            "placeholder": "Enter your base url here"
           },
           {
             "type": "text_input",

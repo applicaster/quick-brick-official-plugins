@@ -29,7 +29,7 @@ class AuthWebViewClient extends WebViewClient {
         if (url.equals(redirectUri)) {
             AccessEnablerHandler.INSTANCE.getAccessEnabler().getAuthenticationToken();
             actionCallback.onFinished();
-        } if (url.equals(getLogoutUri())){
+        } else if (url.equals(getLogoutUri())){
             AccessEnablerHandler.INSTANCE.getAccessEnabler().checkAuthentication();
             actionCallback.onFinished();
         } else {
