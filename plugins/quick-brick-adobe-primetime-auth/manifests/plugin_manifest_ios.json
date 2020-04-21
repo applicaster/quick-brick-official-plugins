@@ -22,7 +22,7 @@
   "unsupported_since_zapp_sdk": "",
   "preload": true,
   "platform": "ios",
-  "dependency_version": "0.0.7",
+  "dependency_version": "0.0.8",
   "manifest_version": "0.0.1",
   "min_zapp_sdk": "20.0.0",
   "general": {
@@ -37,8 +37,7 @@
             "key": "base_url",
             "label": "Base URL",
             "label_tooltip": "Determines which Adobe’s backend environment the plugin should use.",
-            "placeholder": "sp.auth.adobe.com/adobe-services",
-            "initial_value": "sp.auth.adobe.com/adobe-services"
+            "placeholder": "Enter your base url here"
           },
           {
             "type": "text_input",
