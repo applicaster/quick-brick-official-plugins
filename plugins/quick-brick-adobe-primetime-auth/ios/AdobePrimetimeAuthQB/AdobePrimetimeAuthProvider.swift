@@ -83,6 +83,7 @@ public class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, E
     }
     
     public func setToken(_ token: String!, forResource resource: String!) {
+        _ = FacadeConnector.connector?.storage?.localStorageSetValue(for: "idToken", value: token, namespace: nil)
         finishFlow(token)
     }
     
