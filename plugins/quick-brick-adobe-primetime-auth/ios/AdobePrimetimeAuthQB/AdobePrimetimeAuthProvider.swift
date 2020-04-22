@@ -20,23 +20,26 @@ public class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, E
     
     private var flow = AdobeFlow.none
     private var webLoginViewController: WebLoginViewController?
-    private var pluginConfig = [String: String]()
+    private var pluginConfig = [String: Any]()
     private var additionalParameters = [String: Any]()
     private var accessEnabler = AccessEnabler()
     private var resourceID: String?
     private var authCompletion: RCTResponseSenderBlock?
     
-    @objc public func setupAccessEnabler(_ pluginConfig: [String: String]) {
+    @objc public func setupAccessEnabler(_ pluginConfig: [String: Any]) {
         self.pluginConfig = pluginConfig
-        accessEnabler = AccessEnabler(pluginConfig["software_statement"] ?? "")
+        guard let resourceID = pluginConfig["resource_id"] as? String,
+              let softwareStatement = pluginConfig["software_statement"] as? String,
+              let requestorID = pluginConfig["requestor_id"] as? String,
+              let baseUrl = pluginConfig["base_url"] as? String
+            else {
+            return
+        }
+        accessEnabler = AccessEnabler(softwareStatement)
         accessEnabler.delegate = self
         accessEnabler.statusDelegate = self
-        var providers = [String]()
-        if let url = pluginConfig["base_url"] {
-            providers.append(url)
-        }
-        accessEnabler.setRequestor(pluginConfig["requestor_id"] ?? "", serviceProviders: providers)
-        self.resourceID = pluginConfig["resource_id"]
+        accessEnabler.setRequestor(requestorID, serviceProviders: [baseUrl])
+        self.resourceID = resourceID
     }
     
     @objc public func startLoginFlow(_ additionalParameters: [String: Any], callback: @escaping RCTResponseSenderBlock) {
