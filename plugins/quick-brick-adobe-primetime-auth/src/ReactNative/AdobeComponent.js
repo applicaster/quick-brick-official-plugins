@@ -86,9 +86,9 @@ class AdobeComponent extends Component {
     }
   };
 
-  tryToSkipPlayerHookFlow = (payload) => {
+  tryToSkipPlayerHookFlow = (payload, callback) => {
     const requiresAuth = R.pathOr(false, ['extensions', 'requires_authentication'], payload);
-    if (!requiresAuth) return this.successHook();
+    if (!requiresAuth) return callback({ success: true, payload });
   };
 
   logoutFlow = () => {
@@ -107,8 +107,10 @@ class AdobeComponent extends Component {
   };
 
   loginFlow = () => {
-    const { payload = {}, navigator } = this.props;
-    this.tryToSkipPlayerHookFlow(payload);
+    const { payload = {}, navigator, callback } = this.props;
+    if (!R.isEmpty(payload)) {
+      this.tryToSkipPlayerHookFlow(payload, callback);
+    }
 
     const { title = 'N/A', id = 'N/A' } = payload;
 

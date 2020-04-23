@@ -22,7 +22,7 @@
   "unsupported_since_zapp_sdk": "",
   "preload": true,
   "platform": "ios",
-  "dependency_version": "0.0.8",
+  "dependency_version": "0.0.9",
   "manifest_version": "0.0.1",
   "min_zapp_sdk": "20.0.0",
   "general": {
