@@ -53,10 +53,12 @@ public class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, E
         flow = .logout
         self.authCompletion = callback
         self.accessEnabler.logout()
-        let cookieStorage = HTTPCookieStorage.shared
-        cookieStorage.cookies?.forEach({ (cookie) in
-            cookieStorage.deleteCookie(cookie)
-        })
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+            records.forEach { record in
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+            }
+        }
         accessEnabler.checkAuthentication()
     }
     
