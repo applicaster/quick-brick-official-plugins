@@ -1,7 +1,6 @@
-import {getCustomPluginData} from "@applicaster/quick-brick-adobe-primetime-auth/src/ReactNative/Config/PluginData";
-import {hideMenu} from "@applicaster/quick-brick-adobe-primetime-auth/src/ReactNative/Utils";
 import {connectToStore} from "@applicaster/zapp-react-native-redux";
-import { InterstitialAd, TestIds } from '@react-native-firebase/admob';
+import { InterstitialAd, AdEventType,TestIds } from '@react-native-firebase/admob';
+import React, { Component } from 'react';
 
 
 const storeConnector = connectToStore((state) => { // Store connector entity to obtain screen data
@@ -12,16 +11,19 @@ const storeConnector = connectToStore((state) => { // Store connector entity to 
     return { screenData };
 });
 
-const adUnitId = TestIds.INTERSTITIAL
 
-const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
-    requestNonPersonalizedAdsOnly: true,
-    keywords: ['fashion', 'clothing'],
+const interstitials = InterstitialAd.createForAdRequest(TestIds.INTERSTITIAL);
+const eventListener = interstitials.onAdEvent(type => {
+    if (type === AdEventType.LOADED) {
+        interstitials.show();
+    }
+    if(type === AdEventType.ERROR) {
+        console.log("Error")
+    }
 });
 
 
-class AdInterstitialsComponent extends Comment {
-    pluginData = getCustomPluginData(this.props.screenData);
+class AdInterstitialsComponent extends Component {
 
     constructor(props) {
         super(props);
@@ -31,13 +33,15 @@ class AdInterstitialsComponent extends Comment {
     }
 
     componentDidMount() {
-        const { screenData = {}, navigator } = this.props;
-        hideMenu(navigator);
-        interstitial.show();
+        interstitials.load()
     }
 
     componentWillUnmount() {
 
+    }
+
+    render() {
+        return (null);
     }
 
 }

@@ -1,9 +1,9 @@
 {
   "api": {
-    "class_name": "com.google.firebase:firebase-ads",
+    "class_name": "com.applicaster.reactnative.plugins.APReactNativeAdapter",
     "react_packages": [
-      "com.google.firebase:firebase-ads:{{ android.firebase.ads }}",
-      "io.invertase.firebase.admob.RNFirebaseAdMobPackage"
+      "io.invertase.firebase.app.ReactNativeFirebaseAppPackage",
+      "io.invertase.firebase.admob.ReactNativeFirebaseAdMobPackage"
     ]
   },
   "dependency_repository_url": [],
@@ -15,7 +15,10 @@
       "react-native-firebase_admob": "./node_modules/@react-native-firebase/admob/android"
     }
   ],
-  "npm_dependencies": ["@react-native-firebase@6.0.4"],
+  "npm_dependencies": [
+    "@react-native-firebase/app@6.4.0",
+    "@react-native-firebase/admob@6.4.0"
+  ],
   "dependency_name": "@applicaster/quick-brick-google-admob-interstitials",
   "author_name": "Alex Khomich",
   "author_email": "a.khomich@applicaster.com",
@@ -32,7 +35,7 @@
   "unsupported_since_zapp_sdk": "",
   "preload": true,
   "platform": "android",
-  "dependency_version": "0.0.2",
+  "dependency_version": "0.0.3",
   "manifest_version": "0.0.1",
   "general": {},
   "custom_configuration_fields": [],
