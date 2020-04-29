@@ -15,6 +15,11 @@ enum AdobeFlow {
     case none
 }
 
+enum AdobeError: Error {
+    case tokenRetrieveError(String)
+    case undefined
+}
+
 @objc(AdobePrimetimeAuthProvider)
 public class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, EntitlementStatus {
     
@@ -73,12 +78,12 @@ public class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, E
             if let stringForAuthorization = getResourceStringForAuthorization() {
                 self.accessEnabler.getAuthorization(stringForAuthorization)
             } else {
-                finishFlow()
+                finishFlow(.failure(.undefined))
             }
         case ACCESS_ENABLER_STATUS_ERROR:
             if code == USER_NOT_AUTHENTICATED_ERROR && flow == .logout {
                 _ = FacadeConnector.connector?.storage?.localStorageSetValue(for: "idToken", value: "\"{}\"", namespace: nil)
-                finishFlow()
+                finishFlow(.success(""))
             } else {
                 accessEnabler.getAuthentication()
             }
@@ -89,19 +94,16 @@ public class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, E
     
     public func setToken(_ token: String!, forResource resource: String!) {
         _ = FacadeConnector.connector?.storage?.localStorageSetValue(for: "idToken", value: token, namespace: nil)
-        finishFlow(token)
+        finishFlow(.success(token))
     }
     
     public func tokenRequestFailed(_ resource: String!, errorCode code: String!, errorDescription description: String!) {
         if flow == .login {
-            let message = "This content is not included in your package"
-            let okText = "OK"
-            let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: okText, style: .default, handler: { _ in
-                self.finishFlow()
-            }))
-            let topViewController = UIViewController.topmostViewController()
-            topViewController?.present(alert, animated: true, completion: nil)
+            var errorMessage: String = description
+            if let defaultError = pluginConfig["authorization_default_error_message"] as? String, errorMessage.isEmpty {
+                errorMessage = defaultError
+            }
+            self.finishFlow(.failure(.tokenRetrieveError(errorMessage)))
         }
     }
     
@@ -115,7 +117,7 @@ public class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, E
     public func navigate(toUrl url: String!) {
         if flow == .login  {
             guard let url = URL(string: url) else {
-                finishFlow()
+                finishFlow(.failure(.undefined))
                 return
             }
             let viewController = WebLoginViewController.instantiateVC()
@@ -123,7 +125,7 @@ public class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, E
             viewController.accessEnabler = accessEnabler
             viewController.modalPresentationStyle = .fullScreen
             viewController.cancelAction = { [weak self] in
-                self?.finishFlow()
+                self?.finishFlow(.failure(.undefined))
             }
             let topViewController = UIViewController.topmostViewController()
             topViewController?.present(viewController, animated: true, completion: {
@@ -138,13 +140,18 @@ public class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, E
         })
     }
     
-    private func finishFlow(_ token: String? = nil) {
+    private func finishFlow(_ result: Result<String,AdobeError>) {
         dismissWebView()
-        switch flow {
-        case .login:
-            token == nil ? authCompletion?([]) : authCompletion?([["token": token]])
-        default:
-            authCompletion?([])
+        switch result {
+        case .success(let token):
+            authCompletion?([NSNull(), ["token": token]])
+        case .failure(let error):
+            switch error {
+            case .tokenRetrieveError(let errorMessage):
+                authCompletion?([["errorMessage": errorMessage], NSNull()])
+            default:
+                authCompletion?([])
+            }
         }
         authCompletion = nil
         flow = .none
