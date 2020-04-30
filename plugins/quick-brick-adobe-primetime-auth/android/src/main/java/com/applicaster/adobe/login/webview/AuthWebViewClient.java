@@ -1,10 +1,15 @@
 package com.applicaster.adobe.login.webview;
 
 import android.content.Context;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.adobe.adobepass.accessenabler.api.AccessEnabler;
 import com.applicaster.adobe.login.AccessEnablerHandler;
@@ -24,19 +29,29 @@ class AuthWebViewClient extends WebViewClient {
         this.redirectUri = getRedirectUri(context);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+        String url = request.getUrl().toString();
+        return checkOverride(view, url);
+    }
+
+    @SuppressWarnings("deprecation")
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        return checkOverride(view, url);
+    }
+
+    private boolean checkOverride(@NonNull WebView view, @NonNull String url) {
         if (url.equals(redirectUri)) {
             AccessEnablerHandler.INSTANCE.getAccessEnabler().getAuthenticationToken();
-            actionCallback.onFinished();
         } else if (url.equals(getLogoutUri())){
             AccessEnablerHandler.INSTANCE.getAccessEnabler().checkAuthentication();
-            actionCallback.onFinished();
         } else {
             view.loadUrl(url);
             return false;
         }
-        actionCallback.onError();
+        actionCallback.onFinished();
         return true;
     }
 

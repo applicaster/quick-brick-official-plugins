@@ -34,9 +34,9 @@ public enum ReactSession {
         }
     }
 
-    public void triggerCallbackFail() {
+    public void triggerCallbackFail(WritableMap callbackArgs) {
         if (reactAuthCallback != null) {
-            reactAuthCallback.invoke();
+            reactAuthCallback.invoke(callbackArgs);
             reactAuthCallback = null;
         }
     }

@@ -24,10 +24,5 @@ public class LogoutProvider implements ActionCallback {
     public void onFinished() {
         Log.i(this.getClass().getName(), "Logout action performed on WebView");
     }
-
-    @Override
-    public void onError() {
-        Log.e(this.getClass().getName(), "Logout action failed on WebView");
-    }
 }
 

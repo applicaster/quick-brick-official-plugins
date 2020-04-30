@@ -10,8 +10,9 @@ public class PluginDataMapper {
         String requestorID = getOrEmpty(params, "requestor_id");
         String resourceID =  getOrEmpty(params, "resource_id");
         String redirectUri =  getOrEmpty(params, "deep_link");
+        String authDefaultErrorMessage = getOrEmpty(params, "authorization_default_error_message");
 
-        return new PluginConfig(baseUrl, softwareStatement, requestorID, resourceID, redirectUri);
+        return new PluginConfig(baseUrl, softwareStatement, requestorID, resourceID, redirectUri, authDefaultErrorMessage);
     }
 
     private String getOrEmpty(ReadableMap params, String key) {
