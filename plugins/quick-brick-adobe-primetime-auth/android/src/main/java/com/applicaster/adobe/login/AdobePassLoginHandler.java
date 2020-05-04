@@ -143,9 +143,9 @@ class AdobePassLoginHandler {
                         && accessEnablerHandler.getFlow() == Flow.LOGOUT) {
                     LocalStorageHelper.setEmptyToken();
                     accessEnablerHandler.setFlow(Flow.UNDEFINED);
-                    WritableMap args = new WritableNativeMap();
-                    args.putString("token", "");
-                    reactSession.triggerCallbackSuccess(args);
+                    WritableMap callbackParams = new WritableNativeMap();
+                    callbackParams.putString("token", "");
+                    reactSession.triggerCallbackSuccess(null, callbackParams);
                     Log.d(TAG, "User was successfully logged out");
                 } else {
                     accessEnablerHandler.getAuthentication();
@@ -168,7 +168,7 @@ class AdobePassLoginHandler {
         LocalStorageHelper.setToken(token);
         WritableMap callbackParams = new WritableNativeMap();
         callbackParams.putString("token", token);
-        reactSession.triggerCallbackSuccess(callbackParams);
+        reactSession.triggerCallbackSuccess(null, callbackParams);
     }
 
     private void noOps(Bundle bundle) {
@@ -178,13 +178,10 @@ class AdobePassLoginHandler {
 
     private void handleTokenRequestFailed(Bundle bundle) {
         String errorMessage = bundle.getString("err_description");
-        WritableMap args = new WritableNativeMap();
-        if (errorMessage != null && !errorMessage.isEmpty()) {
-            args.putString("errorMessage", errorMessage);
-        } else {
-            args.putString("errorMessage", pluginRepository.getPluginConfig().getAuthDefaultErrorMessage());
+        if (errorMessage == null || errorMessage.isEmpty()) {
+            errorMessage = pluginRepository.getPluginConfig().getAuthDefaultErrorMessage();
         }
-        reactSession.triggerCallbackFail(args);
+        reactSession.triggerCallbackFail(errorMessage, new WritableNativeMap());
     }
 
     private void handleNavigateToUrl(Bundle bundle) {
