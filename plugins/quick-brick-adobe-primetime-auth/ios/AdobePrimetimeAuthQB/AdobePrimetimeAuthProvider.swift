@@ -144,11 +144,11 @@ public class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, E
         dismissWebView()
         switch result {
         case .success(let token):
-            authCompletion?([NSNull(), ["token": token]])
+            authCompletion?([["token": token]])
         case .failure(let error):
             switch error {
             case .tokenRetrieveError(let errorMessage):
-                authCompletion?([["errorMessage": errorMessage], NSNull()])
+                authCompletion?([["errorMessage": errorMessage]])
             default:
                 authCompletion?([])
             }
