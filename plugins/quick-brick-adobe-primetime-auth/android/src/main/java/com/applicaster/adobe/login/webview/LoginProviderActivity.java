@@ -44,6 +44,6 @@ public class LoginProviderActivity extends AppCompatActivity implements ActionCa
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        ReactSession.INSTANCE.triggerCallbackFail(null, new WritableNativeMap());
+        ReactSession.INSTANCE.triggerCallbackFail(new WritableNativeMap());
     }
 }

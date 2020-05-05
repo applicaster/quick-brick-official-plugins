@@ -27,16 +27,16 @@ public enum ReactSession {
         reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, payload);
     }
 
-    public void triggerCallbackSuccess(@Nullable String errorMessage, WritableMap callbackArgs) {
+    public void triggerCallbackSuccess(WritableMap callbackArgs) {
         if (reactAuthCallback != null) {
-            reactAuthCallback.invoke(errorMessage, callbackArgs);
+            reactAuthCallback.invoke(callbackArgs);
             reactAuthCallback = null;
         }
     }
 
-    public void triggerCallbackFail(@Nullable String errorMessage, WritableMap callbackArgs) {
+    public void triggerCallbackFail(WritableMap callbackArgs) {
         if (reactAuthCallback != null) {
-            reactAuthCallback.invoke(errorMessage, callbackArgs);
+            reactAuthCallback.invoke(callbackArgs);
             reactAuthCallback = null;
         }
     }

@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.adobe.adobepass.accessenabler.api.AccessEnabler;
 import com.applicaster.adobe.login.pluginconfig.PluginDataRepository;
-import com.applicaster.plugin_manager.login.LoginContract;
 import com.facebook.react.bridge.Callback;
 
 import java.util.ArrayList;
