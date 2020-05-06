@@ -1,7 +1,6 @@
 package com.applicaster.adobe.login;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,8 +25,6 @@ import com.facebook.react.bridge.WritableNativeMap;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.appcompat.app.AlertDialog;
 
 class AdobePassLoginHandler {
 
@@ -117,7 +114,6 @@ class AdobePassLoginHandler {
             break;
             case (AccessEnabler.ACCESS_ENABLER_STATUS_ERROR): {
                 Log.d(TAG, "Config phase: FAILED");
-                //TODO - Show error message to the user
             }
             break;
             default: {
@@ -147,7 +143,9 @@ class AdobePassLoginHandler {
                         && accessEnablerHandler.getFlow() == Flow.LOGOUT) {
                     LocalStorageHelper.setEmptyToken();
                     accessEnablerHandler.setFlow(Flow.UNDEFINED);
-                    reactSession.triggerCallbackSuccess(new WritableNativeMap());
+                    WritableMap callbackParams = new WritableNativeMap();
+                    callbackParams.putString("token", "");
+                    reactSession.triggerCallbackSuccess(callbackParams);
                     Log.d(TAG, "User was successfully logged out");
                 } else {
                     accessEnablerHandler.getAuthentication();
@@ -179,19 +177,14 @@ class AdobePassLoginHandler {
     }
 
     private void handleTokenRequestFailed(Bundle bundle) {
-        if (context != null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle("Error");
-            builder.setMessage(bundle.getString("err_description"));
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            });
-            builder.show();
+        String errorMessage = bundle.getString("err_description");
+        WritableMap callbackParams = new WritableNativeMap();
+        if (errorMessage != null && !errorMessage.isEmpty()) {
+            callbackParams.putString("errorMessage", errorMessage);
+        } else {
+            callbackParams.putString("errorMessage", pluginRepository.getPluginConfig().getAuthDefaultErrorMessage());
         }
-        reactSession.triggerCallbackFail();
+        reactSession.triggerCallbackFail(callbackParams);
     }
 
     private void handleNavigateToUrl(Bundle bundle) {
@@ -220,6 +213,7 @@ class AdobePassLoginHandler {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void handleMVPDs(Bundle bundle) {
         List<Mvpd> mvpds = new ArrayList<>();
         try {

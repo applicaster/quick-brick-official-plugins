@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 
 import com.applicaster.adobe.login.R;
 import com.applicaster.adobe.login.ReactSession;
+import com.facebook.react.bridge.WritableNativeMap;
 
 public class LoginProviderActivity extends AppCompatActivity implements ActionCallback {
 
@@ -41,14 +42,8 @@ public class LoginProviderActivity extends AppCompatActivity implements ActionCa
     }
 
     @Override
-    public void onError() {
-        Log.i(this.getClass().getSimpleName(), "Login action failed on WebView");
-        finish();
-    }
-
-    @Override
     public void onBackPressed() {
         super.onBackPressed();
-        ReactSession.INSTANCE.triggerCallbackFail();
+        ReactSession.INSTANCE.triggerCallbackFail(new WritableNativeMap());
     }
 }

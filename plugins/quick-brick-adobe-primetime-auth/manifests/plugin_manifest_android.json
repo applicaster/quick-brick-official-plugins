@@ -60,6 +60,12 @@
             "key": "deep_link",
             "label": "Deep Link (Android)",
             "label_tooltip": "Redirect uri assigned by adobe for the specific client's application"
+          },
+          {
+            "type": "text_input",
+            "key": "authorization_default_error_message",
+            "label": "Authorization default error message",
+            "initial_value": "Your package doesn’t include this channel, pleas contact your TV provider"
           }
         ]
       },
