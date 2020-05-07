@@ -22,8 +22,8 @@
   "unsupported_since_zapp_sdk": "",
   "preload": true,
   "platform": "ios",
-  "dependency_version": "0.0.9",
-  "manifest_version": "0.0.1",
+  "dependency_version": "0.1.0",
+  "manifest_version": "0.1.0",
   "min_zapp_sdk": "20.0.0",
   "general": {
     "fields": [
@@ -62,6 +62,12 @@
             "key": "deep_link",
             "label": "Deep Link (Android)",
             "label_tooltip": "Redirect uri assigned by adobe for the specific client's application"
+          },
+          {
+            "type": "text_input",
+            "key": "authorization_default_error_message",
+            "label": "Authorization default error message",
+            "initial_value": "Your package doesn’t include this channel, pleas contact your TV provider"
           }
         ]
       },

@@ -45,19 +45,32 @@ class AdobeComponent extends Component {
   }
 
   componentDidMount() {
-    const { screenData = {}, navigator } = this.props;
-    this.setState({ loading: true });
+    const {
+      screenData = {},
+      navigator,
+      payload = {},
+      callback
+    } = this.props;
+
+    const requiresAuth = R.pathOr(false, ['extensions', 'requires_authentication'], payload);
+    if (!R.isEmpty(payload) && !requiresAuth) {
+      return callback({ success: true, payload });
+    }
+
     hideMenu(navigator);
     this.initAdobeAccessEnabler(screenData);
     this.startFlow();
   }
 
   componentWillUnmount() {
-    this.subscription.remove();
+    if (this.subscription) {
+      this.subscription.remove();
+    }
     this.props.navigator.showNavBar();
   }
 
   initAdobeAccessEnabler = ({ general: data }) => {
+    this.setState({ loading: true });
     // Initialize AccessEnabler
     this.accessEnabler = adobeAccessEnabler;
     this.accessEnabler.setupAccessEnabler(data);
@@ -86,11 +99,6 @@ class AdobeComponent extends Component {
     }
   };
 
-  tryToSkipPlayerHookFlow = (payload, callback) => {
-    const requiresAuth = R.pathOr(false, ['extensions', 'requires_authentication'], payload);
-    if (!requiresAuth) return callback({ success: true, payload });
-  };
-
   logoutFlow = () => {
     const logoutText = R.pathOr('', ['customText', 'logoutDialogMessageText'], this.pluginData);
     const { navigator } = this.props;
@@ -107,11 +115,7 @@ class AdobeComponent extends Component {
   };
 
   loginFlow = () => {
-    const { payload = {}, navigator, callback } = this.props;
-    if (!R.isEmpty(payload)) {
-      this.tryToSkipPlayerHookFlow(payload, callback);
-    }
-
+    const { payload = {}, navigator } = this.props;
     const { title = 'N/A', id = 'N/A' } = payload;
 
     const additionalParams = {
@@ -126,19 +130,35 @@ class AdobeComponent extends Component {
 
   handleResponseFromLogin = (response) => {
     try {
-      this.setState({ loading: true });
+      const hasToken = R.propOr(false, 'token');
+      const hasError = R.propOr(false, 'errorMessage');
 
-      if (response && response.token) {
-        this.setState({ loading: false });
-        this.successHook();
-      } else {
-        this.setState({ loading: false });
-        this.closeHook();
-      }
+      if (hasToken(response)) return this.successHook();
+      if (hasError(response)) return this.handleErrorLoginResponse(response.errorMessage);
+
+      return this.closeHook();
     } catch (err) {
       console.log(err);
     }
   };
+
+  handleErrorLoginResponse = async (errorMessage) => {
+    const { payload = {} } = this.props;
+    const isToken = await isTokenInStorage('idToken');
+    const isPlayerHook = !R.isEmpty(payload);
+
+    if (!isPlayerHook && isToken) {
+      return this.closeHook();
+    }
+    Alert.alert(
+      '',
+      errorMessage,
+      [
+        { text: 'OK', onPress: () => this.closeHook() },
+      ],
+      { cancelable: false }
+    );
+  }
 
   logOut = (navigator) => {
     try {
