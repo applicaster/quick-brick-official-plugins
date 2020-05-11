@@ -21,7 +21,7 @@
   "whitelisted_account_ids": [],
   "preload": true,
   "dependency_version": "0.1.0",
-  "manifest_version": "0.1.0",
+  "manifest_version": "0.1.1",
   "min_zapp_sdk": "12.0.0",
   "general": {
     "fields": [
