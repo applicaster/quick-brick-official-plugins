@@ -12,6 +12,7 @@ import { connectToStore } from '@applicaster/zapp-react-native-redux';
 import ProvidersList from './Components/ProvidersList';
 import NavbarComponent from './Components/NavbarComponent';
 import { getCustomPluginData, PluginContext } from './Config/PluginData';
+import session from './Config/Session';
 import {
   isTriggerOnAppLaunch,
   isHook,
@@ -56,17 +57,29 @@ class AdobeComponent extends Component {
     if (!R.isEmpty(payload) && !requiresAuth) {
       return callback({ success: true, payload });
     }
-
-    hideMenu(navigator);
-    this.initAdobeAccessEnabler(screenData);
-    this.startFlow();
+    this.initPlugin(navigator, screenData);
   }
 
   componentWillUnmount() {
+    session.isStarted = false;
     if (this.subscription) {
       this.subscription.remove();
     }
     this.props.navigator.showNavBar();
+  }
+
+  initPlugin = async (navigator, screenData) => {
+    const isToken = await isTokenInStorage('idToken');
+
+    // Core initiates plugin 2 times - that breaks the flow in case of logout
+    if (!session.isStarted) {
+      if (!isHook(navigator) && isToken) { // if logout flow is invoked for the first time
+        session.isStarted = true; // add flag to avoid second mounting
+      }
+      hideMenu(navigator); // and start normal flow
+      this.initAdobeAccessEnabler(screenData);
+      return this.startFlow();
+    }
   }
 
   initAdobeAccessEnabler = ({ general: data }) => {
