@@ -1,28 +1,30 @@
-const { resolve } = require('path');
-const R = require('ramda');
-const fs = require('fs');
+const { resolve } = require("path");
+const R = require("ramda");
+const fs = require("fs");
 
-const packages = fs.readdirSync('./plugins');
+const packages = fs.readdirSync("./plugins");
 
-const buildExtraNodeModules = (extraNodeModules, packageName) => R.assoc(
-  '@applicaster/${packageName}',
-  resolve(__dirname, './plugins/', packageName),
-  extraNodeModules
-);
+const buildExtraNodeModules = (extraNodeModules, packageName) =>
+  R.assoc(
+    `@applicaster/${packageName}`,
+    resolve(__dirname, "./plugins/", packageName),
+    extraNodeModules
+  );
 
-const resolveLocalPackages = (packageName) => resolve(__dirname, './plugins/${packageName}');
+const resolveLocalPackages = (packageName) =>
+  resolve(__dirname, `./plugins/${packageName}`);
 
 const config = {
   resolver: {
     extraNodeModules: {
-      'react-native': resolve(__dirname, './node_modules/react-native'),
-      ...R.reduce(buildExtraNodeModules, {}, packages)
-    }
+      "react-native": resolve(__dirname, "./node_modules/react-native"),
+      ...R.reduce(buildExtraNodeModules, {}, packages),
+    },
   },
   watchFolders: R.compose(
     R.append(resolve(__dirname)),
     R.map(resolveLocalPackages)
-  )(packages)
+  )(packages),
 };
 
 module.exports = config;
