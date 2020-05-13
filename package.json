@@ -14,7 +14,8 @@
     "zapplicaster:reload": "node_modules/.bin/zapplicaster-cli reload_config -d development-app",
     "clean:node": "rm -rf node_modules **/node_modules yarn.lock && yarn",
     "start": "./node_modules/.bin/react-native start --projectRoot ./development-app",
-    "npm:publish": "yarn workspace @applicaster/<plugin_name> publish"
+    "run:ios": "node_modules/.bin/zapplicaster-cli run ios & yarn start",
+    "publish:plugin": "node_modules/.bin/zapplicaster-cli publish_plugin --dry-run"
   },
   "keywords": [],
   "author": "Alex Khomich",

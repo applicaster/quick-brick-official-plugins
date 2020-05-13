@@ -19,5 +19,11 @@
   },
   "devDependencies": {
     "@types/node": "^14.0.1"
+  },
+  "applicaster": {
+    "supportedPlatforms": [
+      "ios"
+    ],
+    "zappOwnerAccountId": "5e12fe6948ca8800083c4116"
   }
 }
