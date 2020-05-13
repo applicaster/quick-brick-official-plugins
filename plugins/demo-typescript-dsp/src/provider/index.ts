@@ -3,7 +3,7 @@ import { test } from "./test-response";
 import { handler } from "./handler";
 
 const provider = {
-  name: "test-ts-dsp",
+  name: "demo-ts-dsp",
   manifest,
   test,
   handler,

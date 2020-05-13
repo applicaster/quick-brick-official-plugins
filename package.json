@@ -40,7 +40,7 @@
   },
   "applicaster": {
     "moduleMap": {
-      "@applicaster/zapp-pipes-provider-demo-dsp": "../plugins/demo-typescript-dsp/src"
+      "@applicaster/zapp-pipes-provider-demo-typescript-dsp": "../plugins/demo-typescript-dsp/src"
     }
   }
 }
