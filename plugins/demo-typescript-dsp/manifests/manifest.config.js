@@ -31,13 +31,27 @@ const baseManifest = {
   configuration_json: null,
 };
 
+const minZappSdk = {
+  ios: "20.0.0",
+  android: "20.1.0",
+};
+
 function createManifest({ version, platform }) {
-  return {
+  const manifest = {
     ...baseManifest,
     platform,
     manifest_version: version,
     dependency_version: version,
   };
+
+  manifest.min_zapp_sdk = minZappSdk[platform];
+
+  if (platform === "android") {
+    manifest.api = {
+      class: "",
+      proguard_rules: [],
+    };
+  }
 }
 
 module.exports = createManifest;
