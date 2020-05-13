@@ -1,0 +1,23 @@
+{
+  "name": "@applicaster/zapp-pipes-provider-demo-typescript-dsp",
+  "version": "1.0.0",
+  "description": "This package contains the code for a demo Quick Brick data source provider plugin using typescript",
+  "main": "./lib/index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc",
+    "prepare": "yarn build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@applicaster/zapp-pipes-dev-kit": "^1.4.1",
+    "@types/node": "^14.0.1",
+    "axios": "^0.19.2",
+    "ramda": "^0.27.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.0.1"
+  }
+}
