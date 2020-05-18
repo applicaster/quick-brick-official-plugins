@@ -15,7 +15,6 @@ import com.applicaster.adobe.login.pluginconfig.PluginRepository;
 import com.applicaster.adobe.login.util.LocalStorageHelper;
 import com.applicaster.adobe.login.webview.LoginProviderActivity;
 import com.applicaster.adobe.login.webview.LogoutProvider;
-import com.applicaster.app.CustomApplication;
 import com.applicaster.util.AppContext;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;

@@ -73,22 +73,17 @@ android {
     }
 }
 
-
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
 
 dependencies {
-    // Applicaster SDK
-    def applicasterSDKPath = 'com.applicaster:applicaster-android-sdk-core:5.1.0'
-
-    //Check if an open SDK is defined - if not use the closed one.
-    def devSDK = findProject(':applicaster-android-sdk')
-    if (devSDK != null) {
-        implementation project(':applicaster-android-sdk') {
-            exclude group: 'com.applicaster', module: 'react-native'
-        }
-    } else {
-        implementation(applicasterSDKPath) {
-            exclude group: 'com.applicaster', module: 'react-native'
-        }
+    //Applicaster-sdk-core doesn't contain appcompat libs so implement it here
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation "com.facebook.react:react-native:${safeExtGet('reactNativeVersion', '+')}"
+    // Applicaster SDK Core
+    implementation('com.applicaster:applicaster-android-sdk-core:5.1.0') {
+        exclude group: 'com.applicaster', module: 'react-native'
     }
     api 'com.adobe:adobepass:3.2.1'
 }
