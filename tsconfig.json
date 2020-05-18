@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "typeRoots": [
+      "node_modules/@types",
+      "node_modules/@applicaster/applicaster-types"
+    ],
+    "baseUrl": "./plugins/",
+    "paths": {
+      "@applicaster/zapp-pipes-provider-demo-typescript-dsp": [
+        "demo-typescript-dsp/src"
+      ]
+    }
+  },
+  "references": [
+    { "path": "./development-app" },
+    { "path": "./plugins/demo-typescript-dsp" }
+  ]
+}

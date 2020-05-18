@@ -4,3 +4,7 @@ development-app
 
 .idea/
 ../.idea/
+
+# typescript build files
+lib
+dist
