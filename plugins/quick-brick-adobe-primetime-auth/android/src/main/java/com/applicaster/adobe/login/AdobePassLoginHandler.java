@@ -16,6 +16,7 @@ import com.applicaster.adobe.login.util.LocalStorageHelper;
 import com.applicaster.adobe.login.webview.LoginProviderActivity;
 import com.applicaster.adobe.login.webview.LogoutProvider;
 import com.applicaster.app.CustomApplication;
+import com.applicaster.util.AppContext;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.WritableArray;
@@ -71,7 +72,7 @@ class AdobePassLoginHandler {
             // get a reference to the AccessEnabler instance
             // AccessEnabler can set softwareStatement and redirectUrl
             // if values for softwareStatement or redirect url are set in strings.xml, use null
-            accessEnabler = AccessEnabler.Factory.getInstance(CustomApplication.getAppContext(),
+            accessEnabler = AccessEnabler.Factory.getInstance(AppContext.get(),
                     pluginRepository.getPluginConfig().getBaseUrl(),
                     pluginRepository.getPluginConfig().getSoftwareStatement(),
                     pluginRepository.getPluginConfig().getRedirectUri());

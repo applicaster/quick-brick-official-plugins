@@ -77,14 +77,18 @@ android {
 
 dependencies {
     // Applicaster SDK
-    def applicasterSDKPath = 'com.applicaster:applicaster-android-sdk:5.0.1'
+    def applicasterSDKPath = 'com.applicaster:applicaster-android-sdk-core:5.1.0'
 
     //Check if an open SDK is defined - if not use the closed one.
     def devSDK = findProject(':applicaster-android-sdk')
     if (devSDK != null) {
-        implementation project(':applicaster-android-sdk')
+        implementation project(':applicaster-android-sdk') {
+            exclude group: 'com.applicaster', module: 'react-native'
+        }
     } else {
-        implementation(applicasterSDKPath)
+        implementation(applicasterSDKPath) {
+            exclude group: 'com.applicaster', module: 'react-native'
+        }
     }
     api 'com.adobe:adobepass:3.2.1'
 }
