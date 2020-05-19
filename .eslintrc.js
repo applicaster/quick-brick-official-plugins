@@ -9,8 +9,7 @@ module.exports = {
     "switch-default": false,
     "react/jsx-filename-extension": "off",
     "react/prop-types": "off",
-    "comma-dangle": "off",
-    quotes: "double",
+    "comma-dangle": "off"
   },
   globals: {
     fetch: false,
