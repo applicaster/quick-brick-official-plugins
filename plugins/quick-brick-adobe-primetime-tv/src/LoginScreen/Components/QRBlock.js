@@ -9,7 +9,7 @@ import QRCode from './QRCode';
 
 function QRBlock({ loading }) {
   const {
-    resourceUrl,
+    registrationUrl,
     qrCodeHintStyle,
     customText: {
       qrCodeHint
@@ -22,16 +22,16 @@ function QRBlock({ loading }) {
         loading
           ? <ActivityIndicator size="large" color="#D8D8D8" />
           : (
-            <View style={{ alignItems: 'center' }}>
-              <QRCode url={resourceUrl} />
+            <>
+              <QRCode url={registrationUrl} />
               <Text
-                style={[qrCodeHintStyle, { marginTop: '3.5%' }]}
+                style={[qrCodeHintStyle, { marginTop: 22 }]}
                 numberOfLines={2}
                 ellipsizeMode="tail"
               >
                 {qrCodeHint}
               </Text>
-            </View>
+            </>
           )
       }
     </View>
@@ -46,7 +46,7 @@ const styles = {
     minHeight: 340,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '6.3%',
-    marginRight: '5.5%'
+    marginTop: 46,
+    marginRight: 40
   }
 };
