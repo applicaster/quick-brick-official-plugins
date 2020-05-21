@@ -46,6 +46,27 @@ class API {
     const response = await HTTP.post(url, { Authorization: authHeader });
     return response.json();
   }
+
+  static async logout(deviceId, credentials) {
+    const flowType = 'logout';
+    const {
+      baseUrl,
+      requestorId,
+      privateKey,
+      publicKey
+    } = credentials;
+
+    const authHeader = getAdobeAuthHeader(
+      'GET',
+      requestorId,
+      '/logout',
+      publicKey,
+      privateKey
+    );
+
+    const url = createUrlAuthService(flowType, deviceId, baseUrl, requestorId);
+    return HTTP.delete(url, { Authorization: authHeader });
+  }
 }
 
 export default API;
