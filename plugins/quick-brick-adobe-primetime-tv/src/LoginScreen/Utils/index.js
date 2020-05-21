@@ -1,7 +1,9 @@
 import * as R from 'ramda';
 import { localStorage as storage } from '@applicaster/zapp-react-native-bridge/ZappStorage/LocalStorage';
+import { sessionStorage } from '@applicaster/zapp-react-native-bridge/ZappStorage/SessionStorage';
 import { parseJsonIfNeeded } from '@applicaster/zapp-react-native-utils/functionUtils';
 import { fontsize, fontcolor } from '../Config/DefaultStyles';
+import session from '../Config/Session';
 
 
 function getPluginData(screenData) {
@@ -21,6 +23,10 @@ async function setToLocalStorage(key, value, namespace) {
 
 async function getFromLocalStorage(key, namespace) {
   return storage.getItem(key, namespace);
+}
+
+async function getFromSessionStorage(key, namespace) {
+  return sessionStorage.getItem(key, namespace);
 }
 
 async function removeFromLocalStorage(key, namespace) {
@@ -69,7 +75,7 @@ const validateFontsize = (key, pluginData) => {
   const keyname = R.replace('_fontsize', '', key);
 
   const num = Number(value);
-  pluginData[key] = Number.isFinite(num) ? num : fontsize[keyname];
+  pluginData[key] = Number.isFinite(num) && num > 0 ? num : fontsize[keyname];
 };
 
 const validateFontcolor = (key, pluginData) => {
@@ -97,13 +103,28 @@ const parseFontKey = (platform) => {
   return endpoints[platform];
 };
 
+const hideMenu = (navigator) => {
+  navigator.hideNavBar();
+  session.navBarHidden = true;
+};
+
+const showMenu = (navigator) => {
+  if (session.navBarHidden) {
+    navigator.showNavBar();
+    session.navBarHidden = false;
+  }
+};
+
 export {
   getPluginData,
   setToLocalStorage,
   getFromLocalStorage,
+  getFromSessionStorage,
   removeFromLocalStorage,
   isTokenInStorage,
   isHomeScreen,
   isPlayerHook,
-  parseFontKey
+  parseFontKey,
+  hideMenu,
+  showMenu
 };

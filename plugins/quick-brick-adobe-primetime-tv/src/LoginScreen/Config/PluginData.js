@@ -45,7 +45,7 @@ export function getCustomPluginData(screenData) {
     confirm_action_button_fontsize: confirmButtonFontSize,
     confirm_action_button_fontcolor: confirmButtonFontColor,
     [`confirm_action_button_font_${platformEndpoint}`]: confirmButtonFont,
-    activation_url: activationUrl = '',
+    activation_url_text: activationUrl = '',
     main_instructions_text: mainInstructions = '',
     go_to_url_text: goToUrl = '',
     code_instructions_text: codeInstructions = '',
@@ -55,85 +55,93 @@ export function getCustomPluginData(screenData) {
     close_action_button_text: closeLabel = '',
     confirmation_message_text: confirmationMessage = '',
     confirm_action_button_text: confirmLabel = '',
-    cancel_action_button_text: cancelLabel = ''
+    cancel_action_button_text: cancelLabel = '',
+    registration_url: registrationUrl = '',
+    additional_info: isAdditionalInfo = false,
+    confirm_action_button_background_color: confirmButtonBackground,
+    cancel_action_button_background_color: cancelButtonBackground,
+    activation_alert_background_color: errorScreenBackground,
+    close_action_button_background_color: closeButtonBackground,
+    retry_action_button_background_color: retryButtonBackground,
+    activation_screen_background_color: loginScreenBackground
   } = getPluginData(screenData);
 
   const mainInstructionsStyle = {
     color: mainInstructionsFontColor,
     fontSize: mainInstructionsFontSize,
-    font: mainInstructionsFont
+    fontFamily: mainInstructionsFont
   };
 
   const goToUrlStyle = {
     color: goToUrlFontColor,
     fontSize: goToUrlFontSize,
-    font: goToUrlFont
+    fontFamily: goToUrlFont
   };
 
   const activationUrlStyle = {
     color: activationUrlFontColor,
     fontSize: activationUrlFontSize,
-    font: activationUrlFont
+    fontFamily: activationUrlFont
   };
 
   const codeInstructionsStyle = {
     color: codeInstructionsFontColor,
     fontSize: codeInstructionsFontSize,
-    font: codeInstructionsFont
+    fontFamily: codeInstructionsFont
   };
 
   const activationCodeStyle = {
     color: activationCodeFontColor,
     fontSize: activationCodeFontSize,
-    font: activationCodeFont
+    fontFamily: activationCodeFont
   };
 
   const qrCodeHintStyle = {
     color: qrCodeHintFontColor,
     fontSize: qrCodeHintFontSize,
-    font: qrCodeHintFont
+    fontFamily: qrCodeHintFont
   };
 
   const additionalInfoStyle = {
     color: additionalInfoFontColor,
     fontSize: additionalInfoFontSize,
-    font: additionalInfoFont
+    fontFamily: additionalInfoFont
   };
 
   const retryButtonStyle = {
     color: retryButtonFontColor,
     fontSize: retryButtonFontSize,
-    font: retryButtonFont
+    fontFamily: retryButtonFont
   };
 
   const closeButtonStyle = {
     color: closeButtonFontColor,
     fontSize: closeButtonFontSize,
-    font: closeButtonFont
+    fontFamily: closeButtonFont
   };
 
   const errorDescriptionStyle = {
     color: errorDescriptionFontColor,
     fontSize: errorDescriptionFontSize,
-    font: errorDescriptionFont
+    fontFamily: errorDescriptionFont
   };
 
   const confirmationMessageStyle = {
     color: confirmationMessageFontColor,
     fontSize: confirmationMessageFontSize,
-    font: confirmationMessageFont
+    fontFamily: confirmationMessageFont
   };
 
   const confirmButtonStyle = {
     color: confirmButtonFontColor,
     fontSize: confirmButtonFontSize,
-    font: confirmButtonFont
+    fontFamily: confirmButtonFont
   };
 
   const cancelButtonStyle = {
     color: cancelButtonFontColor,
     fontSize: cancelButtonFontSize,
-    font: cancelButtonFont
+    fontFamily: cancelButtonFont
   };
 
   const customText = {
@@ -150,6 +158,15 @@ export function getCustomPluginData(screenData) {
     cancelLabel
   };
 
+  const background = {
+    confirmButtonBackground,
+    cancelButtonBackground,
+    errorScreenBackground,
+    closeButtonBackground,
+    retryButtonBackground,
+    loginScreenBackground
+  };
+
   return {
     mainInstructionsStyle,
     goToUrlStyle,
@@ -164,7 +181,10 @@ export function getCustomPluginData(screenData) {
     confirmationMessageStyle,
     confirmButtonStyle,
     cancelButtonStyle,
-    customText
+    customText,
+    registrationUrl,
+    isAdditionalInfo,
+    background
   };
 }
 
