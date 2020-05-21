@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
-import { sessionStorage } from '@applicaster/zapp-react-native-bridge/ZappStorage/SessionStorage';
 import { connectToStore } from '@applicaster/zapp-react-native-redux';
 import { getCustomPluginData, PluginContext } from './LoginScreen/Config/PluginData';
-import { isHomeScreen, isTokenInStorage, isPlayerHook } from './LoginScreen/Utils';
+import { checkDeviceStatus } from './LoginPluginInterface';
 import session from './LoginScreen/Config/Session';
-import SCREENS from './LoginScreen/Config/Screens';
 import LoadingScreen from './LoginScreen/Screens/LoadingScreen';
 import ErrorScreen from './LoginScreen/Screens/ErrorScreen';
 import SignInScreen from './LoginScreen/Screens/SignInScreen';
 import LogoutScreen from './LoginScreen/Screens/LogoutScreen';
+import {
+  isHomeScreen,
+  isTokenInStorage,
+  getFromSessionStorage,
+  isPlayerHook,
+  hideMenu
+} from './LoginScreen/Utils';
 
 
 const storeConnector = connectToStore((state) => {
   const values = Object.values(state.rivers);
-  const screenData = values.find(({ type }) => type === 'quick-brick-adobe-primetime-tv');
+  const screenData = values.find(({ type }) => type === 'adobe-primetime-tv-qb');
   const homeScreen = values.find(({ home }) => home === true);
   return { screenData, homeScreen };
 });
@@ -26,27 +31,37 @@ function AdobeLoginComponent(props) {
     screenData,
     payload,
     navigator,
-    homeScreen,
-    parentFocus,
-    focused
+    homeScreen
   } = props;
 
-  const [screen, setScreen] = useState(SCREENS.LOADING);
+  const {
+    general: {
+      base_url: baseUrl = '',
+      resource_id: resourceId = '',
+      requestor_id: requestorId = '',
+      private_key: privateKey = '',
+      public_key: publicKey = ''
+    } = {}
+  } = screenData || {};
+
+  const credentials = {
+    baseUrl,
+    resourceId,
+    requestorId,
+    privateKey,
+    publicKey
+  };
+
+  const [screen, setScreen] = useState('LOADING');
+  const [error, setError] = useState(null);
   const pluginData = getCustomPluginData(screenData);
 
   session.isHomeScreen = isHomeScreen(navigator);
 
   useEffect(() => {
-    hideMenu();
+    hideMenu(navigator);
     start();
   }, []);
-
-  const hideMenu = () => {
-    if (navigator.isNavBarVisible) {
-      navigator.hideNavBar();
-      session.navBarHidden = true;
-    }
-  };
 
   const goToScreen = (targetScreen) => {
     setScreen(targetScreen);
@@ -66,36 +81,40 @@ function AdobeLoginComponent(props) {
     });
   };
 
-  const tryToSkipPlayerHookFlow = () => {
-    const requiresAuth = R.pathOr(false, ['extensions', 'requires_authentication'], payload);
-    return (!requiresAuth) ? successLoginFlow() : goToScreen(SCREENS.LOGIN);
-  };
-
   const isHook = () => {
     // need to check if it's a hook.
     // If it was ui_component && token in localstorage => logout screen;
     return !!R.propOr(false, 'hookPlugin')(navigator.routeData());
   };
 
+  const errorCallback = (err) => {
+    setError(err);
+    goToScreen('ERROR');
+  };
+
   const start = async () => {
     try {
       const isToken = await isTokenInStorage('idToken');
-      const deviceId = await sessionStorage.getItem('uuid');
 
-      if (isToken) {
-        return isHook() ? successLoginFlow() : goToScreen('LOGOUT');
-      }
+      const requiresAuth = R.pathOr(false, ['extensions', 'requires_authentication'], payload);
+      if (isPlayerHook(payload) && !requiresAuth) return successLoginFlow();
+      if (isToken && !isHook()) return goToScreen('LOGOUT');
 
-      return startLoginFlow();
+      return checkAuth();
     } catch (err) {
-      startLoginFlow();
+      return checkAuth();
     }
   };
 
-  const startLoginFlow = () => {
-    if (isPlayerHook(payload)) return tryToSkipPlayerHookFlow();
-
-    return goToScreen(SCREENS.LOGIN);
+  const checkAuth = async () => {
+    try {
+      const deviceId = await getFromSessionStorage('uuid');
+      const userId = await checkDeviceStatus(deviceId, credentials);
+      if (!userId) return goToScreen('LOGIN');
+      return callback({ success: true, payload });
+    } catch (err) {
+      return goToScreen('ERROR');
+    }
   };
 
   const remoteHandler = async (component, event) => {
@@ -120,7 +139,8 @@ function AdobeLoginComponent(props) {
       <SignInScreen
         navigator={navigator}
         closeHook={callback}
-        screenData={screenData}
+        errorCallback={errorCallback}
+        credentials={credentials}
         payload={payload}
         remoteHandler={remoteHandler}
       />
@@ -132,10 +152,9 @@ function AdobeLoginComponent(props) {
       <LogoutScreen
         homeScreen={homeScreen}
         navigator={navigator}
-        screenData={screenData}
+        credentials={credentials}
+        errorCallback={errorCallback}
         remoteHandler={remoteHandler}
-        parentFocus
-        focused
       />
     </PluginContext.Provider>
   );
@@ -143,22 +162,21 @@ function AdobeLoginComponent(props) {
   const renderErrorScreen = () => (
     <PluginContext.Provider value={pluginData}>
       <ErrorScreen
-        homeScreen={homeScreen}
+        error={error}
         navigator={navigator}
-        screenData={screenData}
         remoteHandler={remoteHandler}
-        parentFocus
-        focused
+        closeHook={callback}
+        goToScreen={goToScreen}
       />
     </PluginContext.Provider>
   );
 
   const renderScreen = (targetScreen) => {
     const screens = {
-      [SCREENS.LOGIN]: renderLoginScreen,
-      [SCREENS.LOGOUT]: renderLogoutScreen,
-      [SCREENS.LOADING]: renderLoadingScreen,
-      [SCREENS.ERROR]: renderErrorScreen
+      LOGIN: renderLoginScreen,
+      LOGOUT: renderLogoutScreen,
+      LOADING: renderLoadingScreen,
+      ERROR: renderErrorScreen
     };
 
     return screens[targetScreen]();
