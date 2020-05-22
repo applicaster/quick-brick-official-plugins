@@ -61,6 +61,7 @@ function SignInScreen(props) {
       setPincode(code);
     } catch (err) {
       console.log(err);
+      err.screenName = 'LOGIN';
       return errorCallback(err);
     }
   };
@@ -71,10 +72,11 @@ function SignInScreen(props) {
       if (userId) {
         await setToLocalStorage('idToken', userId);
         clearInterval(heartbeat);
-        return closeHook({ success: true, payload });
+        return closeHook ? closeHook({ success: true, payload }) : navigator.goBack();
       }
     } catch (err) {
       console.log(err);
+      err.screenName = 'LOGIN';
       return errorCallback(err);
     }
   };

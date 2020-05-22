@@ -16,4 +16,11 @@ export default class HTTP {
       method: 'GET'
     });
   }
+
+  static delete(url, headers) {
+    return fetch(url, {
+      headers: R.mergeDeepLeft(headers, defaultHeaders),
+      method: 'DELETE'
+    });
+  }
 }

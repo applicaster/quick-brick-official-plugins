@@ -113,6 +113,7 @@ function AdobeLoginComponent(props) {
       if (!userId) return goToScreen('LOGIN');
       return callback({ success: true, payload });
     } catch (err) {
+      setError(err);
       return goToScreen('ERROR');
     }
   };
@@ -150,7 +151,6 @@ function AdobeLoginComponent(props) {
   const renderLogoutScreen = () => (
     <PluginContext.Provider value={pluginData}>
       <LogoutScreen
-        homeScreen={homeScreen}
         navigator={navigator}
         credentials={credentials}
         errorCallback={errorCallback}
