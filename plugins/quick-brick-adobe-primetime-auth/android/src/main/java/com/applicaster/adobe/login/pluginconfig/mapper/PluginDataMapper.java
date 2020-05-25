@@ -5,7 +5,7 @@ import com.facebook.react.bridge.ReadableMap;
 
 public class PluginDataMapper {
     public PluginConfig mapParamsToConfig(ReadableMap params) {
-        String baseUrl = getOrEmpty(params, "base_url");
+        String baseUrl = getOrEmpty(params, "base_url_android");
         String softwareStatement =  getOrEmpty(params, "software_statement");
         String requestorID = getOrEmpty(params, "requestor_id");
         String resourceID =  getOrEmpty(params, "resource_id");

@@ -20,7 +20,7 @@
   "dependency_name": "@applicaster/quick-brick-adobe-primetime-auth",
   "whitelisted_account_ids": [],
   "preload": true,
-  "dependency_version": "1.0.1",
+  "dependency_version": "1.1.0",
   "manifest_version": "1.0.0",
   "min_zapp_sdk": "20.0.0",
   "general": {
@@ -32,16 +32,17 @@
         "fields": [
           {
             "type": "text_input",
-            "key": "base_url",
-            "label": "Base URL",
+            "key": "base_url_ios",
+            "label": "Base URL iOS",
             "label_tooltip": "Determines which Adobe’s backend environment the plugin should use.",
             "placeholder": "Enter your base url here"
           },
           {
             "type": "text_input",
-            "key": "software_statement",
-            "label": "Software Statement",
-            "label_tooltip": "JWT token issued by Adobe for the specific client’s application."
+            "key": "base_url_android",
+            "label": "Base URL Android",
+            "label_tooltip": "Determines which Adobe’s backend environment the plugin should use.",
+            "placeholder": "Enter your base url here"
           },
           {
             "type": "text_input",
