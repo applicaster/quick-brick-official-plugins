@@ -1,0 +1,65 @@
+{
+  "_from": "@applicaster/quick-brick-google-ima@0.2.0",
+  "_id": "@applicaster/quick-brick-google-ima@0.2.0",
+  "_inBundle": false,
+  "_integrity": "sha512-2pt6MlkGEcKMtFRm3VvXakeoqQIp3Jiagxc1v1fw8IJWVNJiHPPsCUVNgXboV1ruQdePvM55sQ34hd1XUx2/TA==",
+  "_location": "/@applicaster/quick-brick-google-ima",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "@applicaster/quick-brick-google-ima@0.2.0",
+    "name": "@applicaster/quick-brick-google-ima",
+    "escapedName": "@applicaster%2fquick-brick-google-ima",
+    "scope": "@applicaster",
+    "rawSpec": "0.2.0",
+    "saveSpec": null,
+    "fetchSpec": "0.2.0"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@applicaster/quick-brick-google-ima/-/quick-brick-google-ima-0.2.0.tgz",
+  "_shasum": "a5227bf851f5399698000fef0fd1a0da3fb44497",
+  "_spec": "@applicaster/quick-brick-google-ima@0.2.0",
+  "_where": "/Volumes/HDD/PROJECTS/zapp/QBTest/zapp-platform-android",
+  "applicaster": {
+    "supportedPlatforms": [
+      "android_tv_for_quickbrick",
+      "amazon_fire_tv_for_quickbrick",
+      "android_for_quickbrick",
+      "android"
+    ],
+    "zappOwnerAccountId": "5e12fac7666333000ec0f8ab"
+  },
+  "author": "",
+  "bundleDependencies": false,
+  "dependencies": {
+    "ramda": "^0.27.0"
+  },
+  "deprecated": false,
+  "description": "",
+  "devDependencies": {
+    "react": "16.8.3",
+    "react-native": "0.59.10",
+    "react-native-web": "0.11.5"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "main": "src/index.js",
+  "name": "@applicaster/quick-brick-google-ima",
+  "peerDependencies": {
+    "@applicaster/zapp-react-native-bridge": "2.3.1-rc.7",
+    "@applicaster/zapp-react-native-redux": "2.3.1-rc.8",
+    "@applicaster/zapp-react-native-ui-components": "2.3.1-rc.8",
+    "@applicaster/zapp-react-native-utils": "2.3.2-rc.7",
+    "react": "16.8.3",
+    "react-native": "0.59.10",
+    "react-native-web": "0.11.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.2.0"
+}
