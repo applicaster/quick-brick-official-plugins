@@ -1,5 +1,6 @@
-import React, { useContext } from 'react';
-import { Text, View, ActivityIndicator } from 'react-native';
+import React, { useContext, useRef } from 'react';
+import { Text, View, ActivityIndicator, Platform } from 'react-native';
+import { useInitialFocus } from '@applicaster/zapp-react-native-utils/focusManager';
 import Button from './Button';
 import ASSETS from '../Config/Assets';
 import { PluginContext } from '../Config/PluginData';
@@ -23,6 +24,13 @@ export default function LogoutComponent(props) {
     }
   } = useContext(PluginContext);
 
+  const confirmButton = useRef(null);
+  const cancelButton = useRef(null);
+
+  if (Platform.OS === 'android') {
+    useInitialFocus(true, confirmButton);
+  }
+
   return (
     <View style={styles.container}>
       <Text
@@ -41,6 +49,8 @@ export default function LogoutComponent(props) {
                 <Button
                   label={customText.confirmLabel}
                   onPress={handleLogout}
+                  buttonRef={confirmButton}
+                  nextFocusDown={cancelButton}
                   textStyle={confirmButtonStyle}
                   backgroundColor={confirmButtonBackground}
                   backgroundButtonUri={ASSETS.retryButtonBackground}
@@ -49,6 +59,8 @@ export default function LogoutComponent(props) {
                 <Button
                   label={customText.cancelLabel}
                   onPress={handleCancel}
+                  buttonRef={cancelButton}
+                  nextFocusUp={confirmButton}
                   textStyle={cancelButtonStyle}
                   backgroundColor={cancelButtonBackground}
                   backgroundButtonUri={ASSETS.closeButtonBackground}

@@ -1,5 +1,11 @@
-import React, { useContext, useEffect } from 'react';
-import { View, Text, Dimensions } from 'react-native';
+import React, { useContext, useEffect, useRef } from 'react';
+import {
+  View,
+  Text,
+  Dimensions,
+  Platform
+} from 'react-native';
+import { useInitialFocus } from '@applicaster/zapp-react-native-utils/focusManager';
 import { PluginContext } from '../Config/PluginData';
 import Layout from '../Components/Layout';
 import Button from '../Components/Button';
@@ -55,6 +61,13 @@ function ErrorScreen(props) {
       : startAuthFlow();
   };
 
+  const retryButton = useRef(null);
+  const closeButton = useRef(null);
+
+  if (Platform.OS === 'android') {
+    useInitialFocus(true, retryButton);
+  }
+
   return (
     <Layout
       backgroundColor={errorScreenBackground}
@@ -71,6 +84,8 @@ function ErrorScreen(props) {
         <Button
           label={retryLabel}
           onPress={onTryAgain}
+          buttonRef={retryButton}
+          nextFocusDown={closeButton}
           textStyle={retryButtonStyle}
           backgroundColor={retryButtonBackground}
           backgroundButtonUri={ASSETS.retryButtonBackground}
@@ -79,6 +94,8 @@ function ErrorScreen(props) {
         <Button
           label={closeLabel}
           onPress={onClose}
+          buttonRef={closeButton}
+          nextFocusUp={retryButton}
           textStyle={closeButtonStyle}
           backgroundColor={closeButtonBackground}
           backgroundButtonUri={ASSETS.closeButtonBackground}

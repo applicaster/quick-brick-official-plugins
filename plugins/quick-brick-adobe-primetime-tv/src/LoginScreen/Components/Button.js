@@ -11,6 +11,9 @@ export default function Button(
     label = '',
     onPress,
     preferredFocus,
+    buttonRef,
+    nextFocusDown,
+    nextFocusUp,
     groupId,
     textStyle = {},
     backgroundColor = '',
@@ -21,7 +24,15 @@ export default function Button(
   const buttonStyle = backgroundButtonUri ? styles.input : { ...styles.input, backgroundColor };
 
   return (
-    <Focusable id={`tv-button-${label}`} onPress={onPress} groupId={groupId} preferredFocus={preferredFocus}>
+    <Focusable
+      id={`tv-button-${label}`}
+      onPress={onPress}
+      groupId={groupId}
+      preferredFocus={preferredFocus}
+      ref={buttonRef}
+      nextFocusDown={nextFocusDown}
+      nextFocusUp={nextFocusUp}
+    >
       {
         (focused) => {
           return (

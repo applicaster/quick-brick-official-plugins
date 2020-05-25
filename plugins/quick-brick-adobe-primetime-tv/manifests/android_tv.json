@@ -1,0 +1,678 @@
+{
+  "api": {
+    "require_startup_execution": false,
+    "modules": []
+  },
+  "react_native": true,
+  "dependency_repository_url": [],
+  "dependency_name": "@applicaster/quick-brick-adobe-primetime-tv",
+  "dependency_version": "0.0.2",
+  "platform": "android",
+  "author_name": "Olga Duk",
+  "author_email": "oduk@scand.com",
+  "manifest_version": "0.0.1",
+  "name": "Quickbrick Adobe Primetime Authentication TV",
+  "description": "Cable Operator Authentication using Adobe Pass Authentication",
+  "cover_image": "https://assets-secure.applicaster.com/zapp/plugins/gallery_previews/1568027636112/adobe_pass_authentification.png",
+  "type": "login",
+  "screen": true,
+  "identifier": "adobe-primetime-tv-qb",
+  "ui_builder_support": true,
+  "whitelisted_account_ids": [
+    "5a4516fa41442c000b0195d6",
+    "5c85455842b06d000836d041"
+  ],
+  "min_zapp_sdk": "1.0.0",
+  "deprecated_since_zapp_sdk": "",
+  "unsupported_since_zapp_sdk": "",
+  "preload": true,
+  "general": {
+    "fields": [
+      {
+        "type": "text_input",
+        "key": "base_url",
+        "label": "Base URL",
+        "label_tooltip": "Determines which Adobe’s backend environment the plugin should use.",
+        "initial_value": "sp.auth.adobe.com/adobe-services"
+      },
+      {
+        "type": "text_input",
+        "key": "resource_id",
+        "label": "Resource ID",
+        "label_tooltip": "The ID assigned for the client’s resource by Adobe."
+      },
+      {
+        "type": "text_input",
+        "key": "requestor_id",
+        "label": "Requestor ID",
+        "label_tooltip": "The ID assigned for the client by Adobe."
+      },
+      {
+        "type": "text_input",
+        "key": "private_key",
+        "label": "Private Key",
+        "label_tooltip": "Secret assigned by Adobe for the client’s application."
+      },
+      {
+        "type": "text_input",
+        "key": "public_key",
+        "label": "Public Key",
+        "label_tooltip": "Public key assigned by Adobe for the client’s application."
+      },
+      {
+        "type": "text_input",
+        "key": "registration_url",
+        "label": "Registration URL",
+        "label_tooltip": "URL to the client’s registration site."
+      },
+      {
+        "group": true,
+        "label": "Screen Design and Text",
+        "tooltip": "These fields affect the design of the main screen plugin.",
+        "folded": true,
+        "fields": [
+          {
+            "key": "main_instructions_text",
+            "type": "text_input",
+            "label": "Main Instructions Text",
+            "label_tooltip": "Text at the top of the screen. Briefly introduces purpose and instructions about the plugin to the user.",
+            "initial_value": "WELCOME, SIGN IN BY ACTIVATING YOUR DEVICE",
+            "placeholder": "WELCOME, SIGN IN BY ACTIVATING YOUR DEVICE"
+          },
+          {
+            "key": "main_instructions_font_tvos",
+            "type": "tvos_font_selector",
+            "label_tooltip": "Font for Main Instructions Text for TvOS.",
+            "initial_value": "Helvetica-Bold"
+          },
+          {
+            "key": "main_instructions_font_android",
+            "type": "android_font_selector",
+            "label_tooltip": "Font for Main Instructions Text for Android TV.",
+            "initial_value": "Roboto-Bold"
+          },
+          {
+            "key": "main_instructions_font_samsung",
+            "type": "samsung_tv_font_selector",
+            "label_tooltip": "Font for Main Instructions Text for Samsung TV.",
+            "initial_value": "Times New Roman"
+          },
+          {
+            "key": "main_instructions_fontsize",
+            "type": "number_input",
+            "label_tooltip": "Font Size for Main Instructions Text.",
+            "initial_value": "41"
+          },
+          {
+            "key": "main_instructions_fontcolor",
+            "type": "color_picker_rgba",
+            "label_tooltip": "Font Color for Main Instructions Text.",
+            "initial_value": "rgba(84, 90, 92, 1)"
+          },
+          {
+            "key": "go_to_url_text",
+            "type": "text_input",
+            "label": "Go To Text",
+            "label_tooltip": "Text indicating clear instructions on what to do with the URL on screen.",
+            "initial_value": "Go to:",
+            "placeholder": "Go to:"
+          },
+          {
+            "key": "go_to_url_font_tvos",
+            "type": "tvos_font_selector",
+            "label_tooltip": "Font for Go To Text for TvOS.",
+            "initial_value": "Helvetica"
+          },
+          {
+            "key": "go_to_url_font_android",
+            "type": "android_font_selector",
+            "label_tooltip": "Font for Go To Text for Android TV.",
+            "initial_value": "Roboto-Regular"
+          },
+          {
+            "key": "go_to_url_font_samsung",
+            "type": "samsung_tv_font_selector",
+            "label_tooltip": "Font for Go To Text for Samsung TV.",
+            "initial_value": "Times New Roman"
+          },
+          {
+            "key": "go_to_url_fontsize",
+            "type": "number_input",
+            "label_tooltip": "Font Size for Go To Text.",
+            "initial_value": "30"
+          },
+          {
+            "key": "go_to_url_fontcolor",
+            "type": "color_picker_rgba",
+            "label_tooltip": "Font Color for Go To Text.",
+            "initial_value": "rgba(84, 90, 92, 1)"
+          },
+          {
+            "key": "activation_url_text",
+            "type": "text_input",
+            "label": "Activation URL",
+            "label_tooltip": "URL referring to the web portal where the user l completes the activation flow.",
+            "initial_value": "www.mydomain.com/activate",
+            "placeholder": "www.mydomain.com/activate"
+          },
+          {
+            "key": "activation_url_font_tvos",
+            "type": "tvos_font_selector",
+            "label_tooltip": "Font for Registration URL Text for TvOS.",
+            "initial_value": "Helvetica-Bold"
+          },
+          {
+            "key": "activation_url_font_android",
+            "type": "android_font_selector",
+            "label_tooltip": "Font for Registration Url Text for Android TV.",
+            "initial_value": "Roboto-Bold"
+          },
+          {
+            "key": "activation_url_font_samsung",
+            "type": "samsung_tv_font_selector",
+            "label_tooltip": "Font for Registration URL Text for Samsung TV.",
+            "initial_value": "Times New Roman"
+          },
+          {
+            "key": "activation_url_fontsize",
+            "type": "number_input",
+            "label_tooltip": "Font Size for Registration URL.",
+            "initial_value": "30"
+          },
+          {
+            "key": "activation_url_fontcolor",
+            "type": "color_picker_rgba",
+            "label_tooltip": "Font Color for Registration URL.",
+            "initial_value": "rgba(84, 90, 92, 1)"
+          },
+          {
+            "key": "code_instructions_text",
+            "type": "text_input",
+            "label": "Code Instructions Text",
+            "label_tooltip": "Text indicating clear instructions on what to do with the activation code on screen.",
+            "initial_value": "Enter the activation code bellow:",
+            "placeholder": "Enter the activation code bellow:"
+          },
+          {
+            "key": "code_instructions_font_tvos",
+            "type": "tvos_font_selector",
+            "label_tooltip": "Font for Code Instructions Text for TvOS.",
+            "initial_value": "Helvetica"
+          },
+          {
+            "key": "code_instructions_font_android",
+            "type": "android_font_selector",
+            "label_tooltip": "Font for Code Instructions Text for Android TV.",
+            "initial_value": "Roboto-Regular"
+          },
+          {
+            "key": "code_instructions_font_samsung",
+            "type": "samsung_tv_font_selector",
+            "label_tooltip": "Font for Code Instructions Text for Samsung TV.",
+            "initial_value": "Times New Roman"
+          },
+          {
+            "key": "code_instructions_fontsize",
+            "type": "number_input",
+            "label_tooltip": "Font Size for Code Instructions Text.",
+            "initial_value": "30"
+          },
+          {
+            "key": "code_instructions_fontcolor",
+            "type": "color_picker_rgba",
+            "label_tooltip": "Font Color for Code Instructions Text.",
+            "initial_value": "rgba(84, 90, 92, 1)"
+          },
+          {
+            "key": "activation_code_font_tvos",
+            "type": "tvos_font_selector",
+            "label_tooltip": "Font for Activation Code for TvOS.",
+            "initial_value": "Helvetica-Bold"
+          },
+          {
+            "key": "activation_code_font_android",
+            "type": "android_font_selector",
+            "label_tooltip": "Font for Activation Code for Android TV.",
+            "initial_value": "Roboto-Bold"
+          },
+          {
+            "key": "activation_code_font_samsung",
+            "type": "samsung_tv_font_selector",
+            "label_tooltip": "Font for Activation Code for Samsung TV.",
+            "initial_value": "Times New Roman"
+          },
+          {
+            "key": "activation_code_fontsize",
+            "type": "number_input",
+            "label_tooltip": "Font Size for the automatically generated Activation Code.",
+            "initial_value": "105"
+          },
+          {
+            "key": "activation_code_fontcolor",
+            "type": "color_picker_rgba",
+            "label_tooltip": "Font Color for the automatically generated Activation Code.",
+            "initial_value": "rgba(84, 90, 92, 1)"
+          },
+          {
+            "key": "qr_code_hint_text",
+            "type": "text_input",
+            "label": "QR Code Hint Text",
+            "label_tooltip": "Brief instructions to advice the user about using the QR Code to access the Activation URL.",
+            "initial_value": "Or Scan the QR Code",
+            "placeholder": "Or Scan the QR Code"
+          },
+          {
+            "key": "qr_code_hint_font_tvos",
+            "type": "tvos_font_selector",
+            "label_tooltip": "Font for QR Code Hint Text for TvOS.",
+            "initial_value": "Helvetica"
+          },
+          {
+            "key": "qr_code_hint_font_android",
+            "type": "android_font_selector",
+            "label_tooltip": "Font for QR Code Hint Text for Android TV.",
+            "initial_value": "Roboto-Regular"
+          },
+          {
+            "key": "qr_code_hint_font_samsung",
+            "type": "samsung_tv_font_selector",
+            "label_tooltip": "Font for QR Code Hint Text for Samsung TV.",
+            "initial_value": "Times New Roman"
+          },
+          {
+            "key": "qr_code_hint_fontsize",
+            "type": "number_input",
+            "label_tooltip": "Font Size for QR Code Hint Text.",
+            "initial_value": "30"
+          },
+          {
+            "key": "qr_code_hint_fontcolor",
+            "type": "color_picker_rgba",
+            "label_tooltip": "Font Color for QR Code Hint Text.",
+            "initial_value": "rgba(84, 90, 92, 1)"
+          },
+          {
+            "key": "additional_info",
+            "type": "switch",
+            "label": "Additional Instructions",
+            "label_tooltip": "If this field is on, the plugin makes visible a text at the bottom of the screen for additional instructions.",
+            "initial_value": "true"
+          },
+          {
+            "key": "additional_info_text",
+            "type": "text_input",
+            "label": "Optional Instructions Text",
+            "label_tooltip": "Additional instructions commonly use for support or terms of use links.",
+            "initial_value": "If you need support, please visit http://www.mydomain.com/support",
+            "placeholder": "If you need support, please visit http://www.mydomain.com/support",
+            "conditional_fields": [
+              {
+                "condition_value": [
+                  true
+                ],
+                "key": "general/additional_info"
+              }
+            ]
+          },
+          {
+            "key": "additional_info_font_tvos",
+            "type": "tvos_font_selector",
+            "label_tooltip": "Font for Optional Instructions for TvOS.",
+            "initial_value": "Helvetica",
+            "conditional_fields": [
+              {
+                "condition_value": [
+                  true
+                ],
+                "key": "general/additional_info"
+              }
+            ]
+          },
+          {
+            "key": "additional_info_font_android",
+            "type": "android_font_selector",
+            "label_tooltip": "Font for Optional Instructions for Android TV.",
+            "initial_value": "Roboto-Regular",
+            "conditional_fields": [
+              {
+                "condition_value": [
+                  true
+                ],
+                "key": "general/additional_info"
+              }
+            ]
+          },
+          {
+            "key": "additional_info_font_samsung",
+            "type": "samsung_tv_font_selector",
+            "label_tooltip": "Font for Optional Instructions for Samsung TV.",
+            "initial_value": "Times New Roman",
+            "conditional_fields": [
+              {
+                "condition_value": [
+                  true
+                ],
+                "key": "general/additional_info"
+              }
+            ]
+          },
+          {
+            "key": "additional_info_fontsize",
+            "type": "number_input",
+            "label_tooltip": "Font Size for Optional Instructions.",
+            "initial_value": "30",
+            "conditional_fields": [
+              {
+                "condition_value": [
+                  true
+                ],
+                "key": "general/additional_info"
+              }
+            ]
+          },
+          {
+            "key": "additional_info_fontcolor",
+            "type": "color_picker_rgba",
+            "label_tooltip": "Font Color for Optional Instructions.",
+            "initial_value": "rgba(84, 90, 92, 1)",
+            "conditional_fields": [
+              {
+                "condition_value": [
+                  true
+                ],
+                "key": "general/additional_info"
+              }
+            ]
+          },
+          {
+            "key": "activation_screen_background_color",
+            "type": "color_picker_rgba",
+            "label": "Activation Screen Background Color",
+            "label_tooltip": "Background Color for the Activation Screen. Serves as fallback or primary if an image is not found in the plugin assets.",
+            "initial_value": "rgba(213, 213, 213, 1)"
+          }
+        ]
+      },
+      {
+        "group": true,
+        "label": "Alert Design and Text",
+        "tooltip": "These fields affect the design of plugin alert screen.",
+        "folded": true,
+        "fields": [
+          {
+            "key": "retry_action_button_text",
+            "type": "text_input",
+            "label": "Alert “Try Again” Action Button Text",
+            "label_tooltip": "Text for “Try Again” Action button on the error overlay screen.",
+            "initial_value": "Try Again",
+            "placeholder": "Try Again"
+          },
+          {
+            "key": "retry_action_button_font_tvos",
+            "type": "tvos_font_selector",
+            "label_tooltip": "Font for “Try Again” Action button Text for TvOS.",
+            "initial_value": "Helvetica"
+          },
+          {
+            "key": "retry_action_button_font_android",
+            "type": "android_font_selector",
+            "label_tooltip": "Font for “Try Again” Action button Text for Android TV.",
+            "initial_value": "Roboto-Regular"
+          },
+          {
+            "key": "retry_action_button_font_samsung",
+            "type": "samsung_tv_font_selector",
+            "label_tooltip": "Font for “Try Again” Action button Text for Samsung TV.",
+            "initial_value": "Times New Roman"
+          },
+          {
+            "key": "retry_action_button_fontsize",
+            "type": "number_input",
+            "label_tooltip": "Font Size for Alert “Try Again” Action Button Text.",
+            "initial_value": "41"
+          },
+          {
+            "key": "retry_action_button_fontcolor",
+            "type": "color_picker_rgba",
+            "label_tooltip": "Font Color for Alert “Try Again” Action Button Text.",
+            "initial_value": "rgba(84, 90, 92, 1)"
+          },
+          {
+            "key": "retry_action_button_background_color",
+            "type": "color_picker_rgba",
+            "label": "Alert “Try Again” Action Button Background Color",
+            "label_tooltip": "Background Color for the Alert “Try Again” Action Button. Will be used if no assets found.",
+            "initial_value": "rgba(39, 218, 134, 1)"
+          },
+          {
+            "key": "close_action_button_text",
+            "type": "text_input",
+            "label": "Alert “Close” Action Button Text",
+            "label_tooltip": "Text for “Close” Action button on the error overlay screen.",
+            "initial_value": "Close",
+            "placeholder": "Close"
+          },
+          {
+            "key": "close_action_button_font_tvos",
+            "type": "tvos_font_selector",
+            "label_tooltip": "Font for “Close” Action button Text for TvOS.",
+            "initial_value": "Helvetica"
+          },
+          {
+            "key": "close_action_button_font_android",
+            "type": "android_font_selector",
+            "label_tooltip": "Font for “Close” Action button Text for Android TV.",
+            "initial_value": "Roboto-Regular"
+          },
+          {
+            "key": "close_action_button_font_samsung",
+            "type": "samsung_tv_font_selector",
+            "label_tooltip": "Font for “Close” Action button Text for Samsung TV.",
+            "initial_value": "Times New Roman"
+          },
+          {
+            "key": "close_action_button_fontsize",
+            "type": "number_input",
+            "label_tooltip": "Font Size for Alert “Close” Action Button Text.",
+            "initial_value": "41"
+          },
+          {
+            "key": "close_action_button_fontcolor",
+            "type": "color_picker_rgba",
+            "label_tooltip": "Font Color for Alert “Close” Action Button Text.",
+            "initial_value": "rgba(84, 90, 92, 1)"
+          },
+          {
+            "key": "close_action_button_background_color",
+            "type": "color_picker_rgba",
+            "label": "Alert “Close” Action Button Background Color",
+            "label_tooltip": "Background Color for the Alert “Close” Action Button. Will be used if no assets found.",
+            "initial_value": "rgba(39, 218, 134, 1)"
+          },
+          {
+            "key": "activation_alert_background_color",
+            "type": "color_picker_rgba",
+            "label": "Activation Alert Background Color",
+            "label_tooltip": "Background Color for the Activation Alert Screen. The screen is shown when the service returns an error or notice.",
+            "initial_value": "rgba(74, 74, 74, 1)"
+          },
+          {
+            "key": "error_description_font_tvos",
+            "type": "tvos_font_selector",
+            "label_tooltip": "Font for Description Text for TvOS.",
+            "initial_value": "Helvetica"
+          },
+          {
+            "key": "error_description_font_android",
+            "type": "android_font_selector",
+            "label_tooltip": "Font for Description Text for Android TV.",
+            "initial_value": "Roboto-Regular"
+          },
+          {
+            "key": "error_description_font_samsung",
+            "type": "samsung_tv_font_selector",
+            "label_tooltip": "Font for Description Text for Samsung TV.",
+            "initial_value": "Times New Roman"
+          },
+          {
+            "key": "error_description_fontsize",
+            "type": "number_input",
+            "label_tooltip": "Font Size for Description Text.",
+            "initial_value": "36"
+          },
+          {
+            "key": "error_description_fontcolor",
+            "type": "color_picker_rgba",
+            "label_tooltip": "Font Color for Description Text.",
+            "initial_value": "rgba(84, 90, 92, 1)"
+          }
+        ]
+      },
+      {
+        "group": true,
+        "label": "Confirmation Screen Design and Text",
+        "tooltip": "These fields affect the design of plugin confirmation screen.",
+        "folded": true,
+        "fields": [
+          {
+            "key": "confirmation_message_text",
+            "type": "text_input",
+            "label": "Confirmation Message Text",
+            "label_tooltip": "Text for the Confirmation message.",
+            "initial_value": "Are you sure you want to logout?",
+            "placeholder": "Are you sure you want to logout?"
+          },
+          {
+            "key": "confirmation_message_font_tvos",
+            "type": "tvos_font_selector",
+            "label_tooltip": "Font for Confirmation Text for TvOS.",
+            "initial_value": "Helvetica"
+          },
+          {
+            "key": "confirmation_message_font_android",
+            "type": "android_font_selector",
+            "label_tooltip": "Font for Confirmation Text for Android TV.",
+            "initial_value": "Roboto-Regular"
+          },
+          {
+            "key": "confirmation_message_font_samsung",
+            "type": "samsung_tv_font_selector",
+            "label_tooltip": "Font for Confirmation Text for Samsung TV.",
+            "initial_value": "Times New Roman"
+          },
+          {
+            "key": "confirmation_message_fontsize",
+            "type": "number_input",
+            "label_tooltip": "Font Size for confirmation text.",
+            "initial_value": "41"
+          },
+          {
+            "key": "confirmation_message_fontcolor",
+            "type": "color_picker_rgba",
+            "label_tooltip": "Font Color for confirmation text.",
+            "initial_value": "rgba(255, 255, 255, 1)"
+          },
+          {
+            "key": "confirm_action_button_text",
+            "type": "text_input",
+            "label": "Confirm Action Button Text",
+            "label_tooltip": "Text for the Confirm Button.",
+            "initial_value": "Yes",
+            "placeholder": "Yes"
+          },
+          {
+            "key": "confirm_action_button_font_tvos",
+            "type": "tvos_font_selector",
+            "label_tooltip": "Font for the Confirm Button for TvOS.",
+            "initial_value": "Helvetica"
+          },
+          {
+            "key": "confirm_action_button_font_android",
+            "type": "android_font_selector",
+            "label_tooltip": "Font for the Confirm Button for Android TV.",
+            "initial_value": "Roboto-Regular"
+          },
+          {
+            "key": "confirm_action_button_font_samsung",
+            "type": "samsung_tv_font_selector",
+            "label_tooltip": "Font for the Confirm Button for Samsung TV.",
+            "initial_value": "Times New Roman"
+          },
+          {
+            "key": "confirm_action_button_fontsize",
+            "type": "number_input",
+            "label_tooltip": "Font Size for Confirm Action Button Text.",
+            "initial_value": "40"
+          },
+          {
+            "key": "confirm_action_button_fontcolor",
+            "type": "color_picker_rgba",
+            "label_tooltip": "Font Color for Confirm Action Button Text.",
+            "initial_value": "rgba(84, 90, 92, 1)"
+          },
+          {
+            "key": "confirm_action_button_background_color",
+            "type": "color_picker_rgba",
+            "label": "Background Color for the Confirm Action Button",
+            "label_tooltip": "Background Color for the Confirm Action Button. Will be used if no assets found.",
+            "initial_value": "rgba(39, 218, 134, 1)"
+          },
+          {
+            "key": "cancel_action_button_text",
+            "type": "text_input",
+            "label": "Cancel Action Button Text",
+            "label_tooltip": "Text for the Cancel Button.",
+            "initial_value": "Cancel",
+            "placeholder": "Cancel"
+          },
+          {
+            "key": "cancel_action_button_font_tvos",
+            "type": "tvos_font_selector",
+            "label_tooltip": "Font for the Cancel Button for TvOS.",
+            "initial_value": "Helvetica"
+          },
+          {
+            "key": "cancel_action_button_font_android",
+            "type": "android_font_selector",
+            "label_tooltip": "Font for the Cancel Button for Android TV.",
+            "initial_value": "Roboto-Regular"
+          },
+          {
+            "key": "cancel_action_button_font_samsung",
+            "type": "samsung_tv_font_selector",
+            "label_tooltip": "Font for the Cancel Button for Samsung TV.",
+            "initial_value": "Times New Roman"
+          },
+          {
+            "key": "cancel_action_button_fontsize",
+            "type": "number_input",
+            "label_tooltip": "Font Size for Cancel Action Button Text.",
+            "initial_value": "40"
+          },
+          {
+            "key": "cancel_action_button_fontcolor",
+            "type": "color_picker_rgba",
+            "label_tooltip": "Font Color for Cancel Action Button Text.",
+            "initial_value": "rgba(84, 90, 92, 1)"
+          },
+          {
+            "key": "cancel_action_button_background_color",
+            "type": "color_picker_rgba",
+            "label": "Background Color for the Cancel Action Button",
+            "label_tooltip": "Background Color for the Cancel Action Button. Will be used if no assets found.",
+            "initial_value": "rgba(39, 218, 134, 1)"
+          }
+        ]
+      }
+    ]
+  },
+  "custom_configuration_fields": [
+    {
+      "key": "android_assets_bundle",
+      "type": "uploader",
+      "label": "Android TV Design Assets",
+      "label_tooltip": "Please upload a zip file to provide the design assets for this plugin. For guidance and proper naming of the assets, please refer to this <a href='https://assets-production.applicaster.com.s3.amazonaws.com/applicaster-employees/marketplace/OPT/Login%20Plugin%20-%20Designer%20Documentation.sketch'>resource</a>."
+    }
+  ],
+  "targets": ["tv"]
+}

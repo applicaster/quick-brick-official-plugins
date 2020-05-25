@@ -4,7 +4,7 @@ import {
   Image,
   ImageBackground
 } from 'react-native';
-import { TVEventHandlerComponent } from '@applicaster/zapp-react-native-tvos-ui-components/Components/TVEventHandlerComponent';
+import TVRemoteHandlerComponent from './TVRemoteHandlerComponent';
 import ASSETS from '../Config/Assets';
 
 
@@ -16,7 +16,7 @@ function Layout(props) {
   } = props;
 
   return (
-    <TVEventHandlerComponent tvEventHandler={remoteHandler}>
+    <TVRemoteHandlerComponent tvEventHandler={remoteHandler}>
       <ImageBackground
         source={{ uri: ASSETS.screenBackground }}
         style={{ ...styles.container, backgroundColor }}
@@ -32,7 +32,7 @@ function Layout(props) {
           {children}
         </View>
       </ImageBackground>
-    </TVEventHandlerComponent>
+    </TVRemoteHandlerComponent>
   );
 }
 
