@@ -34,7 +34,7 @@
         "fields": [
           {
             "type": "text_input",
-            "key": "base_url",
+            "key": "base_url_ios",
             "label": "Base URL",
             "label_tooltip": "Determines which Adobe’s backend environment the plugin should use.",
             "placeholder": "Enter your base url here"

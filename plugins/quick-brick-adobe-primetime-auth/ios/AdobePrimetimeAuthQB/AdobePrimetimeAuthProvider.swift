@@ -36,7 +36,7 @@ public class AdobePrimetimeAuthProvider: RCTEventEmitter, EntitlementDelegate, E
         guard let resourceID = pluginConfig["resource_id"] as? String,
               let softwareStatement = pluginConfig["software_statement"] as? String,
               let requestorID = pluginConfig["requestor_id"] as? String,
-              let baseUrl = pluginConfig["base_url"] as? String
+              let baseUrl = pluginConfig["base_url_ios"] as? String
             else {
             return
         }
