@@ -6,9 +6,10 @@ export const defaultHeaders = {
 
 export const HEARBEAT = 5000;
 
-export function createUrlAuthService(flowType, deviceId, baseUrl, requestorId) {
+export function createUrlAuthService(flowType, deviceId, baseUrl, requestorId, resource) {
   const device = deviceId || uuidv4();
-  return `https://${baseUrl}/api/v1/${flowType}?deviceId=${device}&requestor=${requestorId}`;
+  const resourceQuery = resource ? `&resource=${resource}` : '';
+  return `https://${baseUrl}/api/v1/${flowType}?deviceId=${device}&requestor=${requestorId}${resourceQuery}`;
 }
 
 export function createUrlRegService(deviceId, baseUrl, requestorId) {
