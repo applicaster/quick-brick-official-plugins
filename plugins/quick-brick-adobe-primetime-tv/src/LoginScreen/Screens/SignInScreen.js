@@ -22,6 +22,7 @@ function SignInScreen(props) {
     credentials,
     closeHook,
     errorCallback,
+    startAuthZFlow,
     remoteHandler
   } = props;
 
@@ -71,7 +72,9 @@ function SignInScreen(props) {
       const userId = await checkDeviceStatus(deviceId, credentials);
       if (userId) {
         await setToLocalStorage('idToken', userId);
+        await setToLocalStorage('userId', userId);
         clearInterval(heartbeat);
+        await startAuthZFlow(deviceId);
         return closeHook ? closeHook({ success: true, payload }) : navigator.goBack();
       }
     } catch (err) {

@@ -67,6 +67,51 @@ class API {
     const url = createUrlAuthService(flowType, deviceId, baseUrl, requestorId);
     return HTTP.delete(url, { Authorization: authHeader });
   }
+
+  static async authZ(deviceId, credentials, resource) {
+    const flowType = 'authorize';
+    const {
+      baseUrl,
+      requestorId,
+      privateKey,
+      publicKey
+    } = credentials;
+
+    const authHeader = getAdobeAuthHeader(
+      'GET',
+      requestorId,
+      '/authorize',
+      publicKey,
+      privateKey
+    );
+
+    const url = createUrlAuthService(flowType, deviceId, baseUrl, requestorId, resource);
+    const response = await HTTP.get(url, { Authorization: authHeader });
+    return response.json();
+  }
+
+  static async getMediaToken(deviceId, credentials, resource) {
+    const flowType = 'tokens/media';
+    const {
+      baseUrl,
+      requestorId,
+      privateKey,
+      publicKey
+    } = credentials;
+
+    const authHeader = getAdobeAuthHeader(
+      'GET',
+      requestorId,
+      '/media',
+      publicKey,
+      privateKey
+    );
+
+    const url = createUrlAuthService(flowType, deviceId, baseUrl, requestorId, resource);
+
+    const response = await HTTP.get(url, { Authorization: authHeader });
+    return response.json();
+  }
 }
 
 export default API;

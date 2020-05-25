@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
 import { connectToStore } from '@applicaster/zapp-react-native-redux';
 import { getCustomPluginData, PluginContext } from './LoginScreen/Config/PluginData';
-import { checkDeviceStatus } from './LoginPluginInterface';
+import { checkDeviceStatus, authorizeContent, getAuthZToken } from './LoginPluginInterface';
 import session from './LoginScreen/Config/Session';
 import LoadingScreen from './LoginScreen/Screens/LoadingScreen';
 import ErrorScreen from './LoginScreen/Screens/ErrorScreen';
@@ -13,7 +13,8 @@ import {
   isTokenInStorage,
   getFromSessionStorage,
   isPlayerHook,
-  hideMenu
+  hideMenu,
+  setToLocalStorage
 } from './LoginScreen/Utils';
 
 
@@ -98,19 +99,31 @@ function AdobeLoginComponent(props) {
 
       const requiresAuth = R.pathOr(false, ['extensions', 'requires_authentication'], payload);
       if (isPlayerHook(payload) && !requiresAuth) return successLoginFlow();
-      if (isToken && !isHook()) return goToScreen('LOGOUT');
+      if (isToken && !isHook()) return startLogoutFlow();
 
-      return checkAuth();
+      return startAuthNFlow();
     } catch (err) {
-      return checkAuth();
+      return startAuthNFlow();
     }
   };
 
-  const checkAuth = async () => {
+  const startLogoutFlow = () => goToScreen('LOGOUT');
+
+  const startAuthZFlow = async (deviceId) => {
+    if (isPlayerHook(payload)) {
+      const resource = await authorizeContent(deviceId, credentials, payload);
+      const token = await getAuthZToken(deviceId, credentials, resource);
+
+      await setToLocalStorage('idToken', token);
+    }
+  };
+
+  const startAuthNFlow = async () => {
     try {
       const deviceId = await getFromSessionStorage('uuid');
       const userId = await checkDeviceStatus(deviceId, credentials);
       if (!userId) return goToScreen('LOGIN');
+      await startAuthZFlow(deviceId);
       return callback({ success: true, payload });
     } catch (err) {
       setError(err);
@@ -141,6 +154,7 @@ function AdobeLoginComponent(props) {
         navigator={navigator}
         closeHook={callback}
         errorCallback={errorCallback}
+        startAuthZFlow={startAuthZFlow}
         credentials={credentials}
         payload={payload}
         remoteHandler={remoteHandler}
@@ -166,7 +180,8 @@ function AdobeLoginComponent(props) {
         navigator={navigator}
         remoteHandler={remoteHandler}
         closeHook={callback}
-        goToScreen={goToScreen}
+        startAuthFlow={startAuthNFlow}
+        startLogoutFlow={startLogoutFlow}
       />
     </PluginContext.Provider>
   );

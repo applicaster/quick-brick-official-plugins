@@ -16,7 +16,8 @@ function ErrorScreen(props) {
     navigator,
     payload,
     closeHook,
-    goToScreen
+    startLogoutFlow,
+    startAuthFlow
   } = props;
 
   useEffect(() => {
@@ -48,8 +49,10 @@ function ErrorScreen(props) {
   };
 
   const onTryAgain = () => {
-    const targetScreen = error?.screenName || 'LOGIN';
-    goToScreen(targetScreen);
+    const targetScreen = error?.screenName;
+    return targetScreen === 'LOGOUT'
+      ? startLogoutFlow()
+      : startAuthFlow();
   };
 
   return (

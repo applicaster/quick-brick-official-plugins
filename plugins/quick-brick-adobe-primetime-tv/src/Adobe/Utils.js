@@ -23,3 +23,20 @@ export function getAdobeAuthHeader(verb, requestorId, requestUri, publicKey, sec
 
   return `${authorizationParams}, public_key=${publicKey}, signature=${signatureBase64String}`;
 }
+
+export function b64DecodeUnicode(str) {
+  const wordsArr = CryptoJS.enc.Base64.parse(str);
+  return wordsArr.toString(CryptoJS.enc.Utf8);
+}
+
+export function getResourceForAuthZ(resourceId, itemId, itemTitle) {
+  return `<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>${resourceId}</title>
+    <item>
+      <title>${itemTitle}</title>
+      <guid>${itemId}</guid>
+    </item>
+  </channel>
+</rss>`;
+}
