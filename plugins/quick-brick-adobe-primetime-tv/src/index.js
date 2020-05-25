@@ -16,6 +16,8 @@ import {
   hideMenu,
   setToLocalStorage
 } from './LoginScreen/Utils';
+import trackEvent from './Analytics';
+import EVENTS from './Analytics/Events';
 
 
 const storeConnector = connectToStore((state) => {
@@ -111,10 +113,12 @@ function AdobeLoginComponent(props) {
 
   const startAuthZFlow = async (deviceId) => {
     if (isPlayerHook(payload)) {
+      trackEvent(EVENTS.authZ.authorizationActivated, { payload, credentials });
       const resource = await authorizeContent(deviceId, credentials, payload);
       const token = await getAuthZToken(deviceId, credentials, resource);
 
       await setToLocalStorage('idToken', token);
+      trackEvent(EVENTS.authZ.authorizationSuccess, { payload, credentials });
     }
   };
 
@@ -127,6 +131,7 @@ function AdobeLoginComponent(props) {
       return callback({ success: true, payload });
     } catch (err) {
       setError(err);
+      trackEvent(EVENTS.authZ.authorizationFailed, { payload, credentials, error: err });
       return goToScreen('ERROR');
     }
   };

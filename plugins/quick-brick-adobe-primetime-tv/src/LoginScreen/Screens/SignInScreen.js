@@ -13,6 +13,8 @@ import {
   getFromSessionStorage,
   showMenu
 } from '../Utils';
+import trackEvent from '../../Analytics';
+import EVENTS from '../../Analytics/Events';
 
 
 function SignInScreen(props) {
@@ -55,15 +57,28 @@ function SignInScreen(props) {
   const signIn = async () => {
     try {
       const deviceId = await getFromSessionStorage('uuid');
+      trackEvent(
+        EVENTS.authN.registrationActivated,
+        { credentials, payload, deviceId }
+      );
       const code = await getRegistrationCode(deviceId, credentials);
 
       setDevice(deviceId);
       setLoading(false);
       setPincode(code);
-    } catch (err) {
-      console.log(err);
-      err.screenName = 'LOGIN';
-      return errorCallback(err);
+    } catch (error) {
+      console.log(error);
+      trackEvent(
+        EVENTS.authN.registrationFailed,
+        {
+          credentials,
+          payload,
+          error,
+          deviceId: device
+        }
+      );
+      error.screenName = 'LOGIN';
+      return errorCallback(error);
     }
   };
 
@@ -71,16 +86,29 @@ function SignInScreen(props) {
     try {
       const userId = await checkDeviceStatus(deviceId, credentials);
       if (userId) {
+        trackEvent(
+          EVENTS.authN.activationSuccess,
+          { credentials, payload, deviceId }
+        );
         await setToLocalStorage('idToken', userId);
         await setToLocalStorage('userId', userId);
         clearInterval(heartbeat);
         await startAuthZFlow(deviceId);
         return closeHook ? closeHook({ success: true, payload }) : navigator.goBack();
       }
-    } catch (err) {
-      console.log(err);
-      err.screenName = 'LOGIN';
-      return errorCallback(err);
+    } catch (error) {
+      console.log(error);
+      trackEvent(
+        EVENTS.authN.activationFailed,
+        {
+          credentials,
+          payload,
+          error,
+          deviceId: device
+        }
+      );
+      error.screenName = 'LOGIN';
+      return errorCallback(error);
     }
   };
 
