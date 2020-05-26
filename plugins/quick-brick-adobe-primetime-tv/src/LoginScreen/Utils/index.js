@@ -37,6 +37,8 @@ async function isTokenInStorage(key, namespace) {
   try {
     let token = await getFromLocalStorage(key, namespace);
 
+    if (token === null) return false;
+
     if (typeof token === 'string') {
       token = parseJsonIfNeeded(token);
     }

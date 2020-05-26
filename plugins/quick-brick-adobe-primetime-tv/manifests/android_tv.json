@@ -6,8 +6,8 @@
   "react_native": true,
   "dependency_repository_url": [],
   "dependency_name": "@applicaster/quick-brick-adobe-primetime-tv",
-  "dependency_version": "0.0.3",
-  "platform": "tvos",
+  "dependency_version": "0.0.4",
+  "platform": "android",
   "author_name": "Olga Duk",
   "author_email": "oduk@scand.com",
   "manifest_version": "0.0.1",
@@ -668,9 +668,9 @@
   },
   "custom_configuration_fields": [
     {
-      "key": "ios_assets_bundle",
+      "key": "android_assets_bundle",
       "type": "uploader",
-      "label": "tvOS Design Assets",
+      "label": "Android TV Design Assets",
       "label_tooltip": "Please upload a zip file to provide the design assets for this plugin. For guidance and proper naming of the assets, please refer to this <a href='https://assets-production.applicaster.com.s3.amazonaws.com/applicaster-employees/marketplace/OPT/Login%20Plugin%20-%20Designer%20Documentation.sketch'>resource</a>."
     }
   ],

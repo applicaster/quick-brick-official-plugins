@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View } from 'react-native';
 import Layout from '../Components/Layout';
 import LogoutComponent from '../Components/LogoutComponent';
 import { PluginContext } from '../Config/PluginData';
@@ -56,24 +55,13 @@ function LogoutScreen(props) {
       backgroundColor={loginScreenBackground}
       remoteHandler={remoteHandler}
     >
-      <View style={styles.container}>
-        <LogoutComponent
-          loading={loading}
-          handleCancel={handleCancel}
-          handleLogout={handleLogout}
-        />
-      </View>
+      <LogoutComponent
+        loading={loading}
+        handleCancel={handleCancel}
+        handleLogout={handleLogout}
+      />
     </Layout>
   );
 }
-
-const styles = {
-  container: {
-    paddingTop: 70,
-    alignItems: 'center',
-    height: '100%',
-    width: '100%'
-  }
-};
 
 export default LogoutScreen;
