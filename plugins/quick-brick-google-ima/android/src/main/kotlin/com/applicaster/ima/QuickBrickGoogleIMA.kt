@@ -84,7 +84,6 @@ class QuickBrickGoogleIMA :
 				this.context = it
 				this.vmapTagUrl = getAdsTagUrl().toString()
 			}
-			imaLoader.setPlayerView(playerView)
 		}
 	}
 
@@ -94,6 +93,7 @@ class QuickBrickGoogleIMA :
 				this.context = it
 				this.cuePoints = getVastCuePoints()
 			}
+			imaLoader.setPlayerView(playerView)
 			imaLoader.setVideoPlayerEventListener(this)
 		}
 	}
@@ -161,17 +161,17 @@ class QuickBrickGoogleIMA :
 	}
 
 	override fun playerProgressUpdate(player: PlayerSenderPlugin, currentTime: Long, duration: Long) {
-		imaLoader.timelineUpdate(playerView)
+		imaLoader.timelineUpdate(0)
 		logData("playerProgressUpdate")
 	}
 
 	override fun onTimelineChanged(timeline: Timeline, reason: Int) {
 		logData("onTimelineChanged")
 		if (!isAdsStartWasCalled) {
-			imaLoader.timelineUpdate(playerView)
+			imaLoader.timelineUpdate(0)
 			isAdsStartWasCalled = true
 			android.os.Handler(Looper.getMainLooper()).postDelayed({
-				imaLoader.timelineUpdate(playerView)
+				imaLoader.timelineUpdate(0)
 			}, 40_000)
 		}
 	}

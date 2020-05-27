@@ -184,9 +184,14 @@ class ImaLoader(private val context: Context,
 		resumeContent()
 	}
 
-	fun timelineUpdate(playerView: PlayerView?) {
-		setPlayerView(playerView)
+	fun setPlayerView(playerView: PlayerView?) {
+		Log.d(TAG, "setPlayerView")
+		this.playerView = playerView
+	}
+
+	fun timelineUpdate(currentTime: Long) {
 		//request ads here if needed
+		initAdsPlayer()
 		requestAds(getAvailablePreroll()?.adTagUri.toString())
 	}
 
@@ -262,9 +267,7 @@ class ImaLoader(private val context: Context,
 		return ""
 	}
 
-	fun setPlayerView(playerView: PlayerView?) {
-		Log.d(TAG, "setPlayerView")
-		this.playerView = playerView
+	private fun initAdsPlayer() {
 		this.player = SimpleExoPlayer.Builder(context).build()
 		this.playerView?.player = this.player
 		val sdkFactory = ImaSdkFactory.getInstance()
