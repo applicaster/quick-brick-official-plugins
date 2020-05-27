@@ -30,7 +30,7 @@ export function b64DecodeUnicode(str) {
 }
 
 export function getResourceForAuthZ(resourceId, itemId, itemTitle) {
-  return `<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+  const string = `<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
     <title>${resourceId}</title>
     <item>
@@ -39,4 +39,6 @@ export function getResourceForAuthZ(resourceId, itemId, itemTitle) {
     </item>
   </channel>
 </rss>`;
+
+  return string.replace(/\n|\r/g, '');
 }

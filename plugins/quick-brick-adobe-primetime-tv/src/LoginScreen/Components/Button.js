@@ -1,7 +1,8 @@
 import React from 'react';
 import {
   Text,
-  ImageBackground
+  ImageBackground,
+  Platform
 } from 'react-native';
 import { Focusable } from '@applicaster/zapp-react-native-ui-components/Components/Focusable';
 
@@ -21,7 +22,7 @@ export default function Button(
     backgroundButtonUriActive = ''
   }
 ) {
-  const buttonStyle = backgroundButtonUri ? styles.input : { ...styles.input, backgroundColor };
+  const buttonStyle = Platform.OS === 'web' ? { ...styles.input, backgroundColor } : styles.input;
 
   return (
     <Focusable
