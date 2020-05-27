@@ -17,8 +17,7 @@ import {
   isTriggerOnAppLaunch,
   isHook,
   goBack,
-  isTokenInStorage,
-  hideMenu
+  isTokenInStorage
 } from './Utils';
 
 
@@ -53,6 +52,8 @@ class AdobeComponent extends Component {
       callback
     } = this.props;
 
+    this.props.navigator.showNavBar();
+
     const requiresAuth = R.pathOr(false, ['extensions', 'requires_authentication'], payload);
     if (!R.isEmpty(payload) && !requiresAuth) {
       return callback({ success: true, payload });
@@ -65,7 +66,6 @@ class AdobeComponent extends Component {
     if (this.subscription) {
       this.subscription.remove();
     }
-    this.props.navigator.showNavBar();
   }
 
   initPlugin = async (navigator, screenData) => {
@@ -76,7 +76,6 @@ class AdobeComponent extends Component {
       if (!isHook(navigator) && isToken) { // if logout flow is invoked for the first time
         session.isStarted = true; // add flag to avoid second mounting
       }
-      hideMenu(navigator); // and start normal flow
       this.initAdobeAccessEnabler(screenData);
       return this.startFlow();
     }
@@ -217,7 +216,7 @@ class AdobeComponent extends Component {
     return (
       <PluginContext.Provider value={this.pluginData}>
         <View style={styles.pickerScreenContainer}>
-          <NavbarComponent closeHook={this.closeHook} />
+          <NavbarComponent />
           <ProvidersList data={dataSource} setProviderID={this.setProviderID} />
         </View>
       </PluginContext.Provider>
