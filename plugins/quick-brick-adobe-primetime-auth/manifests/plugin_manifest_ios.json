@@ -22,7 +22,7 @@
   "unsupported_since_zapp_sdk": "",
   "preload": true,
   "platform": "ios",
-  "dependency_version": "1.1.0",
+  "dependency_version": "1.1.1",
   "manifest_version": "0.1.1",
   "min_zapp_sdk": "20.0.0",
   "general": {
@@ -161,7 +161,7 @@
           "label_tooltip": "The ID assigned for the client’s resource by Adobe."
         }
       ]
-    }          
+    }
   ],
   "hooks": {
     "fields": [
