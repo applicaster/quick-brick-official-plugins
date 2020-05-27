@@ -2,6 +2,7 @@ package com.applicaster.ima
 
 import android.content.Context
 import android.net.Uri
+import android.os.Looper
 import android.util.Log
 import com.applicaster.ima.ads.*
 import com.applicaster.plugin_manager.dependencyplugin.base.interfaces.SenderPlugin
@@ -15,10 +16,15 @@ import com.google.android.exoplayer2.Timeline
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import java.util.logging.Handler
 import com.google.android.exoplayer2.util.Util as exoUtil
 
 
-class QuickBrickGoogleIMA : PlayerReceiverPlugin, Player.EventListener, AdErrorEvent.AdErrorListener {
+class QuickBrickGoogleIMA :
+		PlayerReceiverPlugin,
+		Player.EventListener,
+		AdErrorEvent.AdErrorListener,
+		ImaLoader.VideoPlayerEventListener {
 
 	override fun onAdError(p: AdErrorEvent?) {
 		logData(p.toString())
@@ -34,7 +40,6 @@ class QuickBrickGoogleIMA : PlayerReceiverPlugin, Player.EventListener, AdErrorE
 	private var ads: Ad = Ad.Empty
 	private var nextQuePointPosition = 0
 	private lateinit var imaLoader: ImaLoader
-	private lateinit var mVideoPlayerController: VideoPlayerController
 	private var isAdsStartWasCalled = false
 
 	init {
@@ -79,9 +84,7 @@ class QuickBrickGoogleIMA : PlayerReceiverPlugin, Player.EventListener, AdErrorE
 				this.context = it
 				this.vmapTagUrl = getAdsTagUrl().toString()
 			}
-			imaLoader.setPlayer(player)
 			imaLoader.setPlayerView(playerView)
-			imaLoader.setMediaSource(mediaSource)
 		}
 	}
 
@@ -91,9 +94,7 @@ class QuickBrickGoogleIMA : PlayerReceiverPlugin, Player.EventListener, AdErrorE
 				this.context = it
 				this.cuePoints = getVastCuePoints()
 			}
-			imaLoader.setPlayer(player)
-			imaLoader.setPlayerView(playerView)
-			imaLoader.setMediaSource(mediaSource)
+			imaLoader.setVideoPlayerEventListener(this)
 		}
 	}
 
@@ -151,24 +152,27 @@ class QuickBrickGoogleIMA : PlayerReceiverPlugin, Player.EventListener, AdErrorE
 	override fun playerDidDismiss(player: PlayerSenderPlugin) {
 		logData("playerDidDismiss")
 		release()
-		isAdsStartWasCalled = false
 	}
 
 	private fun release() {
 		this.player?.release()
+		isAdsStartWasCalled = false
 //		this.imaLoader?.release()
 	}
 
 	override fun playerProgressUpdate(player: PlayerSenderPlugin, currentTime: Long, duration: Long) {
-		imaLoader.timelineUpdate(0)
+		imaLoader.timelineUpdate(playerView)
 		logData("playerProgressUpdate")
 	}
 
 	override fun onTimelineChanged(timeline: Timeline, reason: Int) {
 		logData("onTimelineChanged")
 		if (!isAdsStartWasCalled) {
-			imaLoader.timelineUpdate(0)
+			imaLoader.timelineUpdate(playerView)
 			isAdsStartWasCalled = true
+			android.os.Handler(Looper.getMainLooper()).postDelayed({
+				imaLoader.timelineUpdate(playerView)
+			}, 40_000)
 		}
 	}
 
@@ -176,6 +180,18 @@ class QuickBrickGoogleIMA : PlayerReceiverPlugin, Player.EventListener, AdErrorE
 		logData("receiveEvent => eventName: $eventName, sender: ${sender.dependencyType}")
 	}
 
+	override fun onPause() {
+		player?.playWhenReady = false
+	}
+
+	override fun onPlay() {
+		playerView?.player = this.player
+		player?.playWhenReady = true
+	}
+
+	override fun onStop() {
+		player?.stop()
+	}
 
 	private fun logData(message: String) {
 		Log.d(tag, message)

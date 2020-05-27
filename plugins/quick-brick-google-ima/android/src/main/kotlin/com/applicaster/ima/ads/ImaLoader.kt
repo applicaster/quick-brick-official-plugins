@@ -1,23 +1,22 @@
 package com.applicaster.ima.ads
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import com.applicaster.util.OSUtil
 import com.google.ads.interactivemedia.v3.api.*
-import com.google.ads.interactivemedia.v3.api.player.AdMediaInfo
 import com.google.ads.interactivemedia.v3.api.player.ContentProgressProvider
 import com.google.ads.interactivemedia.v3.api.player.VideoAdPlayer
 import com.google.ads.interactivemedia.v3.api.player.VideoProgressUpdate
+import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.source.ads.AdsMediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
-import java.io.IOException
-import java.util.*
-import kotlin.collections.ArrayList
 
 class ImaLoader(private val context: Context,
 				private val vmapTagUrl: String,
@@ -25,8 +24,8 @@ class ImaLoader(private val context: Context,
 		AdsLoader.AdsLoadedListener,
 		AdEvent.AdEventListener,
 		AdErrorEvent.AdErrorListener,
-		com.google.android.exoplayer2.source.ads.AdsLoader,
 		VideoAdPlayer,
+		Player.EventListener,
 		ContentProgressProvider {
 
 	private constructor(builder: Builder) :
@@ -44,13 +43,22 @@ class ImaLoader(private val context: Context,
 		fun build() = ImaLoader(this)
 	}
 
+	interface VideoPlayerEventListener {
+		fun onPause()
+		fun onPlay()
+		fun onStop()
+	}
+
 	//class fields
+	private val TAG = this.javaClass.simpleName
 	private var player: Player? = null
+	private var videoPlayerEventListener: VideoPlayerEventListener? = null
 	private var adsManager: AdsManager? = null
 	private var adsLoader: AdsLoader? = null
 	private var playerView: PlayerView? = null
-	private var mediaSource: MediaSource? = null
 	private val adCallbacks: ArrayList<VideoAdPlayer.VideoAdPlayerCallback> = ArrayList(1)
+	private var playbackSavedPosition: Long = C.TIME_UNSET
+	private var isAdDisplayed = false
 
 	override fun onAdsManagerLoaded(event: AdsManagerLoadedEvent?) {
 		adsManager = event?.adsManager
@@ -62,54 +70,73 @@ class ImaLoader(private val context: Context,
 	override fun onAdEvent(event: AdEvent?) {
 		when (event?.type) {
 			AdEvent.AdEventType.LOADED -> {
+				Log.d(TAG, "${event.type?.name}")
 				adsManager?.start()
 			}
 			AdEvent.AdEventType.CONTENT_PAUSE_REQUESTED -> {
+				Log.d(TAG, "${event.type?.name}")
 				pauseContent()
 			}
 			AdEvent.AdEventType.CONTENT_RESUME_REQUESTED -> {
+				Log.d(TAG, "${event.type?.name}")
 				resumeContent()
 			}
 			AdEvent.AdEventType.ALL_ADS_COMPLETED -> {
+				Log.d(TAG, "${event.type?.name}")
 				adsManager?.destroy()
 				adsManager = null
 			}
-			AdEvent.AdEventType.AD_BREAK_FETCH_ERROR -> Unit
-			AdEvent.AdEventType.CLICKED -> Unit
-			AdEvent.AdEventType.COMPLETED -> Unit
-			AdEvent.AdEventType.CUEPOINTS_CHANGED -> Unit
-			AdEvent.AdEventType.FIRST_QUARTILE -> Unit
-			AdEvent.AdEventType.LOG -> {
-				Log.d("IMASDK", event.adData.toString())
-			}
-			AdEvent.AdEventType.AD_BREAK_READY -> Unit
-			AdEvent.AdEventType.MIDPOINT -> Unit
-			AdEvent.AdEventType.PAUSED -> Unit
-			AdEvent.AdEventType.RESUMED -> Unit
-			AdEvent.AdEventType.SKIPPABLE_STATE_CHANGED -> Unit
-			AdEvent.AdEventType.SKIPPED -> Unit
-			AdEvent.AdEventType.STARTED -> Unit
-			AdEvent.AdEventType.TAPPED -> Unit
-			AdEvent.AdEventType.ICON_TAPPED -> Unit
-			AdEvent.AdEventType.THIRD_QUARTILE -> Unit
-			AdEvent.AdEventType.AD_PROGRESS -> Unit
-			AdEvent.AdEventType.AD_BUFFERING -> Unit
-			AdEvent.AdEventType.AD_BREAK_STARTED -> Unit
-			AdEvent.AdEventType.AD_BREAK_ENDED -> Unit
-			AdEvent.AdEventType.AD_PERIOD_STARTED -> Unit
-			AdEvent.AdEventType.AD_PERIOD_ENDED -> Unit
-			else -> Unit
+			AdEvent.AdEventType.CLICKED -> Log.d(TAG, "${event.type?.name}")
+			AdEvent.AdEventType.COMPLETED -> Log.d(TAG, "${event.type?.name}")
+			AdEvent.AdEventType.CUEPOINTS_CHANGED -> Log.d(TAG, "${event.type?.name}")
+			AdEvent.AdEventType.FIRST_QUARTILE -> Log.d(TAG, "${event.type?.name}")
+			AdEvent.AdEventType.LOG -> Log.d(TAG, event.adData.toString())
+			AdEvent.AdEventType.AD_BREAK_READY -> Log.d(TAG, "${event.type?.name}")
+			AdEvent.AdEventType.MIDPOINT -> Log.d(TAG, "${event.type?.name}")
+			AdEvent.AdEventType.PAUSED -> Log.d(TAG, "${event.type?.name}")
+			AdEvent.AdEventType.RESUMED -> Log.d(TAG, "${event.type?.name}")
+			AdEvent.AdEventType.SKIPPABLE_STATE_CHANGED -> Log.d(TAG, "${event.type?.name}")
+			AdEvent.AdEventType.SKIPPED -> Log.d(TAG, "${event.type?.name}")
+			AdEvent.AdEventType.STARTED -> Log.d(TAG, "${event.type?.name}")
+			AdEvent.AdEventType.TAPPED -> Log.d(TAG, "${event.type?.name}")
+			AdEvent.AdEventType.ICON_TAPPED -> Log.d(TAG, "${event.type?.name}")
+			AdEvent.AdEventType.THIRD_QUARTILE -> Log.d(TAG, "${event.type?.name}")
+			AdEvent.AdEventType.AD_PROGRESS -> Log.d(TAG, "${event.type?.name}")
+			AdEvent.AdEventType.AD_BUFFERING -> Log.d(TAG, "${event.type?.name}")
+			AdEvent.AdEventType.AD_BREAK_STARTED -> Log.d(TAG, "${event.type?.name}")
+			AdEvent.AdEventType.AD_BREAK_ENDED -> Log.d(TAG, "${event.type?.name}")
+			AdEvent.AdEventType.AD_PERIOD_STARTED -> Log.d(TAG, "${event.type?.name}")
+			AdEvent.AdEventType.AD_PERIOD_ENDED -> Log.d(TAG, "${event.type?.name}")
+			else -> Log.d(TAG, "${event?.type?.name}")
 		}
 	}
 
-	override fun loadAd(adMediaInfo: AdMediaInfo?, adPodInfo: AdPodInfo?) {
-		val adsMediaSource = adsMediaSource(this.mediaSource, createDefaultDataSourceFactory())
-		player?.playWhenReady = true
-		(player as? ExoPlayer?)?.prepare(adsMediaSource)
+	override fun loadAd(adTagUrl: String) {
+		Log.d(TAG, "loadAd")
+		isAdDisplayed = false
+		playbackSavedPosition = player?.currentPosition ?: C.TIME_UNSET
+		(player as? ExoPlayer?)?.prepare(createAdsMediaSource(adTagUrl), true, true)
 	}
 
-	override fun pauseAd(adMediaInfo: AdMediaInfo?) {
+	override fun playAd() {
+		videoPlayerEventListener?.onPause()
+		if (isAdDisplayed) {
+			player?.playWhenReady = true
+		} else {
+			isAdDisplayed = true
+			playerView?.hideController()
+			playerView?.useController = false
+			player?.playWhenReady = true
+		}
+		Log.d(TAG, "playAd")
+	}
 
+	override fun pauseAd() {
+		player?.playWhenReady = false
+	}
+
+	override fun resumeAd() {
+		player?.playWhenReady = true
 	}
 
 	override fun getVolume(): Int =
@@ -119,9 +146,11 @@ class ImaLoader(private val context: Context,
 		callback?.let { adCallbacks.remove(it) }
 	}
 
-	override fun stopAd(adMediaInfo: AdMediaInfo?) {
-		Log.d("IMASDK", "stopAd => ${adMediaInfo?.url}")
-		this.mediaSource?.let { (player as? ExoPlayer?)?.prepare(it) }
+	override fun stopAd() {
+		Log.d(TAG, "stopAd")
+		playerView?.useController = true
+		player?.stop(true)
+		player = null
 	}
 
 	override fun addCallback(callback: VideoAdPlayer.VideoAdPlayerCallback?) {
@@ -130,55 +159,63 @@ class ImaLoader(private val context: Context,
 
 	override fun getAdProgress(): VideoProgressUpdate {
 		val durationMs: Long = player?.duration ?: 0
-		if (durationMs <= 0) {
+		Log.d(TAG, "getAdProgress => ${player?.currentPosition?.div(1000)}")
+		if (!isAdDisplayed || durationMs <= 0) {
 			return VideoProgressUpdate.VIDEO_TIME_NOT_READY
 		}
+		if (player?.currentPosition ?: 0 >= durationMs) {
+			adsManager?.destroy()
+		}
 		return VideoProgressUpdate(player?.currentPosition ?: 0L, durationMs)
-	}
-
-	override fun playAd(adMediaInfo: AdMediaInfo?) {
-		Log.d("IMASDK", "playAd => ${adMediaInfo?.url}")
 	}
 
 	override fun getContentProgress(): VideoProgressUpdate {
 		val durationMs: Long = player?.duration ?: 0
-		if (durationMs <= 0) {
+		Log.d(TAG, "getContentProgress => ${player?.currentPosition?.div(1000)}")
+		if (isAdDisplayed || durationMs <= 0) {
 			return VideoProgressUpdate.VIDEO_TIME_NOT_READY
 		}
 		return VideoProgressUpdate(player?.currentPosition ?: 0L, durationMs)
 	}
 
-	private fun adsMediaSource(
-			mediaSource: MediaSource?,
-			defaultDataSourceFactory: DefaultDataSourceFactory): AdsMediaSource {
-		return AdsMediaSource(mediaSource, defaultDataSourceFactory, this, playerView)
-	}
-
-	private fun createDefaultDataSourceFactory(): DefaultDataSourceFactory {
-		return DefaultDataSourceFactory(
-				this.context,
-				Util.getUserAgent(this.context, OSUtil.getApplicationName()))
-	}
-
-	private fun pauseContent() {
-		player?.playWhenReady = false
-	}
-
-	private fun resumeContent() {
-		player?.playWhenReady = true
-	}
-
 	override fun onAdError(event: AdErrorEvent?) {
-		Log.d("IMASDK", event?.error?.localizedMessage)
+		Log.d(TAG, event?.error?.localizedMessage)
+		adsManager?.destroy()
 		resumeContent()
 	}
 
-	fun timelineUpdate(currentTime: Long) {
+	fun timelineUpdate(playerView: PlayerView?) {
+		setPlayerView(playerView)
 		//request ads here if needed
 		requestAds(getAvailablePreroll()?.adTagUri.toString())
 	}
 
+	fun setVideoPlayerEventListener(listener: VideoPlayerEventListener) {
+		this.videoPlayerEventListener = listener
+	}
+
+	private fun pauseContent() {
+		Log.d(TAG, "pauseContent")
+		player?.playWhenReady = false
+	}
+
+	private fun resumeContent() {
+		Log.d(TAG, "resumeContent")
+		playerView?.useController = true
+		player?.stop()
+		player?.release()
+		videoPlayerEventListener?.onPlay()
+	}
+
+	private fun getUserAgent() =
+			Util.getUserAgent(this.context, OSUtil.getApplicationName())
+
+	private fun createAdsMediaSource(adTagUrl: String): MediaSource =
+			ProgressiveMediaSource.Factory(DefaultHttpDataSourceFactory(getUserAgent()))
+					.createMediaSource(Uri.parse(adTagUrl))
+
 	private fun requestAds(adTagUrl: String) {
+		Log.d(TAG, "requestAds")
 		// Since we're switching to a new video, tell the SDK the previous video is finished.
 		adsManager?.destroy()
 		adsLoader?.contentComplete()
@@ -225,47 +262,23 @@ class ImaLoader(private val context: Context,
 		return ""
 	}
 
-	override fun handlePrepareError(adGroupIndex: Int, adIndexInAdGroup: Int, exception: IOException?) {
-
-	}
-
-	override fun start(eventListener: com.google.android.exoplayer2.source.ads.AdsLoader.EventListener?, adViewProvider: com.google.android.exoplayer2.source.ads.AdsLoader.AdViewProvider?) {
-
-	}
-
-	override fun stop() {
-
-	}
-
-	override fun setSupportedContentTypes(vararg contentTypes: Int) {
-
-	}
-
-	override fun release() {
-
-	}
-
-	override fun setPlayer(player: Player?) {
-
-	}
-
 	fun setPlayerView(playerView: PlayerView?) {
+		Log.d(TAG, "setPlayerView")
 		this.playerView = playerView
-		this.player = playerView?.player
+		this.player = SimpleExoPlayer.Builder(context).build()
+		this.playerView?.player = this.player
 		val sdkFactory = ImaSdkFactory.getInstance()
 		val settings = sdkFactory.createImaSdkSettings()
 		settings.language = "en"
 		val adViewGroup = playerView?.adViewGroup
-		val adDisplayContainer = ImaSdkFactory.createAdDisplayContainer(
-				adViewGroup,
-				this
-		)
+		val adDisplayContainer = sdkFactory.createAdDisplayContainer()
+		adDisplayContainer.player = this
+		adDisplayContainer.adContainer = adViewGroup
+		playerView?.adOverlayViews?.forEach {
+			adDisplayContainer.registerVideoControlsOverlay(it)
+		}
 		adsLoader = sdkFactory.createAdsLoader(context, settings, adDisplayContainer)
 		adsLoader?.addAdErrorListener(this)
 		adsLoader?.addAdsLoadedListener(this)
-	}
-
-	fun setMediaSource(mediaSource: MediaSource?) {
-		this.mediaSource = mediaSource
 	}
 }
