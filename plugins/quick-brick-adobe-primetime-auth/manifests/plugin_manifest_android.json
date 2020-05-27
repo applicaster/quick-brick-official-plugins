@@ -46,6 +46,12 @@
           },
           {
             "type": "text_input",
+            "key": "software_statement",
+            "label": "Software Statement",
+            "label_tooltip": "JWT token issued by Adobe for the specific client’s application."
+          },
+          {
+            "type": "text_input",
             "key": "requestor_id",
             "label": "Requestor ID",
             "label_tooltip": "The ID assigned for the client by Adobe."
