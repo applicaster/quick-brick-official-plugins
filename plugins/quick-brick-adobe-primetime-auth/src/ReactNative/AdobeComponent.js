@@ -49,7 +49,8 @@ class AdobeComponent extends Component {
       screenData = {},
       navigator,
       payload = {},
-      callback
+      callback,
+      configuration
     } = this.props;
 
     this.props.navigator.showNavBar();
@@ -58,7 +59,8 @@ class AdobeComponent extends Component {
     if (!R.isEmpty(payload) && !requiresAuth) {
       return callback({ success: true, payload });
     }
-    this.initPlugin(navigator, screenData);
+    const data = R.mergeDeepRight(screenData.general, configuration);
+    this.initPlugin(navigator, data);
   }
 
   componentWillUnmount() {
@@ -68,7 +70,7 @@ class AdobeComponent extends Component {
     }
   }
 
-  initPlugin = async (navigator, screenData) => {
+  initPlugin = async (navigator, data) => {
     const isToken = await isTokenInStorage('idToken');
 
     // Core initiates plugin 2 times - that breaks the flow in case of logout
@@ -76,12 +78,12 @@ class AdobeComponent extends Component {
       if (!isHook(navigator) && isToken) { // if logout flow is invoked for the first time
         session.isStarted = true; // add flag to avoid second mounting
       }
-      this.initAdobeAccessEnabler(screenData);
+      this.initAdobeAccessEnabler(data);
       return this.startFlow();
     }
   }
 
-  initAdobeAccessEnabler = ({ general: data }) => {
+  initAdobeAccessEnabler = (data) => {
     this.setState({ loading: true });
     // Initialize AccessEnabler
     this.accessEnabler = adobeAccessEnabler;
