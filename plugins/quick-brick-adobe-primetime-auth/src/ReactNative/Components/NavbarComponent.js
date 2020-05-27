@@ -6,10 +6,9 @@ import {
   SafeAreaView
 } from 'react-native';
 import { PluginContext } from '../Config/PluginData';
-import CloseButton from './CloseButton';
 
 
-export default function NavbarComponent({ closeHook }) {
+export default function NavbarComponent() {
   const {
     customStyle: { headerColor },
     titleTextStyle,
@@ -22,7 +21,6 @@ export default function NavbarComponent({ closeHook }) {
 
   return (
     <SafeAreaView style={{ backgroundColor: headerColor }}>
-      <CloseButton closeHook={closeHook} label="X" />
       <View style={styles.container}>
         <Text
           style={[titleTextStyle, styles.title]}

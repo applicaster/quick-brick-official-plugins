@@ -74,18 +74,11 @@ async function isTokenInStorage(key, namespace) {
   }
 }
 
-function hideMenu(navigator) {
-  if (navigator.isNavBarVisible) {
-    navigator.hideNavBar();
-  }
-}
-
 export {
   isTriggerOnAppLaunch,
   getPluginData,
   isHook,
   goBack,
   getFromLocalStorage,
-  isTokenInStorage,
-  hideMenu
+  isTokenInStorage
 };
