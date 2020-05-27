@@ -1,3 +1,4 @@
+/*
 package com.applicaster.ima.ads;
 
 import android.content.Context;
@@ -59,6 +60,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+*/
 /**
  * {@link AdsLoader} using the IMA SDK. All methods must be called on the main thread.
  *
@@ -69,7 +71,8 @@ import java.util.Set;
  * <p>The IMA SDK can take into account video control overlay views when calculating ad viewability.
  * For more details see {@link AdDisplayContainer#registerVideoControlsOverlay(View)} and {@link
  * AdViewProvider#getAdOverlayViews()}.
- */
+ *//*
+
 public final class ZappImaVastLoader
         implements Player.EventListener,
         AdsLoader,
@@ -83,7 +86,9 @@ public final class ZappImaVastLoader
         ExoPlayerLibraryInfo.registerModule("goog.exo.ima");
     }
 
-    /** Builder for {@link com.google.android.exoplayer2.ext.ima.ImaAdsLoader}. */
+    */
+/** Builder for {@link com.google.android.exoplayer2.ext.ima.ImaAdsLoader}. *//*
+
     public static final class Builder {
 
         private final Context context;
@@ -97,11 +102,13 @@ public final class ZappImaVastLoader
         private boolean focusSkipButtonWhenAvailable;
         private ImaFactory imaFactory;
 
-        /**
+        */
+/**
          * Creates a new builder for {@link com.google.android.exoplayer2.ext.ima.ImaAdsLoader}.
          *
          * @param context The context;
-         */
+         *//*
+
         public Builder(Context context) {
             this.context = Assertions.checkNotNull(context);
             vastLoadTimeoutMs = TIMEOUT_UNSET;
@@ -111,7 +118,8 @@ public final class ZappImaVastLoader
             imaFactory = new DefaultImaFactory();
         }
 
-        /**
+        */
+/**
          * Sets the IMA SDK settings. The provided settings instance's player type and version fields
          * may be overwritten.
          *
@@ -119,76 +127,88 @@ public final class ZappImaVastLoader
          *
          * @param imaSdkSettings The {@link ImaSdkSettings}.
          * @return This builder, for convenience.
-         */
+         *//*
+
         public Builder setImaSdkSettings(ImaSdkSettings imaSdkSettings) {
             this.imaSdkSettings = Assertions.checkNotNull(imaSdkSettings);
             return this;
         }
 
-        /**
+        */
+/**
          * Sets a listener for ad events that will be passed to {@link
          * AdsManager#addAdEventListener(AdEventListener)}.
          *
          * @param adEventListener The ad event listener.
          * @return This builder, for convenience.
-         */
+         *//*
+
         public Builder setAdEventListener(AdEventListener adEventListener) {
             this.adEventListener = Assertions.checkNotNull(adEventListener);
             return this;
         }
 
-        /**
+        */
+/**
          * Sets the ad UI elements to be rendered by the IMA SDK.
          *
          * @param adUiElements The ad UI elements to be rendered by the IMA SDK.
          * @return This builder, for convenience.
          * @see AdsRenderingSettings#setUiElements(Set)
-         */
+         *//*
+
         public Builder setAdUiElements(Set<UiElement> adUiElements) {
             this.adUiElements = new HashSet<>(Assertions.checkNotNull(adUiElements));
             return this;
         }
 
-        /**
+        */
+/**
          * Sets the VAST load timeout, in milliseconds.
          *
          * @param vastLoadTimeoutMs The VAST load timeout, in milliseconds.
          * @return This builder, for convenience.
          * @see AdsRequest#setVastLoadTimeout(float)
-         */
+         *//*
+
         public Builder setVastLoadTimeoutMs(int vastLoadTimeoutMs) {
             Assertions.checkArgument(vastLoadTimeoutMs > 0);
             this.vastLoadTimeoutMs = vastLoadTimeoutMs;
             return this;
         }
 
-        /**
+        */
+/**
          * Sets the ad media load timeout, in milliseconds.
          *
          * @param mediaLoadTimeoutMs The ad media load timeout, in milliseconds.
          * @return This builder, for convenience.
          * @see AdsRenderingSettings#setLoadVideoTimeout(int)
-         */
+         *//*
+
         public Builder setMediaLoadTimeoutMs(int mediaLoadTimeoutMs) {
             Assertions.checkArgument(mediaLoadTimeoutMs > 0);
             this.mediaLoadTimeoutMs = mediaLoadTimeoutMs;
             return this;
         }
 
-        /**
+        */
+/**
          * Sets the media maximum recommended bitrate for ads, in bps.
          *
          * @param bitrate The media maximum recommended bitrate for ads, in bps.
          * @return This builder, for convenience.
          * @see AdsRenderingSettings#setBitrateKbps(int)
-         */
+         *//*
+
         public Builder setMaxMediaBitrate(int bitrate) {
             Assertions.checkArgument(bitrate > 0);
             this.mediaBitrate = bitrate;
             return this;
         }
 
-        /**
+        */
+/**
          * Sets whether to focus the skip button (when available) on Android TV devices. The default
          * setting is {@code true}.
          *
@@ -196,23 +216,28 @@ public final class ZappImaVastLoader
          *     Android TV devices.
          * @return This builder, for convenience.
          * @see AdsRenderingSettings#setFocusSkipButtonWhenAvailable(boolean)
-         */
+         *//*
+
         public Builder setFocusSkipButtonWhenAvailable(boolean focusSkipButtonWhenAvailable) {
             this.focusSkipButtonWhenAvailable = focusSkipButtonWhenAvailable;
             return this;
         }
 
         @VisibleForTesting
-            /* package */ Builder setImaFactory(ImaFactory imaFactory) {
+            */
+/* package *//*
+ Builder setImaFactory(ImaFactory imaFactory) {
             this.imaFactory = Assertions.checkNotNull(imaFactory);
             return this;
         }
 
-        /**
+        */
+/**
          * Returns a new {@link com.google.android.exoplayer2.ext.ima.ImaAdsLoader} for the specified ad tag.
          *
          * @return The new {@link com.google.android.exoplayer2.ext.ima.ImaAdsLoader}.
-         */
+         *//*
+
         public ZappImaVastLoader buildForCuePoints(List<CuePoint> cuePoints) {
             return new ZappImaVastLoader(
                     context,
@@ -228,13 +253,15 @@ public final class ZappImaVastLoader
                     imaFactory);
         }
 
-        /**
+        */
+/**
          * Returns a new {@link com.google.android.exoplayer2.ext.ima.ImaAdsLoader} with the specified sideloaded ads response.
          *
          * @param adsResponse The sideloaded VAST, VMAP, or ad rules response to be used instead of
          *     making a request via an ad tag URL.
          * @return The new {@link com.google.android.exoplayer2.ext.ima.ImaAdsLoader}.
-         */
+         *//*
+
         public ZappImaVastLoader buildForAdsResponse(String adsResponse) {
             return new ZappImaVastLoader(
                     context,
@@ -254,45 +281,61 @@ public final class ZappImaVastLoader
     private static final boolean DEBUG = true;
     private static final String TAG = "ZappImaVastLoader";
 
-    /**
+    */
+/**
      * Whether to enable preloading of ads in {@link AdsRenderingSettings}.
-     */
+     *//*
+
     private static final boolean ENABLE_PRELOADING = true;
 
     private static final String IMA_SDK_SETTINGS_PLAYER_TYPE = "google/exo.ext.ima";
     private static final String IMA_SDK_SETTINGS_PLAYER_VERSION = ExoPlayerLibraryInfo.VERSION;
 
-    /** The value used in {@link VideoProgressUpdate}s to indicate an unset duration. */
+    */
+/** The value used in {@link VideoProgressUpdate}s to indicate an unset duration. *//*
+
     private static final long IMA_DURATION_UNSET = -1L;
 
-    /**
+    */
+/**
      * Threshold before the end of content at which IMA is notified that content is complete if the
      * player buffers, in milliseconds.
-     */
+     *//*
+
     private static final long END_OF_CONTENT_POSITION_THRESHOLD_MS = 5000;
 
-    /** The maximum duration before an ad break that IMA may start preloading the next ad. */
+    */
+/** The maximum duration before an ad break that IMA may start preloading the next ad. *//*
+
     private static final long MAXIMUM_PRELOAD_DURATION_MS = 8000;
 
     private static final int TIMEOUT_UNSET = -1;
     private static final int BITRATE_UNSET = -1;
 
-    /** The state of ad playback. */
+    */
+/** The state of ad playback. *//*
+
     @Documented
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({IMA_AD_STATE_NONE, IMA_AD_STATE_PLAYING, IMA_AD_STATE_PAUSED})
     private @interface ImaAdState {}
-    /**
+    */
+/**
      * The ad playback state when IMA is not playing an ad.
-     */
+     *//*
+
     private static final int IMA_AD_STATE_NONE = 0;
-    /**
+    */
+/**
      * The ad playback state when IMA has called {@link #playAd()} and not {@link #pauseAd()}.
-     */
+     *//*
+
     private static final int IMA_AD_STATE_PLAYING = 1;
-    /**
+    */
+/**
      * The ad playback state when IMA has called {@link #pauseAd()} while playing an ad.
-     */
+     *//*
+
     private static final int IMA_AD_STATE_PAUSED = 2;
 
     @Nullable private Uri adTagUri;
@@ -333,94 +376,156 @@ public final class ZappImaVastLoader
 
     // Fields tracking IMA's state.
 
-    /** The expected ad group index that IMA should load next. */
+    */
+/** The expected ad group index that IMA should load next. *//*
+
     private int expectedAdGroupIndex;
-    /** The index of the current ad group that IMA is loading. */
+    */
+/** The index of the current ad group that IMA is loading. *//*
+
     private int adGroupIndex;
-    /** Whether IMA has sent an ad event to pause content since the last resume content event. */
+    */
+/** Whether IMA has sent an ad event to pause content since the last resume content event. *//*
+
     private boolean imaPausedContent;
-    /** The current ad playback state. */
+    */
+/** The current ad playback state. *//*
+
     private @ImaAdState int imaAdState;
-    /**
+    */
+/**
      * Whether {@link com.google.ads.interactivemedia.v3.api.AdsLoader#contentComplete()} has been
      * called since starting ad playback.
-     */
+     *//*
+
     private boolean sentContentComplete;
 
     // Fields tracking the player/loader state.
 
-    /** Whether the player is playing an ad. */
+    */
+/** Whether the player is playing an ad. *//*
+
     private boolean playingAd;
-    /**
+    */
+/**
      * If the player is playing an ad, stores the ad index in its ad group. {@link C#INDEX_UNSET}
      * otherwise.
-     */
+     *//*
+
     private int playingAdIndexInAdGroup;
-    /**
+    */
+/**
      * Whether there's a pending ad preparation error which IMA needs to be notified of when it
      * transitions from playing content to playing the ad.
-     */
+     *//*
+
     private boolean shouldNotifyAdPrepareError;
-    /**
+    */
+/**
      * If a content period has finished but IMA has not yet called {@link #playAd()}, stores the value
      * of {@link SystemClock#elapsedRealtime()} when the content stopped playing. This can be used to
      * determine a fake, increasing content position. {@link C#TIME_UNSET} otherwise.
-     */
+     *//*
+
     private long fakeContentProgressElapsedRealtimeMs;
-    /**
+    */
+/**
      * If {@link #fakeContentProgressElapsedRealtimeMs} is set, stores the offset from which the
      * content progress should increase. {@link C#TIME_UNSET} otherwise.
-     */
+     *//*
+
     private long fakeContentProgressOffsetMs;
-    /** Stores the pending content position when a seek operation was intercepted to play an ad. */
+    */
+/** Stores the pending content position when a seek operation was intercepted to play an ad. *//*
+
     private long pendingContentPositionMs;
-    /** Whether {@link #getContentProgress()} has sent {@link #pendingContentPositionMs} to IMA. */
+    */
+/** Whether {@link #getContentProgress()} has sent {@link #pendingContentPositionMs} to IMA. *//*
+
     private boolean sentPendingContentPositionMs;
 
-    /**
+    */
+/**
      * Creates a new IMA ads loader.
      *
      * <p>If you need to customize the ad request, use {@link com.google.android.exoplayer2.ext.ima.ImaAdsLoader.Builder} instead.
      *
      * @param context The context.
-     */
+     *//*
+
     public ZappImaVastLoader(Context context, List<CuePoint> cuePoints) {
         this(
                 context,
                 cuePoints,
-                /* imaSdkSettings= */ null,
-                /* adsResponse= */ null,
-                /* vastLoadTimeoutMs= */ TIMEOUT_UNSET,
-                /* mediaLoadTimeoutMs= */ TIMEOUT_UNSET,
-                /* mediaBitrate= */ BITRATE_UNSET,
-                /* focusSkipButtonWhenAvailable= */ true,
-                /* adUiElements= */ null,
-                /* adEventListener= */ null,
-                /* imaFactory= */ new DefaultImaFactory());
+                */
+/* imaSdkSettings= *//*
+ null,
+                */
+/* adsResponse= *//*
+ null,
+                */
+/* vastLoadTimeoutMs= *//*
+ TIMEOUT_UNSET,
+                */
+/* mediaLoadTimeoutMs= *//*
+ TIMEOUT_UNSET,
+                */
+/* mediaBitrate= *//*
+ BITRATE_UNSET,
+                */
+/* focusSkipButtonWhenAvailable= *//*
+ true,
+                */
+/* adUiElements= *//*
+ null,
+                */
+/* adEventListener= *//*
+ null,
+                */
+/* imaFactory= *//*
+ new DefaultImaFactory());
     }
 
-    /**
+    */
+/**
      * Creates a new IMA ads loader.
      *
      * @param context The context.
      * @param imaSdkSettings {@link ImaSdkSettings} used to configure the IMA SDK, or {@code null} to
      *     use the default settings. If set, the player type and version fields may be overwritten.
      * @deprecated Use {@link com.google.android.exoplayer2.ext.ima.ImaAdsLoader.Builder}.
-     */
+     *//*
+
     @Deprecated
     public ZappImaVastLoader(Context context, List<CuePoint> cuePoints, @Nullable ImaSdkSettings imaSdkSettings) {
         this(
                 context,
                 cuePoints,
                 imaSdkSettings,
-                /* adsResponse= */ null,
-                /* vastLoadTimeoutMs= */ TIMEOUT_UNSET,
-                /* mediaLoadTimeoutMs= */ TIMEOUT_UNSET,
-                /* mediaBitrate= */ BITRATE_UNSET,
-                /* focusSkipButtonWhenAvailable= */ true,
-                /* adUiElements= */ null,
-                /* adEventListener= */ null,
-                /* imaFactory= */ new DefaultImaFactory());
+                */
+/* adsResponse= *//*
+ null,
+                */
+/* vastLoadTimeoutMs= *//*
+ TIMEOUT_UNSET,
+                */
+/* mediaLoadTimeoutMs= *//*
+ TIMEOUT_UNSET,
+                */
+/* mediaBitrate= *//*
+ BITRATE_UNSET,
+                */
+/* focusSkipButtonWhenAvailable= *//*
+ true,
+                */
+/* adUiElements= *//*
+ null,
+                */
+/* adEventListener= *//*
+ null,
+                */
+/* imaFactory= *//*
+ new DefaultImaFactory());
     }
 
     private ZappImaVastLoader(
@@ -457,12 +562,20 @@ public final class ZappImaVastLoader
         imaSdkSettings.setPlayerType(IMA_SDK_SETTINGS_PLAYER_TYPE);
         imaSdkSettings.setPlayerVersion(IMA_SDK_SETTINGS_PLAYER_VERSION);
         period = new Timeline.Period();
-        adCallbacks = new ArrayList<>(/* initialCapacity= */ 1);
+        adCallbacks = new ArrayList<>(*/
+/* initialCapacity= *//*
+ 1);
         adDisplayContainer = imaFactory.createAdDisplayContainer();
-        adDisplayContainer.setPlayer(/* videoAdPlayer= */ this);
+        adDisplayContainer.setPlayer(*/
+/* videoAdPlayer= *//*
+ this);
         adsLoader = imaFactory.createAdsLoader(context, imaSdkSettings, adDisplayContainer);
-        adsLoader.addAdErrorListener(/* adErrorListener= */ this);
-        adsLoader.addAdsLoadedListener(/* adsLoadedListener= */ this);
+        adsLoader.addAdErrorListener(*/
+/* adErrorListener= *//*
+ this);
+        adsLoader.addAdsLoadedListener(*/
+/* adsLoadedListener= *//*
+ this);
         fakeContentProgressElapsedRealtimeMs = C.TIME_UNSET;
         fakeContentProgressOffsetMs = C.TIME_UNSET;
         pendingContentPositionMs = C.TIME_UNSET;
@@ -471,15 +584,18 @@ public final class ZappImaVastLoader
         timeline = Timeline.EMPTY;
     }
 
-    /**
+    */
+/**
      * Returns the underlying {@code com.google.ads.interactivemedia.v3.api.AdsLoader} wrapped by
      * this instance.
-     */
+     *//*
+
     public com.google.ads.interactivemedia.v3.api.AdsLoader getAdsLoader() {
         return adsLoader;
     }
 
-    /**
+    */
+/**
      * Returns the {@link AdDisplayContainer} used by this loader.
      *
      * <p>Note: any video controls overlays registered via {@link
@@ -488,25 +604,29 @@ public final class ZappImaVastLoader
      * each time the ads loader is reused. Alternatively, provide overlay views via the {@link
      * AdsLoader.AdViewProvider} when creating the media source to benefit from automatic
      * registration.
-     */
+     *//*
+
     public AdDisplayContainer getAdDisplayContainer() {
         return adDisplayContainer;
     }
 
-    /**
+    */
+/**
      * Sets the slots for displaying companion ads. Individual slots can be created using {@link
      * ImaSdkFactory#createCompanionAdSlot()}.
      *
      * @param companionSlots Slots for displaying companion ads.
      * @see AdDisplayContainer#setCompanionSlots(Collection)
      * @deprecated Use {@code getAdDisplayContainer().setCompanionSlots(...)}.
-     */
+     *//*
+
     @Deprecated
     public void setCompanionSlots(Collection<CompanionAdSlot> companionSlots) {
         adDisplayContainer.setCompanionSlots(companionSlots);
     }
 
-    /**
+    */
+/**
      * Requests ads, if they have not already been requested. Must be called on the main thread.
      *
      * <p>Ads will be requested automatically when the player is prepared if this method has not been
@@ -514,7 +634,8 @@ public final class ZappImaVastLoader
      * the player.
      *
      * @param adViewGroup A {@link ViewGroup} on top of the player that will show any ad UI.
-     */
+     *//*
+
     public void requestAds(ViewGroup adViewGroup, Uri adTagUri) {
         this.adTagUri = adTagUri;
         isSingleAdRequested = false;
@@ -527,7 +648,9 @@ public final class ZappImaVastLoader
         AdsRequest request = imaFactory.createAdsRequest();
         if (adTagUri != null) {
             request.setAdTagUrl(adTagUri.toString());
-        } else /* adsResponse != null */ {
+        } else */
+/* adsResponse != null *//*
+ {
             request.setAdsResponse(adsResponse);
         }
         if (vastLoadTimeoutMs != TIMEOUT_UNSET) {
@@ -702,8 +825,12 @@ public final class ZappImaVastLoader
             adsManager.destroy();
             adsManager = null;
         }
-        adsLoader.removeAdsLoadedListener(/* adsLoadedListener= */ this);
-        adsLoader.removeAdErrorListener(/* adErrorListener= */ this);
+        adsLoader.removeAdsLoadedListener(*/
+/* adsLoadedListener= *//*
+ this);
+        adsLoader.removeAdErrorListener(*/
+/* adErrorListener= *//*
+ this);
         imaPausedContent = false;
         imaAdState = IMA_AD_STATE_NONE;
         pendingAdLoadError = null;
@@ -1396,10 +1523,12 @@ public final class ZappImaVastLoader
         }
     }
 
-    /**
+    */
+/**
      * Returns the next ad index in the specified ad group to load, or {@link C#INDEX_UNSET} if all
      * ads in the ad group have loaded.
-     */
+     *//*
+
     private int getAdIndexInAdGroupToLoad(int adGroupIndex) {
         @AdState int[] states = adPlaybackState.adGroups[adGroupIndex].states;
         int adIndexInAdGroup = 0;
@@ -1478,23 +1607,39 @@ public final class ZappImaVastLoader
         }
     }
 
-    /** Factory for objects provided by the IMA SDK. */
+    */
+/** Factory for objects provided by the IMA SDK. *//*
+
     @VisibleForTesting
-            /* package */ interface ImaFactory {
-        /** @see ImaSdkSettings */
+            */
+/* package *//*
+ interface ImaFactory {
+        */
+/** @see ImaSdkSettings *//*
+
         ImaSdkSettings createImaSdkSettings();
-        /** @see com.google.ads.interactivemedia.v3.api.ImaSdkFactory#createAdsRenderingSettings() */
+        */
+/** @see com.google.ads.interactivemedia.v3.api.ImaSdkFactory#createAdsRenderingSettings() *//*
+
         AdsRenderingSettings createAdsRenderingSettings();
-        /** @see com.google.ads.interactivemedia.v3.api.ImaSdkFactory#createAdDisplayContainer() */
+        */
+/** @see com.google.ads.interactivemedia.v3.api.ImaSdkFactory#createAdDisplayContainer() *//*
+
         AdDisplayContainer createAdDisplayContainer();
-        /** @see com.google.ads.interactivemedia.v3.api.ImaSdkFactory#createAdsRequest() */
+        */
+/** @see com.google.ads.interactivemedia.v3.api.ImaSdkFactory#createAdsRequest() *//*
+
         AdsRequest createAdsRequest();
-        /** @see ImaSdkFactory#createAdsLoader(Context, ImaSdkSettings, AdDisplayContainer) */
+        */
+/** @see ImaSdkFactory#createAdsLoader(Context, ImaSdkSettings, AdDisplayContainer) *//*
+
         com.google.ads.interactivemedia.v3.api.AdsLoader createAdsLoader(
                 Context context, ImaSdkSettings imaSdkSettings, AdDisplayContainer adDisplayContainer);
     }
 
-    /** Default {@link ImaFactory} for non-test usage, which delegates to {@link ImaSdkFactory}. */
+    */
+/** Default {@link ImaFactory} for non-test usage, which delegates to {@link ImaSdkFactory}. *//*
+
     private static final class DefaultImaFactory implements ImaFactory {
         @Override
         public ImaSdkSettings createImaSdkSettings() {
@@ -1525,3 +1670,4 @@ public final class ZappImaVastLoader
     }
 }
 
+*/

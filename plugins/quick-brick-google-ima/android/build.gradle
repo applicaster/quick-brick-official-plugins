@@ -113,7 +113,8 @@ dependencies {
     api "com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion"
     api "com.google.android.exoplayer:exoplayer-hls:$exoPlayerVersion"
     api "com.google.android.exoplayer:exoplayer-smoothstreaming:$exoPlayerVersion"
-    api "com.google.android.exoplayer:extension-ima:$exoPlayerVersion"
+//    api "com.google.android.exoplayer:extension-ima:$exoPlayerVersion"
+    implementation 'com.google.ads.interactivemedia.v3:interactivemedia:3.18.1'
 }
 
 //---------------------------------- Bintray ----------------------------------//

@@ -13,9 +13,6 @@ import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.Timeline
 import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.source.ads.AdsLoader
-import com.google.android.exoplayer2.source.ads.AdsMediaSource
-import com.google.android.exoplayer2.ui.DefaultTimeBar
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util as exoUtil
@@ -32,12 +29,13 @@ class QuickBrickGoogleIMA : PlayerReceiverPlugin, Player.EventListener, AdErrorE
 	private var context: Context? = null
 	private var player: ExoPlayer? = null
 	private var playerView: PlayerView? = null
-	private var playerTimeBar: DefaultTimeBar? = null
-	private var imaLoader: AdsLoader? = null
 	private var entry: Map<String, Any>? = null
 	private var mediaSource: MediaSource? = null
 	private var ads: Ad = Ad.Empty
 	private var nextQuePointPosition = 0
+	private lateinit var imaLoader: ImaLoader
+	private lateinit var mVideoPlayerController: VideoPlayerController
+	private var isAdsStartWasCalled = false
 
 	init {
 		logData("init $tag")
@@ -45,7 +43,7 @@ class QuickBrickGoogleIMA : PlayerReceiverPlugin, Player.EventListener, AdErrorE
 
 	override fun playerDidFinishPlayItem(player: PlayerSenderPlugin) {
 		logData("playerDidFinishPlayItem")
-		imaLoader?.release()
+//		imaLoader?.release()
 	}
 
 	override fun playerDidCreate(player: PlayerSenderPlugin) {
@@ -62,47 +60,50 @@ class QuickBrickGoogleIMA : PlayerReceiverPlugin, Player.EventListener, AdErrorE
 
 		// Creates ads media source
 
-		val adsMediaSource = adsMediaSource(this.mediaSource, createDefaultDataSourceFactory())
+//		val adsMediaSource = adsMediaSource(this.mediaSource, createDefaultDataSourceFactory())
 
-		this.player?.prepare(adsMediaSource)
+		this.player?.prepare(mediaSource!!)
 	}
 
 	private fun initImaLoader() {
 		when (ads) {
 			is Ad.Vast -> initImaVastLoader()
-			is Ad.Vmap -> initImaAdsLoader()
+			is Ad.Vmap -> initImaVmapLoader()
 			Ad.Empty -> Uri.EMPTY
 		}
 	}
 
-	private fun initImaAdsLoader() {
-		this.context?.let {
-			this.imaLoader = ZappImaAdsLoader.Builder(it)
-					.setMediaLoadTimeoutMs(10_000)
-					.setVastLoadTimeoutMs(10_000)
-					.buildForAdTag(Uri.parse("https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/ad_rule_samples&ciu_szs=300x250&ad_rule=1&impl=s&gdfp_req=1&env=vp&output=vmap&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ar%3Dpostonly&cmsid=496&vid=short_onecue&correlator="))
+	private fun initImaVmapLoader() {
+		context?.let {
+			imaLoader = ImaLoader.build {
+				this.context = it
+				this.vmapTagUrl = getAdsTagUrl().toString()
+			}
+			imaLoader.setPlayer(player)
+			imaLoader.setPlayerView(playerView)
+			imaLoader.setMediaSource(mediaSource)
 		}
-		this.imaLoader?.setPlayer(this.player)
 	}
 
 	private fun initImaVastLoader() {
-		this.context?.let {
-//			this.imaLoader = ImaVastLoader(it)
-			this.imaLoader = ZappImaVastLoader.Builder(it)
-					.setMediaLoadTimeoutMs(10_000)
-					.setVastLoadTimeoutMs(10_000)
-					.buildForCuePoints(getVastCuePoints())
+		context?.let {
+			imaLoader = ImaLoader.build {
+				this.context = it
+				this.cuePoints = getVastCuePoints()
+			}
+			imaLoader.setPlayer(player)
+			imaLoader.setPlayerView(playerView)
+			imaLoader.setMediaSource(mediaSource)
 		}
-		this.imaLoader?.setPlayer(this.player)
 	}
 
-	private fun adsMediaSource(
-			mediaSource: MediaSource?,
-			defaultDataSourceFactory: DefaultDataSourceFactory) = AdsMediaSource(
-			mediaSource,
-			defaultDataSourceFactory,
-			this.imaLoader,
-			this.playerView)
+//	private fun adsMediaSource(
+//			mediaSource: MediaSource?,
+//			defaultDataSourceFactory: DefaultDataSourceFactory) = AdsMediaSource(
+//			mediaSource,
+//			defaultDataSourceFactory,
+//			this.imaLoader,
+//			this.playerView)
 
 	private fun createDefaultDataSourceFactory() = DefaultDataSourceFactory(
 			this.context,
@@ -150,20 +151,25 @@ class QuickBrickGoogleIMA : PlayerReceiverPlugin, Player.EventListener, AdErrorE
 	override fun playerDidDismiss(player: PlayerSenderPlugin) {
 		logData("playerDidDismiss")
 		release()
+		isAdsStartWasCalled = false
 	}
 
 	private fun release() {
 		this.player?.release()
-		this.imaLoader?.release()
+//		this.imaLoader?.release()
 	}
 
 	override fun playerProgressUpdate(player: PlayerSenderPlugin, currentTime: Long, duration: Long) {
+		imaLoader.timelineUpdate(0)
 		logData("playerProgressUpdate")
-
 	}
 
 	override fun onTimelineChanged(timeline: Timeline, reason: Int) {
 		logData("onTimelineChanged")
+		if (!isAdsStartWasCalled) {
+			imaLoader.timelineUpdate(0)
+			isAdsStartWasCalled = true
+		}
 	}
 
 	override fun receiveEvent(eventName: String, sender: SenderPlugin) {
