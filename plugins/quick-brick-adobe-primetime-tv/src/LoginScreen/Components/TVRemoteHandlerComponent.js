@@ -28,7 +28,9 @@ export default function TVRemoteHandlerComponent({ tvEventHandler, children }) {
       ios: renderTvOSRemoteComponent
     };
 
-    return remoteHandlers[platform]();
+    return remoteHandlers[platform]
+      ? remoteHandlers[platform]()
+      : renderAndroidRemoteComponent();
   };
 
   return selectRemote(Platform.OS);
