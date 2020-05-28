@@ -6,7 +6,7 @@
   "react_native": true,
   "dependency_repository_url": [],
   "dependency_name": "@applicaster/quick-brick-adobe-primetime-tv",
-  "dependency_version": "0.0.5",
+  "dependency_version": "0.0.6",
   "platform": "samsung_tv",
   "author_name": "Olga Duk",
   "author_email": "oduk@scand.com",

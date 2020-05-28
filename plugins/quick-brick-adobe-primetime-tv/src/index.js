@@ -119,7 +119,8 @@ function AdobeLoginComponent(props) {
       const deviceId = await getFromSessionStorage('uuid');
       const userId = await checkDeviceStatus(deviceId, credentials);
 
-      if (userId && !isHook(navigator)) return setScreen('LOGOUT');
+      if (userId && !isHook(navigator)) return startLogoutFlow();
+      if (userId && !isPlayerHook(payload)) return successLoginFlow();
       if (!userId) setScreen('LOGIN');
 
       heartbeat = setInterval(() => {
