@@ -33,26 +33,6 @@ async function removeFromLocalStorage(key, namespace) {
   return storage.setItem(key, JSON.stringify({}), namespace);
 }
 
-async function isTokenInStorage(key, namespace) {
-  try {
-    let token = await getFromLocalStorage(key, namespace);
-
-    if (token === null) return false;
-
-    if (typeof token === 'string') {
-      token = parseJsonIfNeeded(token);
-    }
-
-    if (Array.isArray(token)) return !!token.length;
-    if (typeof token === 'object') return !R.isEmpty(token);
-
-    return !!token;
-  } catch (err) {
-    console.log(err);
-    return false;
-  }
-}
-
 function validateStyles(pluginData) {
   const keys = Object.keys(pluginData);
   keys.forEach((key) => {
@@ -117,16 +97,22 @@ const showMenu = (navigator) => {
   }
 };
 
+const isHook = (navigator) => {
+  // need to check if it's a hook.
+  // If it was ui_component && token in localstorage => logout screen;
+  return !!R.propOr(false, 'hookPlugin')(navigator.routeData());
+};
+
 export {
   getPluginData,
   setToLocalStorage,
   getFromLocalStorage,
   getFromSessionStorage,
   removeFromLocalStorage,
-  isTokenInStorage,
   isHomeScreen,
   isPlayerHook,
   parseFontKey,
   hideMenu,
-  showMenu
+  showMenu,
+  isHook
 };

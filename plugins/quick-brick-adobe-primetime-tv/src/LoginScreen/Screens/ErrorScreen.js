@@ -17,8 +17,7 @@ function ErrorScreen(props) {
     error,
     remoteHandler,
     navigator,
-    payload,
-    closeHook,
+    skipLoginflow,
     startLogoutFlow,
     startAuthFlow
   } = props;
@@ -47,7 +46,7 @@ function ErrorScreen(props) {
     if (navigator.canGoBack()) {
       navigator.goBack();
     } else {
-      closeHook({ success: false, payload });
+      return skipLoginflow();
     }
   };
 
@@ -73,7 +72,7 @@ function ErrorScreen(props) {
       <View style={styles.container}>
         <Text
           style={[styles.errorText, errorDescriptionStyle]}
-          numberOfLines={2}
+          numberOfLines={3}
           ellipsizeMode="tail"
         >
           {error.message}

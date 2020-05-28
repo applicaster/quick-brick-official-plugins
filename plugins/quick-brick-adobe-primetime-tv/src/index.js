@@ -10,14 +10,15 @@ import SignInScreen from './LoginScreen/Screens/SignInScreen';
 import LogoutScreen from './LoginScreen/Screens/LogoutScreen';
 import {
   isHomeScreen,
-  isTokenInStorage,
   getFromSessionStorage,
   isPlayerHook,
   hideMenu,
-  setToLocalStorage
+  setToLocalStorage,
+  isHook
 } from './LoginScreen/Utils';
 import trackEvent from './Analytics';
 import EVENTS from './Analytics/Events';
+import { HEARBEAT } from './Adobe/Config';
 
 
 const storeConnector = connectToStore((state) => {
@@ -57,6 +58,8 @@ function AdobeLoginComponent(props) {
 
   const [screen, setScreen] = useState('LOADING');
   const [error, setError] = useState(null);
+  let heartbeat;
+
   const pluginData = getCustomPluginData(screenData);
 
   session.isHomeScreen = isHomeScreen(navigator);
@@ -64,11 +67,8 @@ function AdobeLoginComponent(props) {
   useEffect(() => {
     hideMenu(navigator);
     start();
+    return () => clearInterval(heartbeat);
   }, []);
-
-  const goToScreen = (targetScreen) => {
-    setScreen(targetScreen);
-  };
 
   const successLoginFlow = () => {
     callback({
@@ -84,24 +84,12 @@ function AdobeLoginComponent(props) {
     });
   };
 
-  const isHook = () => {
-    // need to check if it's a hook.
-    // If it was ui_component && token in localstorage => logout screen;
-    return !!R.propOr(false, 'hookPlugin')(navigator.routeData());
-  };
-
-  const errorCallback = (err) => {
-    setError(err);
-    goToScreen('ERROR');
-  };
+  const errorCallback = (err) => setError(err);
 
   const start = async () => {
     try {
-      const isToken = await isTokenInStorage('idToken');
-
       const requiresAuth = R.pathOr(false, ['extensions', 'requires_authentication'], payload);
       if (isPlayerHook(payload) && !requiresAuth) return successLoginFlow();
-      if (isToken && !isHook()) return startLogoutFlow();
 
       return startAuthNFlow();
     } catch (err) {
@@ -109,7 +97,10 @@ function AdobeLoginComponent(props) {
     }
   };
 
-  const startLogoutFlow = () => goToScreen('LOGOUT');
+  const startLogoutFlow = () => {
+    setError(null);
+    setScreen('LOGOUT');
+  };
 
   const startAuthZFlow = async (deviceId) => {
     if (isPlayerHook(payload)) {
@@ -124,15 +115,49 @@ function AdobeLoginComponent(props) {
 
   const startAuthNFlow = async () => {
     try {
+      setError(null);
       const deviceId = await getFromSessionStorage('uuid');
       const userId = await checkDeviceStatus(deviceId, credentials);
-      if (!userId) return goToScreen('LOGIN');
-      await startAuthZFlow(deviceId);
-      return callback({ success: true, payload });
+
+      if (userId && !isHook(navigator)) return setScreen('LOGOUT');
+      if (!userId) setScreen('LOGIN');
+
+      heartbeat = setInterval(() => {
+        getSignInStatus(deviceId);
+      }, HEARBEAT);
     } catch (err) {
-      setError(err);
       trackEvent(EVENTS.authZ.authorizationFailed, { payload, credentials, error: err });
-      return goToScreen('ERROR');
+      setError(err);
+    }
+  };
+
+  const getSignInStatus = async (deviceId) => {
+    try {
+      const userId = await checkDeviceStatus(deviceId, credentials);
+      if (userId) {
+        clearInterval(heartbeat);
+        trackEvent(
+          EVENTS.authN.activationSuccess,
+          { credentials, payload, deviceId }
+        );
+        await setToLocalStorage('idToken', userId);
+        await setToLocalStorage('userId', userId);
+
+        await startAuthZFlow(deviceId);
+        return callback ? successLoginFlow() : navigator.goBack();
+      }
+    } catch (err) {
+      console.log(err);
+      trackEvent(
+        EVENTS.authN.activationFailed,
+        {
+          credentials,
+          payload,
+          error,
+          deviceId
+        }
+      );
+      setError(err);
     }
   };
 
@@ -184,7 +209,7 @@ function AdobeLoginComponent(props) {
         error={error}
         navigator={navigator}
         remoteHandler={remoteHandler}
-        closeHook={callback}
+        skipLoginflow={skipLoginflow}
         startAuthFlow={startAuthNFlow}
         startLogoutFlow={startLogoutFlow}
       />
@@ -195,16 +220,13 @@ function AdobeLoginComponent(props) {
     const screens = {
       LOGIN: renderLoginScreen,
       LOGOUT: renderLogoutScreen,
-      LOADING: renderLoadingScreen,
-      ERROR: renderErrorScreen
+      LOADING: renderLoadingScreen
     };
 
     return screens[targetScreen]();
   };
 
-  return (
-    renderScreen(screen)
-  );
+  return error ? renderErrorScreen() : renderScreen(screen);
 }
 
 export default storeConnector(AdobeLoginComponent);
