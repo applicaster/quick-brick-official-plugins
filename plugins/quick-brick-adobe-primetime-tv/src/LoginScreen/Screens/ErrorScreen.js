@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useRef } from 'react';
 import {
   View,
   Text,
-  Dimensions,
   Platform
 } from 'react-native';
 import { useInitialFocus } from '@applicaster/zapp-react-native-utils/focusManager';
@@ -12,8 +11,6 @@ import Button from '../Components/Button';
 import ASSETS from '../Config/Assets';
 import { hideMenu, showMenu } from '../Utils';
 
-
-const { width } = Dimensions.get('window');
 
 function ErrorScreen(props) {
   const {
@@ -112,7 +109,7 @@ const styles = {
     paddingHorizontal: 200,
     alignItems: 'center',
     height: '100%',
-    width
+    width: '100%'
   },
   errorText: {
     textAlign: 'center',
