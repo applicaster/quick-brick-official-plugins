@@ -7,9 +7,7 @@ class Session {
     return Session.instance;
   }
 
-  isHomeScreen = null;
-
-  appLaunch = true;
+  navBarHidden = null;
 }
 
 const session = new Session();

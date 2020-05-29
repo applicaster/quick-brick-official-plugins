@@ -3,7 +3,6 @@ import * as R from 'ramda';
 import { connectToStore } from '@applicaster/zapp-react-native-redux';
 import { getCustomPluginData, PluginContext } from './LoginScreen/Config/PluginData';
 import { checkDeviceStatus, authorizeContent, getAuthZToken } from './LoginPluginInterface';
-import session from './LoginScreen/Config/Session';
 import LoadingScreen from './LoginScreen/Screens/LoadingScreen';
 import ErrorScreen from './LoginScreen/Screens/ErrorScreen';
 import SignInScreen from './LoginScreen/Screens/SignInScreen';
@@ -61,8 +60,6 @@ function AdobeLoginComponent(props) {
   let heartbeat;
 
   const pluginData = getCustomPluginData(screenData);
-
-  session.isHomeScreen = isHomeScreen(navigator);
 
   useEffect(() => {
     hideMenu(navigator);
@@ -163,17 +160,13 @@ function AdobeLoginComponent(props) {
   };
 
   const remoteHandler = async (component, event) => {
+    const isHome = isHomeScreen(navigator, homeScreen);
     const { eventType } = event;
-    if (eventType === 'menu' && session.isHomeScreen) {
-      return null;
-    }
+
+    if (eventType === 'menu' && isHome) return null;
     if (eventType === 'menu' && navigator.canGoBack()) {
       navigator.goBack();
       return skipLoginflow();
-    }
-    if (eventType === 'menu' && !session.isHomeScreen) {
-      successLoginFlow();
-      return navigator.replace(homeScreen);
     }
   };
 

@@ -1,7 +1,6 @@
 import * as R from 'ramda';
 import { localStorage as storage } from '@applicaster/zapp-react-native-bridge/ZappStorage/LocalStorage';
 import { sessionStorage } from '@applicaster/zapp-react-native-bridge/ZappStorage/SessionStorage';
-import { parseJsonIfNeeded } from '@applicaster/zapp-react-native-utils/functionUtils';
 import { fontsize, fontcolor } from '../Config/DefaultStyles';
 import session from '../Config/Session';
 
@@ -19,10 +18,6 @@ function getPluginData(screenData) {
 
 async function setToLocalStorage(key, value, namespace) {
   return storage.setItem(key, value, namespace);
-}
-
-async function getFromLocalStorage(key, namespace) {
-  return storage.getItem(key, namespace);
 }
 
 async function getFromSessionStorage(key, namespace) {
@@ -66,8 +61,10 @@ const validateFontcolor = (key, pluginData) => {
   pluginData[key] = (value !== undefined && value !== null) ? value : fontcolor.default;
 };
 
-const isHomeScreen = (navigator) => {
-  return R.pathOr(false, ['payload', 'home'], navigator.routeData());
+const isHomeScreen = (navigator, homeScreen) => {
+  const targetId = R.pathOr('', ['payload', 'data', 'target'], navigator.routeData());
+  const isHome = R.pathOr(false, ['payload', 'home'], navigator.routeData());
+  return isHome || targetId === homeScreen.id;
 };
 
 const isPlayerHook = (payload) => R.pathSatisfies(
@@ -106,7 +103,6 @@ const isHook = (navigator) => {
 export {
   getPluginData,
   setToLocalStorage,
-  getFromLocalStorage,
   getFromSessionStorage,
   removeFromLocalStorage,
   isHomeScreen,
