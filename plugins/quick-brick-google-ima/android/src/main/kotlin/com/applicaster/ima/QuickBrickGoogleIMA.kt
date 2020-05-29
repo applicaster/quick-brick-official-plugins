@@ -3,6 +3,7 @@ package com.applicaster.ima
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import android.widget.ImageButton
 import com.applicaster.ima.ads.Ad
 import com.applicaster.ima.ads.CuePoint
 import com.applicaster.ima.ads.ImaLoader
@@ -10,6 +11,8 @@ import com.applicaster.ima.ads.parseAds
 import com.applicaster.plugin_manager.dependencyplugin.playerplugin.PlayerReceiverPlugin
 import com.applicaster.plugin_manager.dependencyplugin.playerplugin.PlayerSenderPlugin
 import com.applicaster.util.OSUtil
+import com.facebook.react.bridge.LifecycleEventListener
+import com.facebook.react.uimanager.ThemedReactContext
 import com.google.ads.interactivemedia.v3.api.AdErrorEvent
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
@@ -29,7 +32,8 @@ class QuickBrickGoogleIMA :
 		PlayerReceiverPlugin,
 		Player.EventListener,
 		AdErrorEvent.AdErrorListener,
-		ImaLoader.VideoPlayerEventsListener {
+		ImaLoader.VideoPlayerEventsListener,
+		LifecycleEventListener {
 
 	override fun onAdError(p: AdErrorEvent?) {
 		logData(p.toString())
@@ -57,15 +61,58 @@ class QuickBrickGoogleIMA :
 
 	override fun playerDidCreate(player: PlayerSenderPlugin) {
 		logData("playerDidCreate")
-
 		// Set init data
 		initPlayer(player)
-
 		this.player?.playWhenReady = true
-
 		// init IMA ads loader
 		initImaLoader()
 	}
+
+	override fun playerDidDismiss(player: PlayerSenderPlugin) {
+		logData("playerDidDismiss")
+		release()
+	}
+
+	override fun playerProgressUpdate(player: PlayerSenderPlugin, currentTime: Long, duration: Long) {
+		logData("playerProgressUpdate")
+	}
+
+	override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+		when (playbackState) {
+			Player.STATE_READY -> videoReady()
+			Player.STATE_ENDED -> {
+				playbackProgressObservable?.dispose()
+				this.imaVmapLoader?.release()
+				this.imaVastLoader?.release()
+			}
+			else -> Unit
+		}
+	}
+
+	//ImaLoader.VideoPlayerEventsListener methods
+	override fun onPause() {
+		player?.playWhenReady = false
+	}
+
+	override fun onPlay() {
+		playerView?.player = this.player
+		player?.playWhenReady = true
+	}
+
+	override fun onStop() {
+		player?.stop()
+	}
+
+	//RN lifecycle methods
+	override fun onHostResume() {
+		imaVastLoader?.resumeAd()
+	}
+
+	override fun onHostPause() {
+		imaVastLoader?.pauseAd()
+	}
+
+	override fun onHostDestroy() = Unit
 
 	private fun initImaLoader() {
 		when (ads) {
@@ -129,6 +176,12 @@ class QuickBrickGoogleIMA :
 		entry?.let { this.ads = parseAds(it) }
 		//initialize context
 		this.context = player.senderView.context
+		//add RN lifecycle listener
+		this.context?.let {
+			if (it is ThemedReactContext) {
+				it.addLifecycleEventListener(this)
+			}
+		}
 		//initialize media source
 		this.mediaSource = player.senderMediaSource as MediaSource
 	}
@@ -146,29 +199,8 @@ class QuickBrickGoogleIMA :
 		}
 	}
 
-	override fun playerDidDismiss(player: PlayerSenderPlugin) {
-		logData("playerDidDismiss")
-		release()
-	}
-
 	private fun release() {
 		this.player?.release()
-	}
-
-	override fun playerProgressUpdate(player: PlayerSenderPlugin, currentTime: Long, duration: Long) {
-		logData("playerProgressUpdate")
-	}
-
-	override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-		when (playbackState) {
-			Player.STATE_READY -> videoReady()
-			Player.STATE_ENDED -> {
-				playbackProgressObservable?.dispose()
-				this.imaVmapLoader?.release()
-				this.imaVastLoader?.release()
-			}
-			else -> Unit
-		}
 	}
 
 	private fun videoReady() {
@@ -192,19 +224,6 @@ class QuickBrickGoogleIMA :
 			return player?.currentPosition ?: 0
 		}
 		return 1.toLong()
-	}
-
-	override fun onPause() {
-		player?.playWhenReady = false
-	}
-
-	override fun onPlay() {
-		playerView?.player = this.player
-		player?.playWhenReady = true
-	}
-
-	override fun onStop() {
-		player?.stop()
 	}
 
 	private fun logData(message: String) {

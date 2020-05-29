@@ -138,11 +138,19 @@ class ImaLoader(private val context: Context,
 	}
 
 	override fun pauseAd() {
-		player?.playWhenReady = false
+		if (isAdDisplayed) {
+			adsManager?.pause()
+			player?.playWhenReady = false
+			isAdDisplayed = false
+		}
 	}
 
 	override fun resumeAd() {
-		player?.playWhenReady = true
+		if (!isAdDisplayed) {
+			adsManager?.resume()
+			player?.playWhenReady = true
+			isAdDisplayed = true
+		}
 	}
 
 	override fun getVolume(): Int =
