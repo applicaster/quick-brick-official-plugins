@@ -46,6 +46,7 @@ class ImaLoader(private val context: Context,
 		fun onPause()
 		fun onPlay()
 		fun onStop()
+		fun onAllAdsFinished()
 	}
 
 	//class fields
@@ -58,6 +59,7 @@ class ImaLoader(private val context: Context,
 	private val adCallbacks: ArrayList<VideoAdPlayer.VideoAdPlayerCallback> = ArrayList(1)
 	private var playbackSavedPosition: Long = C.TIME_UNSET
 	private var isAdDisplayed = false
+	private var isAllAdsFinished = false
 
 	override fun onAdsManagerLoaded(event: AdsManagerLoadedEvent?) {
 		adsManager = event?.adsManager
@@ -81,6 +83,10 @@ class ImaLoader(private val context: Context,
 				Log.d(TAG, "${event.type?.name}")
 			}
 			AdEvent.AdEventType.ALL_ADS_COMPLETED -> {
+				if (isAllAdsFinished) {
+					videoPlayerEventsListener?.onAllAdsFinished()
+					isAllAdsFinished = false
+				}
 				adsManager?.destroy()
 				adsManager = null
 				Log.d(TAG, "${event.type?.name}")
@@ -256,11 +262,15 @@ class ImaLoader(private val context: Context,
 				is AdType.Midroll -> type.offset < currentPlayerPosition
 				AdType.Preroll -> 0L == currentPlayerPosition
 				AdType.Postroll -> currentPlayerPosition == videoDuration
+
 			}
 		}
 		if (index != -1) {
 			adTagUrl = cuePoints[index].adTagUri.toString()
 			cuePoints.subList(0, index + 1).clear()
+			if (cuePoints.isEmpty()) isAllAdsFinished = true
+		} else {
+			isAllAdsFinished = true
 		}
 		return adTagUrl
 	}
@@ -268,6 +278,9 @@ class ImaLoader(private val context: Context,
 	private fun initAdsPlayer() {
 		playerView?.hideController()
 		this.player = SimpleExoPlayer.Builder(context).build()
+		if (this.playerView == null) {
+			throw RuntimeException("You must call [setPlayerView] method before calling ads")
+		}
 		this.playerView?.player = this.player
 		val sdkFactory = ImaSdkFactory.getInstance()
 		val settings = sdkFactory.createImaSdkSettings()
@@ -298,5 +311,6 @@ class ImaLoader(private val context: Context,
 		playerView = null
 		adCallbacks.clear()
 		playbackSavedPosition = C.TIME_UNSET
+		isAllAdsFinished = false
 	}
 }

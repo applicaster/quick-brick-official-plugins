@@ -50,6 +50,7 @@ class QuickBrickGoogleIMA :
 	private var imaVastLoader: ImaLoader? = null
 	private var imaVmapLoader: ImaAdsLoader? = null
 	private var playbackProgressObservable: Disposable? = null
+	private var isAllAdsFinished = false
 
 	init {
 		logData("init $tag")
@@ -83,7 +84,6 @@ class QuickBrickGoogleIMA :
 			Player.STATE_ENDED -> {
 				playbackProgressObservable?.dispose()
 				this.imaVmapLoader?.release()
-				this.imaVastLoader?.release()
 			}
 			else -> Unit
 		}
@@ -103,6 +103,12 @@ class QuickBrickGoogleIMA :
 		player?.stop()
 	}
 
+	override fun onAllAdsFinished() {
+		//notify the player that all ads was finished
+		isAllAdsFinished = true
+		logData("allAdsFinished")
+	}
+
 	//RN lifecycle methods
 	override fun onHostResume() {
 		imaVastLoader?.resumeAd()
@@ -112,9 +118,12 @@ class QuickBrickGoogleIMA :
 		imaVastLoader?.pauseAd()
 	}
 
-	override fun onHostDestroy() = Unit
+	override fun onHostDestroy() {
+		this.imaVastLoader?.release()
+	}
 
 	private fun initImaLoader() {
+		isAllAdsFinished = false
 		when (ads) {
 			is Ad.Vast -> {
 				initImaVastLoader()
