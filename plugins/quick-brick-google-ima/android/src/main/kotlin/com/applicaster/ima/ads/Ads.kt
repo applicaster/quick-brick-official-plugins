@@ -14,7 +14,7 @@ const val KEY_OFFSET_POST = "postroll"
 
 //region DataTypes
 sealed class Ad {
-	data class Vast(val cuePoints: List<CuePoint>) : Ad()
+	data class Vast(val cuePoints: MutableList<CuePoint>) : Ad()
 	data class Vmap(val adTagUri: Uri) : Ad()
 	object Empty: Ad()
 }
@@ -34,22 +34,7 @@ sealed class AdType {
 	}
 }
 
-enum class AdState {
-	UNAVAILABLE,
-	/** State for an ad that has a URL but has not yet been played.  */
-	AVAILABLE,
-	/** State for an ad that was skipped.  */
-	SKIPPED,
-	/** State for an ad that was played in full.  */
-	PLAYED,
-	/** State for an ad that could not be loaded.  */
-	ERROR
-}
-
-data class CuePoint(val adState: AdState, val index: Int, val adType: AdType, val adTagUri: Uri) {
-	fun withNewAdState(cuePoint: CuePoint, newAdState: AdState): CuePoint =
-			CuePoint(newAdState, cuePoint.index, cuePoint.adType, cuePoint.adTagUri)
-}
+data class CuePoint(val adType: AdType, val adTagUri: Uri)
 //endregion
 
 //region Functions
@@ -69,14 +54,14 @@ private fun getVideoAdsData(data: Any?): Any? =
 private fun getAds(data: Any?): Ad? =
 	 when {
 		data is List<*> && !data.isNullOrEmpty() -> {
-			val quePoints = data.mapIndexedNotNull { index, ad ->  parseSingleAd(ad as? Map<*, *>?, index) }
-			Ad.Vast(quePoints)
+			val quePoints = data.mapNotNull { ad ->  parseSingleAd(ad as? Map<*, *>?) }
+			Ad.Vast(quePoints.toMutableList())
 		}
 		data is String && data.isNotEmpty() -> Ad.Vmap(Uri.parse(data.toString()))
 		else -> null
 	}
 
-private fun parseSingleAd(ad: Map<*, *>?, index: Int): CuePoint? {
+private fun parseSingleAd(ad: Map<*, *>?): CuePoint? {
 	return ad?.let {
 		var url = ""
 		var offset = ""
@@ -87,9 +72,9 @@ private fun parseSingleAd(ad: Map<*, *>?, index: Int): CuePoint? {
 			offset = ad[KEY_OFFSET].toString()
 		}
 		return when (val type = AdType.create(offset)) {
-			is AdType.Midroll -> CuePoint(AdState.UNAVAILABLE, index, type, Uri.parse(url))
-			AdType.Preroll -> CuePoint(AdState.UNAVAILABLE, index, type, Uri.parse(url))
-			AdType.Postroll -> CuePoint(AdState.UNAVAILABLE, index, type, Uri.parse(url))
+			is AdType.Midroll -> CuePoint(type, Uri.parse(url))
+			AdType.Preroll -> CuePoint(type, Uri.parse(url))
+			AdType.Postroll -> CuePoint(type, Uri.parse(url))
 		}
 	}
 }

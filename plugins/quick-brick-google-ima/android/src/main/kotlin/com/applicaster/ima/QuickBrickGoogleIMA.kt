@@ -2,21 +2,26 @@ package com.applicaster.ima
 
 import android.content.Context
 import android.net.Uri
-import android.os.Looper
 import android.util.Log
-import com.applicaster.ima.ads.*
-import com.applicaster.plugin_manager.dependencyplugin.base.interfaces.SenderPlugin
+import com.applicaster.ima.ads.Ad
+import com.applicaster.ima.ads.CuePoint
+import com.applicaster.ima.ads.ImaLoader
+import com.applicaster.ima.ads.parseAds
 import com.applicaster.plugin_manager.dependencyplugin.playerplugin.PlayerReceiverPlugin
 import com.applicaster.plugin_manager.dependencyplugin.playerplugin.PlayerSenderPlugin
 import com.applicaster.util.OSUtil
 import com.google.ads.interactivemedia.v3.api.AdErrorEvent
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.Timeline
+import com.google.android.exoplayer2.ext.ima.ImaAdsLoader
 import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.ads.AdsMediaSource
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import java.util.logging.Handler
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import java.util.concurrent.TimeUnit
 import com.google.android.exoplayer2.util.Util as exoUtil
 
 
@@ -24,7 +29,7 @@ class QuickBrickGoogleIMA :
 		PlayerReceiverPlugin,
 		Player.EventListener,
 		AdErrorEvent.AdErrorListener,
-		ImaLoader.VideoPlayerEventListener {
+		ImaLoader.VideoPlayerEventsListener {
 
 	override fun onAdError(p: AdErrorEvent?) {
 		logData(p.toString())
@@ -38,9 +43,9 @@ class QuickBrickGoogleIMA :
 	private var entry: Map<String, Any>? = null
 	private var mediaSource: MediaSource? = null
 	private var ads: Ad = Ad.Empty
-	private var nextQuePointPosition = 0
-	private lateinit var imaLoader: ImaLoader
-	private var isAdsStartWasCalled = false
+	private var imaVastLoader: ImaLoader? = null
+	private var imaVmapLoader: ImaAdsLoader? = null
+	private var playbackProgressObservable: Disposable? = null
 
 	init {
 		logData("init $tag")
@@ -48,7 +53,6 @@ class QuickBrickGoogleIMA :
 
 	override fun playerDidFinishPlayItem(player: PlayerSenderPlugin) {
 		logData("playerDidFinishPlayItem")
-//		imaLoader?.release()
 	}
 
 	override fun playerDidCreate(player: PlayerSenderPlugin) {
@@ -57,54 +61,54 @@ class QuickBrickGoogleIMA :
 		// Set init data
 		initPlayer(player)
 
-
 		this.player?.playWhenReady = true
 
 		// init IMA ads loader
 		initImaLoader()
-
-		// Creates ads media source
-
-//		val adsMediaSource = adsMediaSource(this.mediaSource, createDefaultDataSourceFactory())
-
-		this.player?.prepare(mediaSource!!)
 	}
 
 	private fun initImaLoader() {
 		when (ads) {
-			is Ad.Vast -> initImaVastLoader()
-			is Ad.Vmap -> initImaVmapLoader()
+			is Ad.Vast -> {
+				initImaVastLoader()
+				//prepare player
+				mediaSource?.let { this.player?.prepare(it) }
+			}
+			is Ad.Vmap -> {
+				initImaVmapLoader()
+				//create ads media source and prepare player
+				val adsMediaSource = adsMediaSource(this.mediaSource, createDefaultDataSourceFactory())
+				this.player?.prepare(adsMediaSource)
+			}
 			Ad.Empty -> Uri.EMPTY
 		}
 	}
 
 	private fun initImaVmapLoader() {
 		context?.let {
-			imaLoader = ImaLoader.build {
-				this.context = it
-				this.vmapTagUrl = getAdsTagUrl().toString()
-			}
+			imaVmapLoader = ImaAdsLoader(it, getAdsTagUrl())
+			imaVmapLoader?.setPlayer(this.player)
 		}
 	}
 
 	private fun initImaVastLoader() {
 		context?.let {
-			imaLoader = ImaLoader.build {
+			imaVastLoader = ImaLoader.build {
 				this.context = it
 				this.cuePoints = getVastCuePoints()
 			}
-			imaLoader.setPlayerView(playerView)
-			imaLoader.setVideoPlayerEventListener(this)
+			imaVastLoader?.setPlayerView(playerView)
+			imaVastLoader?.setVideoPlayerEventListener(this)
 		}
 	}
 
-//	private fun adsMediaSource(
-//			mediaSource: MediaSource?,
-//			defaultDataSourceFactory: DefaultDataSourceFactory) = AdsMediaSource(
-//			mediaSource,
-//			defaultDataSourceFactory,
-//			this.imaLoader,
-//			this.playerView)
+	private fun adsMediaSource(
+			mediaSource: MediaSource?,
+			defaultDataSourceFactory: DefaultDataSourceFactory) = AdsMediaSource(
+			mediaSource,
+			defaultDataSourceFactory,
+			this.imaVmapLoader,
+			this.playerView)
 
 	private fun createDefaultDataSourceFactory() = DefaultDataSourceFactory(
 			this.context,
@@ -113,39 +117,32 @@ class QuickBrickGoogleIMA :
 	private fun initPlayer(player: PlayerSenderPlugin) {
 		//  Create Media instance
 		this.player = player.playerObject as ExoPlayer
-
 		// ref to main view
 		this.playerView = player.pluginPlayerContainer as PlayerView
-
-//		this.playerTimeBar = this.playerView?.findViewById(R.id.exo_progress)
-
 		// assign main view player to exoplayer
 		this.playerView?.player = this.player
-
+		//add exoplayer events listener
 		this.player?.addListener(this)
-
 		// video entry data
 		this.entry = player.entry
-
+		//parse ads if exists
 		entry?.let { this.ads = parseAds(it) }
-
+		//initialize context
 		this.context = player.senderView.context
-
+		//initialize media source
 		this.mediaSource = player.senderMediaSource as MediaSource
-
 	}
 
 	private fun getAdsTagUrl(): Uri =
 			when (val currentAd = ads) {
-				is Ad.Vast -> currentAd.cuePoints[nextQuePointPosition].adTagUri
 				is Ad.Vmap -> currentAd.adTagUri
-				Ad.Empty -> Uri.EMPTY
+				else -> Uri.EMPTY
 			}
 
-	private fun getVastCuePoints(): List<CuePoint> {
+	private fun getVastCuePoints(): MutableList<CuePoint> {
 		return when (val currentAd = ads) {
 			is Ad.Vast -> currentAd.cuePoints
-			else -> listOf()
+			else -> mutableListOf()
 		}
 	}
 
@@ -156,28 +153,45 @@ class QuickBrickGoogleIMA :
 
 	private fun release() {
 		this.player?.release()
-		isAdsStartWasCalled = false
-//		this.imaLoader?.release()
 	}
 
 	override fun playerProgressUpdate(player: PlayerSenderPlugin, currentTime: Long, duration: Long) {
-		imaLoader.timelineUpdate(0)
 		logData("playerProgressUpdate")
 	}
 
-	override fun onTimelineChanged(timeline: Timeline, reason: Int) {
-		logData("onTimelineChanged")
-		if (!isAdsStartWasCalled) {
-			imaLoader.timelineUpdate(0)
-			isAdsStartWasCalled = true
-			android.os.Handler(Looper.getMainLooper()).postDelayed({
-				imaLoader.timelineUpdate(0)
-			}, 40_000)
+	override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+		when (playbackState) {
+			Player.STATE_READY -> videoReady()
+			Player.STATE_ENDED -> {
+				playbackProgressObservable?.dispose()
+				this.imaVmapLoader?.release()
+				this.imaVastLoader?.release()
+			}
+			else -> Unit
 		}
 	}
 
-	override fun receiveEvent(eventName: String, sender: SenderPlugin) {
-		logData("receiveEvent => eventName: $eventName, sender: ${sender.dependencyType}")
+	private fun videoReady() {
+		if (getVastCuePoints().isNotEmpty()) {
+			playbackProgressObservable = timeUpdate()
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe {
+						imaVastLoader?.timelineUpdate(player?.currentPosition
+								?: 0, player?.contentDuration ?: 0)
+					}
+		}
+	}
+
+	private fun timeUpdate(): Observable<Long> {
+		return Observable.interval(1, TimeUnit.SECONDS)
+				.map { checkIfPlayerIsPlaying() }
+	}
+
+	private fun checkIfPlayerIsPlaying(): Long {
+		if (player?.isPlaying == true){
+			return player?.currentPosition ?: 0
+		}
+		return 1.toLong()
 	}
 
 	override fun onPause() {
@@ -195,15 +209,5 @@ class QuickBrickGoogleIMA :
 
 	private fun logData(message: String) {
 		Log.d(tag, message)
-	}
-
-	private fun checkMidrollPosition(currentTime: Long) {
-		when (val currentAd = ads) {
-			is Ad.Vast -> {
-				currentAd.cuePoints[nextQuePointPosition].adTagUri
-			}
-			is Ad.Vmap -> currentAd.adTagUri
-			Ad.Empty -> Uri.EMPTY
-		}
 	}
 }
