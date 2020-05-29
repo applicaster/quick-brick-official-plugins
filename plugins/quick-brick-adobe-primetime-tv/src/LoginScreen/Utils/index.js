@@ -1,7 +1,6 @@
 import * as R from 'ramda';
 import { localStorage as storage } from '@applicaster/zapp-react-native-bridge/ZappStorage/LocalStorage';
 import { sessionStorage } from '@applicaster/zapp-react-native-bridge/ZappStorage/SessionStorage';
-import { parseJsonIfNeeded } from '@applicaster/zapp-react-native-utils/functionUtils';
 import { fontsize, fontcolor } from '../Config/DefaultStyles';
 import session from '../Config/Session';
 
@@ -21,36 +20,12 @@ async function setToLocalStorage(key, value, namespace) {
   return storage.setItem(key, value, namespace);
 }
 
-async function getFromLocalStorage(key, namespace) {
-  return storage.getItem(key, namespace);
-}
-
 async function getFromSessionStorage(key, namespace) {
   return sessionStorage.getItem(key, namespace);
 }
 
 async function removeFromLocalStorage(key, namespace) {
   return storage.setItem(key, JSON.stringify({}), namespace);
-}
-
-async function isTokenInStorage(key, namespace) {
-  try {
-    let token = await getFromLocalStorage(key, namespace);
-
-    if (token === null) return false;
-
-    if (typeof token === 'string') {
-      token = parseJsonIfNeeded(token);
-    }
-
-    if (Array.isArray(token)) return !!token.length;
-    if (typeof token === 'object') return !R.isEmpty(token);
-
-    return !!token;
-  } catch (err) {
-    console.log(err);
-    return false;
-  }
 }
 
 function validateStyles(pluginData) {
@@ -86,8 +61,10 @@ const validateFontcolor = (key, pluginData) => {
   pluginData[key] = (value !== undefined && value !== null) ? value : fontcolor.default;
 };
 
-const isHomeScreen = (navigator) => {
-  return R.pathOr(false, ['payload', 'home'], navigator.routeData());
+const isHomeScreen = (navigator, homeScreen) => {
+  const targetId = R.pathOr('', ['payload', 'data', 'target'], navigator.routeData());
+  const isHome = R.pathOr(false, ['payload', 'home'], navigator.routeData());
+  return isHome || targetId === homeScreen.id;
 };
 
 const isPlayerHook = (payload) => R.pathSatisfies(
@@ -117,16 +94,21 @@ const showMenu = (navigator) => {
   }
 };
 
+const isHook = (navigator) => {
+  // need to check if it's a hook.
+  // If it was ui_component && token in localstorage => logout screen;
+  return !!R.propOr(false, 'hookPlugin')(navigator.routeData());
+};
+
 export {
   getPluginData,
   setToLocalStorage,
-  getFromLocalStorage,
   getFromSessionStorage,
   removeFromLocalStorage,
-  isTokenInStorage,
   isHomeScreen,
   isPlayerHook,
   parseFontKey,
   hideMenu,
-  showMenu
+  showMenu,
+  isHook
 };

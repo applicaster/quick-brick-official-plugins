@@ -3,15 +3,12 @@ import {
   Text,
   View,
   ActivityIndicator,
-  Platform,
-  Dimensions
+  Platform
 } from 'react-native';
 import { useInitialFocus } from '@applicaster/zapp-react-native-utils/focusManager';
 import Button from './Button';
 import ASSETS from '../Config/Assets';
 import { PluginContext } from '../Config/PluginData';
-
-const { width } = Dimensions.get('window');
 
 
 export default function LogoutComponent(props) {
@@ -87,7 +84,7 @@ const styles = {
     paddingTop: 70,
     alignItems: 'center',
     height: '100%',
-    width
+    width: '100%'
   },
   buttonContainer: {
     minHeight: 90,

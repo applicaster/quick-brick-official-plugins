@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useRef } from 'react';
 import {
   View,
   Text,
-  Dimensions,
   Platform
 } from 'react-native';
 import { useInitialFocus } from '@applicaster/zapp-react-native-utils/focusManager';
@@ -13,15 +12,12 @@ import ASSETS from '../Config/Assets';
 import { hideMenu, showMenu } from '../Utils';
 
 
-const { width } = Dimensions.get('window');
-
 function ErrorScreen(props) {
   const {
     error,
     remoteHandler,
     navigator,
-    payload,
-    closeHook,
+    skipLoginflow,
     startLogoutFlow,
     startAuthFlow
   } = props;
@@ -50,7 +46,7 @@ function ErrorScreen(props) {
     if (navigator.canGoBack()) {
       navigator.goBack();
     } else {
-      closeHook({ success: false, payload });
+      return skipLoginflow();
     }
   };
 
@@ -76,7 +72,7 @@ function ErrorScreen(props) {
       <View style={styles.container}>
         <Text
           style={[styles.errorText, errorDescriptionStyle]}
-          numberOfLines={2}
+          numberOfLines={3}
           ellipsizeMode="tail"
         >
           {error.message}
@@ -112,7 +108,7 @@ const styles = {
     paddingHorizontal: 200,
     alignItems: 'center',
     height: '100%',
-    width
+    width: '100%'
   },
   errorText: {
     textAlign: 'center',

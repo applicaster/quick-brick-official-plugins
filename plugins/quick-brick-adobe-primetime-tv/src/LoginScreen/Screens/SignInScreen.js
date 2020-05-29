@@ -4,12 +4,10 @@ import AdditionalInfo from '../Components/AdditionalInfo';
 import TextComponent from '../Components/TextComponent';
 import QRBlock from '../Components/QRBlock';
 import Layout from '../Components/Layout';
-import { checkDeviceStatus, getRegistrationCode } from '../../LoginPluginInterface';
-import { HEARBEAT } from '../../Adobe/Config';
+import { getRegistrationCode } from '../../LoginPluginInterface';
 import { PluginContext } from '../Config/PluginData';
 import {
   hideMenu,
-  setToLocalStorage,
   getFromSessionStorage,
   showMenu
 } from '../Utils';
@@ -22,13 +20,9 @@ function SignInScreen(props) {
     payload,
     navigator,
     credentials,
-    closeHook,
     errorCallback,
-    startAuthZFlow,
     remoteHandler
   } = props;
-
-  let heartbeat;
 
   const [pinCode, setPincode] = useState('');
   const [loading, setLoading] = useState(true);
@@ -39,15 +33,8 @@ function SignInScreen(props) {
     signIn();
     return () => {
       showMenu(navigator);
-      clearInterval(heartbeat);
     };
   }, []);
-
-  useEffect(() => {
-    heartbeat = setInterval(() => {
-      getSignInStatus(device);
-    }, HEARBEAT);
-  }, [device]);
 
   const {
     background: { loginBackground },
@@ -70,36 +57,6 @@ function SignInScreen(props) {
       console.log(error);
       trackEvent(
         EVENTS.authN.registrationFailed,
-        {
-          credentials,
-          payload,
-          error,
-          deviceId: device
-        }
-      );
-      error.screenName = 'LOGIN';
-      return errorCallback(error);
-    }
-  };
-
-  const getSignInStatus = async (deviceId) => {
-    try {
-      const userId = await checkDeviceStatus(deviceId, credentials);
-      if (userId) {
-        trackEvent(
-          EVENTS.authN.activationSuccess,
-          { credentials, payload, deviceId }
-        );
-        await setToLocalStorage('idToken', userId);
-        await setToLocalStorage('userId', userId);
-        clearInterval(heartbeat);
-        await startAuthZFlow(deviceId);
-        return closeHook ? closeHook({ success: true, payload }) : navigator.goBack();
-      }
-    } catch (error) {
-      console.log(error);
-      trackEvent(
-        EVENTS.authN.activationFailed,
         {
           credentials,
           payload,
