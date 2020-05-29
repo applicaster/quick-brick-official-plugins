@@ -83,6 +83,10 @@ buildscript {
     }
 }
 
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
 dependencies {
     // Applicaster SDK
     def applicasterSDKPath = 'com.applicaster:applicaster-android-sdk-core:5.1.0'
@@ -92,12 +96,15 @@ dependencies {
     if (devSDK != null) {
         implementation project(':applicaster-android-sdk') {
             exclude group: 'com.google.ads.interactivemedia.v3'
+            exclude group: 'com.applicaster', module: 'react-native'
         }
     } else {
         api(applicasterSDKPath) {
             exclude group: 'com.google.ads.interactivemedia.v3'
+            exclude group: 'com.applicaster', module: 'react-native'
         }
     }
+    implementation "com.facebook.react:react-native:${safeExtGet('reactNativeVersion', '+')}"
 
     api 'javax.inject:javax.inject:1'
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
