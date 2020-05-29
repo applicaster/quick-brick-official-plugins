@@ -38,7 +38,7 @@ async function run() {
       !automationFrameworkVersion ||
       compareVersion(version_id, automationFrameworkVersion)
     ) {
-      console.log(`Adding framework to update list: ${framework}`);
+      console.log(`Adding plugins to update list: ${framework}`);
       itemsToUpdate.push(model);
     }
     newAutomationObject[framework] = version_id;
@@ -237,9 +237,9 @@ async function uploadManifestsToZapp(itemsToUpdate) {
 
 async function commitChangesPushAndTag(itemsToUpdate, newGitTag) {
   try {
-    await shell.exec("git add Frameworks");
+    await shell.exec("git add plugins");
     await shell.exec("git add .versions_automation.json");
-    let commitMessage = `System update, expected tag:${newGitTag}, frameworks:`;
+    let commitMessage = `System update, expected tag:${newGitTag}, plugins:`;
     const promises = itemsToUpdate.map(async model => {
       const baseFolderPath = basePathForModel(model);
       await shell.exec(`git add ${baseFolderPath}`);
