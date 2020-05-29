@@ -34,6 +34,12 @@ sealed class AdType {
 	}
 }
 
+enum class VastAdsSate {
+	NO_ADS,
+	IN_PROGRESS,
+	FINISHED
+}
+
 data class CuePoint(val adType: AdType, val adTagUri: Uri)
 //endregion
 

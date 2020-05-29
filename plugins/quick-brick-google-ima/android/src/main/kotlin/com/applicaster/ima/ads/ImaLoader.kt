@@ -91,36 +91,8 @@ class ImaLoader(private val context: Context,
 				adsManager = null
 				Log.d(TAG, "${event.type?.name}")
 			}
-			AdEvent.AdEventType.TAPPED -> {
-				handleAdTap()
-				Log.d(TAG, "${event.type?.name}")
-			}
-			AdEvent.AdEventType.CLICKED -> Log.d(TAG, "${event.type?.name}")
-			AdEvent.AdEventType.COMPLETED -> Log.d(TAG, "${event.type?.name}")
-			AdEvent.AdEventType.CUEPOINTS_CHANGED -> Log.d(TAG, "${event.type?.name}")
-			AdEvent.AdEventType.FIRST_QUARTILE -> Log.d(TAG, "${event.type?.name}")
-			AdEvent.AdEventType.LOG -> Log.d(TAG, event.adData.toString())
-			AdEvent.AdEventType.AD_BREAK_READY -> Log.d(TAG, "${event.type?.name}")
-			AdEvent.AdEventType.MIDPOINT -> Log.d(TAG, "${event.type?.name}")
-			AdEvent.AdEventType.PAUSED -> Log.d(TAG, "${event.type?.name}")
-			AdEvent.AdEventType.RESUMED -> Log.d(TAG, "${event.type?.name}")
-			AdEvent.AdEventType.SKIPPABLE_STATE_CHANGED -> Log.d(TAG, "${event.type?.name}")
-			AdEvent.AdEventType.SKIPPED -> Log.d(TAG, "${event.type?.name}")
-			AdEvent.AdEventType.STARTED -> Log.d(TAG, "${event.type?.name}")
-			AdEvent.AdEventType.ICON_TAPPED -> Log.d(TAG, "${event.type?.name}")
-			AdEvent.AdEventType.THIRD_QUARTILE -> Log.d(TAG, "${event.type?.name}")
-			AdEvent.AdEventType.AD_PROGRESS -> Log.d(TAG, "${event.type?.name}")
-			AdEvent.AdEventType.AD_BUFFERING -> Log.d(TAG, "${event.type?.name}")
-			AdEvent.AdEventType.AD_BREAK_STARTED -> Log.d(TAG, "${event.type?.name}")
-			AdEvent.AdEventType.AD_BREAK_ENDED -> Log.d(TAG, "${event.type?.name}")
-			AdEvent.AdEventType.AD_PERIOD_STARTED -> Log.d(TAG, "${event.type?.name}")
-			AdEvent.AdEventType.AD_PERIOD_ENDED -> Log.d(TAG, "${event.type?.name}")
 			else -> Log.d(TAG, "${event?.type?.name}")
 		}
-	}
-
-	private fun handleAdTap() {
-
 	}
 
 	override fun loadAd(adTagUrl: String) {
@@ -280,6 +252,9 @@ class ImaLoader(private val context: Context,
 		this.player = SimpleExoPlayer.Builder(context).build()
 		if (this.playerView == null) {
 			throw RuntimeException("You must call [setPlayerView] method before calling ads")
+		}
+		if (this.videoPlayerEventsListener == null) {
+			throw RuntimeException("You must call [setVideoPlayerEventListener] method before calling ads")
 		}
 		this.playerView?.player = this.player
 		val sdkFactory = ImaSdkFactory.getInstance()

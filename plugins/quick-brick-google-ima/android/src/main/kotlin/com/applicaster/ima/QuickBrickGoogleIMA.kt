@@ -4,10 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import android.widget.ImageButton
-import com.applicaster.ima.ads.Ad
-import com.applicaster.ima.ads.CuePoint
-import com.applicaster.ima.ads.ImaLoader
-import com.applicaster.ima.ads.parseAds
+import com.applicaster.ima.ads.*
 import com.applicaster.plugin_manager.dependencyplugin.playerplugin.PlayerReceiverPlugin
 import com.applicaster.plugin_manager.dependencyplugin.playerplugin.PlayerSenderPlugin
 import com.applicaster.util.OSUtil
@@ -50,7 +47,7 @@ class QuickBrickGoogleIMA :
 	private var imaVastLoader: ImaLoader? = null
 	private var imaVmapLoader: ImaAdsLoader? = null
 	private var playbackProgressObservable: Disposable? = null
-	private var isAllAdsFinished = false
+	private var vastAdsSate: VastAdsSate = VastAdsSate.NO_ADS
 
 	init {
 		logData("init $tag")
@@ -105,7 +102,7 @@ class QuickBrickGoogleIMA :
 
 	override fun onAllAdsFinished() {
 		//notify the player that all ads was finished
-		isAllAdsFinished = true
+		vastAdsSate = VastAdsSate.FINISHED
 		logData("allAdsFinished")
 	}
 
@@ -123,7 +120,6 @@ class QuickBrickGoogleIMA :
 	}
 
 	private fun initImaLoader() {
-		isAllAdsFinished = false
 		when (ads) {
 			is Ad.Vast -> {
 				initImaVastLoader()
@@ -142,6 +138,7 @@ class QuickBrickGoogleIMA :
 
 	private fun initImaVmapLoader() {
 		context?.let {
+			vastAdsSate = VastAdsSate.IN_PROGRESS
 			imaVmapLoader = ImaAdsLoader(it, getAdsTagUrl())
 			imaVmapLoader?.setPlayer(this.player)
 		}
