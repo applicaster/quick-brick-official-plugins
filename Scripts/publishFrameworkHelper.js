@@ -9,7 +9,7 @@ async function updateTemplate(ejsData, templatePath, outputPath) {
 }
 
 function manifestPath({ model, platform, template }) {
-  const { plugin = null, framework = null } = model;
+  const {framework = null } = model;
   iosPath =
     template == true
       ? `plugins/${framework}/manifests/ios.json.ejs`

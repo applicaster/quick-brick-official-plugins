@@ -60,93 +60,91 @@ async function updateRelevantTemplates(itemsToUpdate, newGitTag) {
   try {
     const promises = itemsToUpdate.map(async model => {
 
+      const {version_id = null} = model;
       const ejsData = { version_id, new_tag: newGitTag };
-      
-      if (plugin) {
-        const iosManifestPath = manifestPath({
-          model,
-          platform: "ios",
-          template: false
-        });
-        const iosTemplatePath = manifestPath({
-          model,
-          platform: "ios",
-          template: true
-        });
+      const iosManifestPath = manifestPath({
+        model,
+        platform: "ios",
+        template: false
+      });
+      const iosTemplatePath = manifestPath({
+        model,
+        platform: "ios",
+        template: true
+      });
 
-        const iosQBManifestPath = manifestPath({
-          model,
-          platform: "ios_qb",
-          template: false
-        });
-        const iosQBTemplatePath = manifestPath({
-          model,
-          platform: "ios_qb",
-          template: true
-        });
+      const iosQBManifestPath = manifestPath({
+        model,
+        platform: "ios_qb",
+        template: false
+      });
+      const iosQBTemplatePath = manifestPath({
+        model,
+        platform: "ios_qb",
+        template: true
+      });
 
-        const tvosManifestPath = manifestPath({
-          model,
-          platform: "tvos",
-          template: false
-        });
-        const tvosTemplatePath = manifestPath({
-          model,
-          platform: "tvos",
-          template: true
-        });
+      const tvosManifestPath = manifestPath({
+        model,
+        platform: "tvos",
+        template: false
+      });
+      const tvosTemplatePath = manifestPath({
+        model,
+        platform: "tvos",
+        template: true
+      });
 
-        const tvosQBManifestPath = manifestPath({
-          model,
-          platform: "tvos_qb",
-          template: false
-        });
-        const tvosQBTemplatePath = manifestPath({
-          model,
-          platform: "tvos_qb",
-          template: true
-        });
+      const tvosQBManifestPath = manifestPath({
+        model,
+        platform: "tvos_qb",
+        template: false
+      });
+      const tvosQBTemplatePath = manifestPath({
+        model,
+        platform: "tvos_qb",
+        template: true
+      });
 
-        const androidManifestPath = manifestPath({
-          model,
-          platform: "android",
-          template: false
-        });
-        const androidTemplatePath = manifestPath({
-          model,
-          platform: "android",
-          template: true
-        });
+      const androidManifestPath = manifestPath({
+        model,
+        platform: "android",
+        template: false
+      });
+      const androidTemplatePath = manifestPath({
+        model,
+        platform: "android",
+        template: true
+      });
 
-        const androidQBManifestPath = manifestPath({
-          model,
-          platform: "android_qb",
-          template: false
-        });
-        const androidQBTemplatePath = manifestPath({
-          model,
-          platform: "android_qb",
-          template: true
-        });
+      const androidQBManifestPath = manifestPath({
+        model,
+        platform: "android_qb",
+        template: false
+      });
+      const androidQBTemplatePath = manifestPath({
+        model,
+        platform: "android_qb",
+        template: true
+      });
 
-        if (fs.existsSync(iosTemplatePath)) {
-          await updateTemplate(ejsData, iosTemplatePath, iosManifestPath);
-        }
-        if (fs.existsSync(iosQBTemplatePath)) {
-          await updateTemplate(ejsData, iosQBTemplatePath, iosQBManifestPath);
-        }
-        if (fs.existsSync(tvosTemplatePath)) {
-          await updateTemplate(ejsData, tvosTemplatePath, tvosManifestPath);
-        }
-        if (fs.existsSync(tvosQBTemplatePath)) {
-          await updateTemplate(ejsData, tvosQBTemplatePath, tvosQBManifestPath);
-        }
-        if (fs.existsSync(androidTemplatePath)) {
-          await updateTemplate(ejsData, androidTemplatePath, androidManifestPath);
-        }
-        if (fs.existsSync(androidQBTemplatePath)) {
-          await updateTemplate(ejsData, androidQBTemplatePath, androidQBManifestPath);
-        }
+      if (fs.existsSync(iosTemplatePath)) {
+        await updateTemplate(ejsData, iosTemplatePath, iosManifestPath);
+      }
+      if (fs.existsSync(iosQBTemplatePath)) {
+        await updateTemplate(ejsData, iosQBTemplatePath, iosQBManifestPath);
+      }
+      if (fs.existsSync(tvosTemplatePath)) {
+        await updateTemplate(ejsData, tvosTemplatePath, tvosManifestPath);
+      }
+      if (fs.existsSync(tvosQBTemplatePath)) {
+        await updateTemplate(ejsData, tvosQBTemplatePath, tvosQBManifestPath);
+      }
+      if (fs.existsSync(androidTemplatePath)) {
+        await updateTemplate(ejsData, androidTemplatePath, androidManifestPath);
+      }
+      if (fs.existsSync(androidQBTemplatePath)) {
+        await updateTemplate(ejsData, androidQBTemplatePath, androidQBManifestPath);
       }
     });
     return await Promise.all(promises);
@@ -160,7 +158,7 @@ async function uploadManifestsToZapp(itemsToUpdate) {
   console.log("Uploading manifests to Zapp");
   try {
     const promises = itemsToUpdate.map(async model => {
-      const { framework = null, plugin = null } = model;
+      const { framework = null} = model;
 
       const zappToken = process.env["ZAPP_TOKEN"];
       const zappAccount = process.env["ZAPP_ACCOUNT"];
@@ -239,19 +237,11 @@ async function uploadManifestsToZapp(itemsToUpdate) {
 
 async function commitChangesPushAndTag(itemsToUpdate, newGitTag) {
   try {
-    await shell.exec("git add docs");
     await shell.exec("git add Frameworks");
-    await shell.exec("git add README.md");
     await shell.exec("git add .versions_automation.json");
     let commitMessage = `System update, expected tag:${newGitTag}, frameworks:`;
     const promises = itemsToUpdate.map(async model => {
       const baseFolderPath = basePathForModel(model);
-
-      const { framework = null, plugin = null } = model;
-      if (!plugin) {
-        await shell.exec(`git add ${framework}.podspec`);
-      }
-
       await shell.exec(`git add ${baseFolderPath}`);
     });
     await Promise.all(promises);
@@ -276,15 +266,13 @@ async function uploadNpmPackages(itemsToUpdate) {
     const baseFolderPath = basePathForModel(model);
 
     const { version_id = null, framework = null } = model;
-    if (plugin) {
-      console.log(`Publishing plugin:${framework}, version:${version_id}`);
-      try {
-        await shell.exec(
-          `cd ${baseFolderPath} && yarn publish --new-version ${version_id} --no-git-tag-version`
-        );
-      } catch (e) {
-        abort(e.message);
-      }
+    console.log(`Publishing plugin:${framework}, version:${version_id}`);
+    try {
+      await shell.exec(
+        `cd ${baseFolderPath} && yarn publish --new-version ${version_id} --no-git-tag-version`
+      );
+    } catch (e) {
+      abort(e.message);
     }
   });
   return await Promise.all(promises);
