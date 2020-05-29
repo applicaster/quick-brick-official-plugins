@@ -56,6 +56,7 @@ class ImaLoader(private val context: Context,
 	private var adsManager: AdsManager? = null
 	private var adsLoader: AdsLoader? = null
 	private var playerView: PlayerView? = null
+	private var adDisplayContainer: AdDisplayContainer? = null
 	private val adCallbacks: ArrayList<VideoAdPlayer.VideoAdPlayerCallback> = ArrayList(1)
 	private var playbackSavedPosition: Long = C.TIME_UNSET
 	private var isAdDisplayed = false
@@ -248,24 +249,24 @@ class ImaLoader(private val context: Context,
 	}
 
 	private fun initAdsPlayer() {
-		playerView?.hideController()
-		this.player = SimpleExoPlayer.Builder(context).build()
 		if (this.playerView == null) {
 			throw RuntimeException("You must call [setPlayerView] method before calling ads")
 		}
 		if (this.videoPlayerEventsListener == null) {
 			throw RuntimeException("You must call [setVideoPlayerEventListener] method before calling ads")
 		}
+		playerView?.hideController()
+		this.player = SimpleExoPlayer.Builder(context).build()
 		this.playerView?.player = this.player
 		val sdkFactory = ImaSdkFactory.getInstance()
 		val settings = sdkFactory.createImaSdkSettings()
 		settings.language = this.language
 		val adViewGroup = playerView?.adViewGroup
-		val adDisplayContainer = sdkFactory.createAdDisplayContainer()
-		adDisplayContainer.player = this
-		adDisplayContainer.adContainer = adViewGroup
+		adDisplayContainer = sdkFactory.createAdDisplayContainer()
+		adDisplayContainer?.player = this
+		adDisplayContainer?.adContainer = adViewGroup
 		playerView?.adOverlayViews?.forEach {
-			adDisplayContainer.registerVideoControlsOverlay(it)
+			adDisplayContainer?.registerVideoControlsOverlay(it)
 		}
 		adsLoader = sdkFactory.createAdsLoader(context, settings, adDisplayContainer)
 		adsLoader?.addAdErrorListener(this)
@@ -278,6 +279,7 @@ class ImaLoader(private val context: Context,
 			player?.release()
 			isAdDisplayed = false
 		}
+		adDisplayContainer?.unregisterAllVideoControlsOverlays()
 		adsManager?.destroy()
 		adsManager = null
 		player = null
