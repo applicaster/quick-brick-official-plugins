@@ -94,7 +94,7 @@ dependencies {
     // Check if an open SDK is defined - if not use the closed one.
     def devSDK = findProject(':applicaster-android-sdk')
     if (devSDK != null) {
-        implementation project(':applicaster-android-sdk') {
+        implementation (project(':applicaster-android-sdk')) {
             exclude group: 'com.google.ads.interactivemedia.v3'
             exclude group: 'com.applicaster', module: 'react-native'
         }
