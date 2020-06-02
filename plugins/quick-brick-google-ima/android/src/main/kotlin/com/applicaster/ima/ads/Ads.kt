@@ -1,6 +1,7 @@
 package com.applicaster.ima.ads
 
 import android.net.Uri
+import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.text.Cue
 
 //region Constants
@@ -19,25 +20,19 @@ sealed class Ad {
 	object Empty: Ad()
 }
 
-sealed class AdType {
-	object Preroll : AdType()
-	data class Midroll(val offset: Long) : AdType()
-	object Postroll : AdType()
+sealed class AdType(val offset: Long = 0) {
+	data class Preroll(val preOffset: Long = 0) : AdType(preOffset)
+	data class Midroll(val midOffset: Long) : AdType(midOffset)
+	data class Postroll(val postOffset: Long = C.TIME_END_OF_SOURCE) : AdType(postOffset)
 
 	companion object {
 		fun create(offset: String): AdType =
 				when (offset) {
-					KEY_OFFSET_PRE -> Preroll
-					KEY_OFFSET_POST -> Postroll
+					KEY_OFFSET_PRE -> Preroll()
+					KEY_OFFSET_POST -> Postroll()
 					else -> Midroll(offset.toDouble().toLong())
 				}
 	}
-}
-
-enum class VastAdsSate {
-	NO_ADS,
-	IN_PROGRESS,
-	FINISHED
 }
 
 data class CuePoint(val adType: AdType, val adTagUri: Uri)
@@ -79,8 +74,8 @@ private fun parseSingleAd(ad: Map<*, *>?): CuePoint? {
 		}
 		return when (val type = AdType.create(offset)) {
 			is AdType.Midroll -> CuePoint(type, Uri.parse(url))
-			AdType.Preroll -> CuePoint(type, Uri.parse(url))
-			AdType.Postroll -> CuePoint(type, Uri.parse(url))
+			is AdType.Preroll -> CuePoint(type, Uri.parse(url))
+			is AdType.Postroll -> CuePoint(type, Uri.parse(url))
 		}
 	}
 }

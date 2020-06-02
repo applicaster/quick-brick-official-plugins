@@ -1,9 +1,10 @@
 package com.applicaster.ima
 
 import android.content.Context
+import android.graphics.Color
 import android.net.Uri
 import android.util.Log
-import android.widget.ImageButton
+import android.view.View
 import com.applicaster.ima.ads.*
 import com.applicaster.plugin_manager.dependencyplugin.playerplugin.PlayerReceiverPlugin
 import com.applicaster.plugin_manager.dependencyplugin.playerplugin.PlayerSenderPlugin
@@ -11,17 +12,16 @@ import com.applicaster.util.OSUtil
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.uimanager.ThemedReactContext
 import com.google.ads.interactivemedia.v3.api.AdErrorEvent
+import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.ima.ImaAdsLoader
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ads.AdsMediaSource
+import com.google.android.exoplayer2.ui.DefaultTimeBar
 import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.ui.TimeBar
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import java.util.concurrent.TimeUnit
 import com.google.android.exoplayer2.util.Util as exoUtil
 
 
@@ -46,15 +46,22 @@ class QuickBrickGoogleIMA :
 	private var ads: Ad = Ad.Empty
 	private var imaVastLoader: ImaLoader? = null
 	private var imaVmapLoader: ImaAdsLoader? = null
-	private var playbackProgressObservable: Disposable? = null
-	private var vastAdsSate: VastAdsSate = VastAdsSate.NO_ADS
+	private var playerDidFinishCompletion: (Boolean) -> Unit = {}
+	private var adMarkers: Pair<LongArray, BooleanArray>? = null
 
 	init {
 		logData("init $tag")
 	}
 
-	override fun playerDidFinishPlayItem(player: PlayerSenderPlugin) {
-		logData("playerDidFinishPlayItem")
+	override fun playerDidFinishPlayItem(player: PlayerSenderPlugin, completion: (finish: Boolean) -> Unit) {
+		this.playerDidFinishCompletion = completion
+		if (!isAdsContainPostroll) {
+			completion(true)
+			logData("playerDidFinishPlayItem => true")
+		} else {
+			completion(false)
+			logData("playerDidFinishPlayItem => false")
+		}
 	}
 
 	override fun playerDidCreate(player: PlayerSenderPlugin) {
@@ -72,18 +79,8 @@ class QuickBrickGoogleIMA :
 	}
 
 	override fun playerProgressUpdate(player: PlayerSenderPlugin, currentTime: Long, duration: Long) {
-		logData("playerProgressUpdate")
-	}
-
-	override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-		when (playbackState) {
-			Player.STATE_READY -> videoReady()
-			Player.STATE_ENDED -> {
-				playbackProgressObservable?.dispose()
-				this.imaVmapLoader?.release()
-			}
-			else -> Unit
-		}
+		imaVastLoader?.timelineUpdate(currentTime, duration)
+		logData("playerProgressUpdate => currentPosition: $currentTime ,duration: $duration")
 	}
 
 	//ImaLoader.VideoPlayerEventsListener methods
@@ -100,10 +97,15 @@ class QuickBrickGoogleIMA :
 		player?.stop()
 	}
 
-	override fun onAllAdsFinished() {
+	override fun onPostrollFinished() {
 		//notify the player that all ads was finished
-		vastAdsSate = VastAdsSate.FINISHED
-		logData("allAdsFinished")
+		playerDidFinishCompletion(true)
+		logData("onPostrollFinished")
+	}
+
+	override fun onPlayedAdMarkerPositionChanged(markerPosition: Int) {
+		updateAdMarkers(markerPosition)
+		logData("onPlayedAdMarkerPositionChanged => $markerPosition")
 	}
 
 	//RN lifecycle methods
@@ -116,7 +118,7 @@ class QuickBrickGoogleIMA :
 	}
 
 	override fun onHostDestroy() {
-		this.imaVastLoader?.release()
+		release()
 	}
 
 	private fun initImaLoader() {
@@ -125,6 +127,8 @@ class QuickBrickGoogleIMA :
 				initImaVastLoader()
 				//prepare player
 				mediaSource?.let { this.player?.prepare(it) }
+				adMarkers = getAdMarkersPositions()
+				this.playerView?.setExtraAdGroupMarkers(adMarkers?.first, adMarkers?.second)
 			}
 			is Ad.Vmap -> {
 				initImaVmapLoader()
@@ -138,7 +142,6 @@ class QuickBrickGoogleIMA :
 
 	private fun initImaVmapLoader() {
 		context?.let {
-			vastAdsSate = VastAdsSate.IN_PROGRESS
 			imaVmapLoader = ImaAdsLoader(it, getAdsTagUrl())
 			imaVmapLoader?.setPlayer(this.player)
 		}
@@ -148,7 +151,7 @@ class QuickBrickGoogleIMA :
 		context?.let {
 			imaVastLoader = ImaLoader.build {
 				this.context = it
-				this.cuePoints = getVastCuePoints()
+				this.cuePoints = ArrayList(getVastCuePoints())
 			}
 			imaVastLoader?.setPlayerView(playerView)
 			imaVastLoader?.setVideoPlayerEventListener(this)
@@ -205,31 +208,52 @@ class QuickBrickGoogleIMA :
 		}
 	}
 
+	private fun updateAdMarkers(markerIndex: Int) {
+		adMarkers?.second?.forEachIndexed { index, _ ->
+			if (index <= markerIndex) adMarkers?.second?.set(index, true)
+		}
+		logData("updateAdMarkers => ${adMarkers?.second?.contentToString()}")
+		this.playerView?.setExtraAdGroupMarkers(adMarkers?.first, adMarkers?.second)
+	}
+
+	private fun getAdMarkersPositions(): Pair<LongArray, BooleanArray> {
+		val cuePoints = getVastCuePoints()
+		val result: Pair<LongArray, BooleanArray> = LongArray(cuePoints.size) to BooleanArray(cuePoints.size)
+		cuePoints.forEachIndexed { index, cuePoint ->
+			when(val ad = cuePoint.adType) {
+				is AdType.Preroll -> {
+					result.first[index] = ad.offset
+					result.second[index] = false
+				}
+				is AdType.Midroll -> {
+					result.first[index] = ad.offset * 1_000
+					result.second[index] = false
+				}
+				is AdType.Postroll -> {
+					result.first[index] = ad.offset
+					result.second[index] = false
+				}
+			}
+		}
+		return result
+	}
+
+	val isAdsContainPostroll: Boolean
+		get() {
+			var result = false
+			getVastCuePoints().forEach {
+				result = when (it.adType) {
+					is AdType.Postroll -> true
+					else -> false
+				}
+			}
+			return result
+		}
+
 	private fun release() {
+		this.imaVmapLoader?.release()
+		this.imaVastLoader?.release()
 		this.player?.release()
-	}
-
-	private fun videoReady() {
-		if (getVastCuePoints().isNotEmpty()) {
-			playbackProgressObservable = timeUpdate()
-					.observeOn(AndroidSchedulers.mainThread())
-					.subscribe {
-						imaVastLoader?.timelineUpdate(player?.currentPosition
-								?: 0, player?.contentDuration ?: 0)
-					}
-		}
-	}
-
-	private fun timeUpdate(): Observable<Long> {
-		return Observable.interval(1, TimeUnit.SECONDS)
-				.map { checkIfPlayerIsPlaying() }
-	}
-
-	private fun checkIfPlayerIsPlaying(): Long {
-		if (player?.isPlaying == true){
-			return player?.currentPosition ?: 0
-		}
-		return 1.toLong()
 	}
 
 	private fun logData(message: String) {

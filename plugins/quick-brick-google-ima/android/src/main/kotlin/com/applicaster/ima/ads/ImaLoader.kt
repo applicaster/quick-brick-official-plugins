@@ -46,7 +46,8 @@ class ImaLoader(private val context: Context,
 		fun onPause()
 		fun onPlay()
 		fun onStop()
-		fun onAllAdsFinished()
+		fun onPostrollFinished()
+		fun onPlayedAdMarkerPositionChanged(markerPosition: Int)
 	}
 
 	//class fields
@@ -60,7 +61,8 @@ class ImaLoader(private val context: Context,
 	private val adCallbacks: ArrayList<VideoAdPlayer.VideoAdPlayerCallback> = ArrayList(1)
 	private var playbackSavedPosition: Long = C.TIME_UNSET
 	private var isAdDisplayed = false
-	private var isAllAdsFinished = false
+	private var isPostrollExists = false
+	private var playedAdIndex = 0
 
 	override fun onAdsManagerLoaded(event: AdsManagerLoadedEvent?) {
 		adsManager = event?.adsManager
@@ -84,12 +86,13 @@ class ImaLoader(private val context: Context,
 				Log.d(TAG, "${event.type?.name}")
 			}
 			AdEvent.AdEventType.ALL_ADS_COMPLETED -> {
-				if (isAllAdsFinished) {
-					videoPlayerEventsListener?.onAllAdsFinished()
-					isAllAdsFinished = false
+				if (isPostrollExists) {
+					videoPlayerEventsListener?.onPostrollFinished()
+					isPostrollExists = false
 				}
 				adsManager?.destroy()
 				adsManager = null
+				videoPlayerEventsListener?.onPlayedAdMarkerPositionChanged(playedAdIndex - 1)
 				Log.d(TAG, "${event.type?.name}")
 			}
 			else -> Log.d(TAG, "${event?.type?.name}")
@@ -133,7 +136,7 @@ class ImaLoader(private val context: Context,
 	}
 
 	override fun getVolume(): Int =
-		player?.audioComponent?.volume?.toInt() ?: 100
+			player?.audioComponent?.volume?.toInt() ?: 100
 
 	override fun removeCallback(callback: VideoAdPlayer.VideoAdPlayerCallback?) {
 		callback?.let { adCallbacks.remove(it) }
@@ -233,17 +236,18 @@ class ImaLoader(private val context: Context,
 		val index = cuePoints.indexOfLast {
 			when (val type = it.adType) {
 				is AdType.Midroll -> type.offset < currentPlayerPosition
-				AdType.Preroll -> 0L == currentPlayerPosition
-				AdType.Postroll -> currentPlayerPosition == videoDuration
-
+				is AdType.Preroll -> type.offset == currentPlayerPosition
+				is AdType.Postroll ->  {
+					if (currentPlayerPosition == videoDuration)
+						isPostrollExists = true
+					currentPlayerPosition == videoDuration
+				}
 			}
 		}
 		if (index != -1) {
 			adTagUrl = cuePoints[index].adTagUri.toString()
+			playedAdIndex += index + 1
 			cuePoints.subList(0, index + 1).clear()
-			if (cuePoints.isEmpty()) isAllAdsFinished = true
-		} else {
-			isAllAdsFinished = true
 		}
 		return adTagUrl
 	}
@@ -288,6 +292,7 @@ class ImaLoader(private val context: Context,
 		playerView = null
 		adCallbacks.clear()
 		playbackSavedPosition = C.TIME_UNSET
-		isAllAdsFinished = false
+		isPostrollExists = false
+		playedAdIndex = 0
 	}
 }
