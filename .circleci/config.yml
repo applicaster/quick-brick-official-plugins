@@ -92,10 +92,6 @@ jobs:
                                   command: zappifest -v
 
                         - run:
-                                  name: CocoaPods - version
-                                  command: bundle exec pod --version
-
-                        - run:
                                   name: Validate Frameworks
                                   command: node ./Scripts/validateExistingFrameworks.js
 
