@@ -1,7 +1,5 @@
 import * as R from "ramda";
 
-const hasAdExtensions = R.path(["extensions", "video_ads"]);
-
 function buildVideoAdInfo(configuration) {
   const {
     tag_vmap_url,
@@ -42,13 +40,13 @@ function buildVideoAdInfo(configuration) {
 }
 
 function runHook(payload, callback, configuration) {
-  if (!hasAdExtensions(payload) && !!configuration) {
-    payload.extensions = {
-      video_ads: buildVideoAdInfo(configuration),
-      ...payload.extensions,
-    };
-  }
+  const hasAdExtensions = R.pathOr(false, ['extensions', 'video_ads'], payload);
 
+  if (!hasAdExtensions && !!configuration) {
+    const videoAds = buildVideoAdInfo(configuration);
+    const payloadWithAds = R.mergeDeepRight(payload, { extensions: { video_ads: videoAds } });
+    return callback({ success: true, payload: payloadWithAds });
+  }
   callback({ success: true, payload });
 }
 

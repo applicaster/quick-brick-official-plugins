@@ -71,6 +71,11 @@ class QuickBrickGoogleIMA :
 		this.player?.playWhenReady = true
 		// init IMA ads loader
 		initImaLoader()
+
+		if (isAdsContainPreroll) {
+			imaVastLoader?.timelineUpdate(0, Long.MAX_VALUE)
+			logData("prerollCall")
+		}
 	}
 
 	override fun playerDidDismiss(player: PlayerSenderPlugin) {
@@ -238,13 +243,25 @@ class QuickBrickGoogleIMA :
 		return result
 	}
 
-	val isAdsContainPostroll: Boolean
+	private val isAdsContainPostroll: Boolean
 		get() {
 			var result = false
 			getVastCuePoints().forEach {
-				result = when (it.adType) {
-					is AdType.Postroll -> true
-					else -> false
+				when (it.adType) {
+					is AdType.Postroll -> result = true
+					else -> Unit
+				}
+			}
+			return result
+		}
+
+	private val isAdsContainPreroll: Boolean
+		get() {
+			var result = false
+			getVastCuePoints().forEach {
+				when (it.adType) {
+					is AdType.Preroll -> result = true
+					else -> Unit
 				}
 			}
 			return result

@@ -20,7 +20,7 @@ sealed class Ad {
 	object Empty: Ad()
 }
 
-sealed class AdType(val offset: Long = 0) {
+sealed class AdType(val offset: Long) {
 	data class Preroll(val preOffset: Long = 0) : AdType(preOffset)
 	data class Midroll(val midOffset: Long) : AdType(midOffset)
 	data class Postroll(val postOffset: Long = C.TIME_END_OF_SOURCE) : AdType(postOffset)
