@@ -268,9 +268,12 @@ class QuickBrickGoogleIMA :
 		}
 
 	private fun release() {
+		this.ads = Ad.Empty
 		this.imaVmapLoader?.release()
 		this.imaVastLoader?.release()
 		this.player?.release()
+		playerDidFinishCompletion = {}
+		adMarkers = null
 	}
 
 	private fun logData(message: String) {

@@ -1,8 +1,6 @@
 package com.applicaster.ima.ads
 
 import android.net.Uri
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.text.Cue
 
 //region Constants
 const val KEY_URL = "ad_url"
@@ -17,13 +15,13 @@ const val KEY_OFFSET_POST = "postroll"
 sealed class Ad {
 	data class Vast(val cuePoints: MutableList<CuePoint>) : Ad()
 	data class Vmap(val adTagUri: Uri) : Ad()
-	object Empty: Ad()
+	object Empty : Ad()
 }
 
 sealed class AdType(val offset: Long) {
 	data class Preroll(val preOffset: Long = 0) : AdType(preOffset)
 	data class Midroll(val midOffset: Long) : AdType(midOffset)
-	data class Postroll(val postOffset: Long = C.TIME_END_OF_SOURCE) : AdType(postOffset)
+	data class Postroll(val postOffset: Long = Long.MAX_VALUE) : AdType(postOffset)
 
 	companion object {
 		fun create(offset: String): AdType =
@@ -47,20 +45,24 @@ fun parseAds(extensions: Map<String, Any?>): Ad {
 }
 
 private fun getVideoAdsData(data: Any?): Any? =
-	when {
-		data is Map<*, *> && data.containsKey(KEY_VIDEO_ADS) -> data[KEY_VIDEO_ADS]
-		else -> null
-	}
+		when {
+			data is Map<*, *> && data.containsKey(KEY_VIDEO_ADS) -> data[KEY_VIDEO_ADS]
+			else -> null
+		}
 
 private fun getAds(data: Any?): Ad? =
-	 when {
-		data is List<*> && !data.isNullOrEmpty() -> {
-			val quePoints = data.mapNotNull { ad ->  parseSingleAd(ad as? Map<*, *>?) }
-			Ad.Vast(quePoints.toMutableList())
+		when {
+			data is List<*> && !data.isNullOrEmpty() -> {
+				val quePoints = data.mapNotNull { ad -> parseSingleAd(ad as? Map<*, *>?) }
+				val sortedCuePoints = sortCuePoints(quePoints).toMutableList()
+				Ad.Vast(sortedCuePoints)
+			}
+			data is String && data.isNotEmpty() -> Ad.Vmap(Uri.parse(data.toString()))
+			else -> null
 		}
-		data is String && data.isNotEmpty() -> Ad.Vmap(Uri.parse(data.toString()))
-		else -> null
-	}
+
+private fun sortCuePoints(cuePoints: List<CuePoint>) =
+		cuePoints.sortedWith(compareBy { it.adType.offset })
 
 private fun parseSingleAd(ad: Map<*, *>?): CuePoint? {
 	return ad?.let {

@@ -278,12 +278,11 @@ class ImaLoader(private val context: Context,
 	}
 
 	fun release() {
-		if (isAdDisplayed) {
-			player?.stop()
-			player?.release()
-			isAdDisplayed = false
-		}
+		player?.stop()
+		player?.release()
+		isAdDisplayed = false
 		adDisplayContainer?.unregisterAllVideoControlsOverlays()
+		cuePoints.clear()
 		adsManager?.destroy()
 		adsManager = null
 		player = null
