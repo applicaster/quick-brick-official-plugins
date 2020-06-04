@@ -238,9 +238,9 @@ class ImaLoader(private val context: Context,
 				is AdType.Midroll -> type.offset < currentPlayerPosition
 				is AdType.Preroll -> type.offset == currentPlayerPosition
 				is AdType.Postroll ->  {
-					if (currentPlayerPosition == videoDuration)
+					if (currentPlayerPosition >= videoDuration)
 						isPostrollExists = true
-					currentPlayerPosition == videoDuration
+					currentPlayerPosition >= videoDuration
 				}
 			}
 		}
