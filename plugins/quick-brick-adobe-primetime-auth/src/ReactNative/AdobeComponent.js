@@ -53,8 +53,6 @@ class AdobeComponent extends Component {
       configuration
     } = this.props;
 
-    this.props.navigator.showNavBar();
-
     const requiresAuth = R.pathOr(false, ['extensions', 'requires_authentication'], payload);
     if (!R.isEmpty(payload) && !requiresAuth) {
       return callback({ success: true, payload });

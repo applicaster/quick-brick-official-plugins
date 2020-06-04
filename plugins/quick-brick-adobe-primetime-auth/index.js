@@ -6,6 +6,7 @@ const AdobePlugin = {
   Component: withNavigator(AdobeComponent),
   isFlowBlocker: () => true,
   presentFullScreen: true,
+  showNavBar: true,
   hasPlayerHook: true
 };
 
