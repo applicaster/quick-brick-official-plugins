@@ -1,0 +1,48 @@
+{
+  "api": {
+    "class_name": "com.applicaster.reactnative.plugins.APReactNativeAdapter",
+    "react_packages": [
+      "io.invertase.firebase.app.ReactNativeFirebaseAppPackage",
+      "io.invertase.firebase.admob.ReactNativeFirebaseAdMobPackage"
+    ]
+  },
+  "dependency_repository_url": [],
+  "project_dependencies": [
+    {
+      "react-native-firebase_app": "./node_modules/@react-native-firebase/app/android"
+    },
+    {
+      "react-native-firebase_admob": "./node_modules/@react-native-firebase/admob/android"
+    }
+  ],
+  "npm_dependencies": [
+    "@react-native-firebase/app@6.4.0",
+    "@react-native-firebase/admob@6.4.0"
+  ],
+  "dependency_name": "@applicaster/quick-brick-google-admob-interstitials",
+  "author_name": "Alex Khomich",
+  "author_email": "a.khomich@applicaster.com",
+  "name": "Google Admob Ads",
+  "description": "This plugin adds react-native-firebase-admob dependency to your native project.",
+  "type": "general",
+  "screen": true,
+  "react_native": true,
+  "identifier": "google-admob-ads-qb",
+  "ui_builder_support": true,
+  "whitelisted_account_ids": [],
+  "min_zapp_sdk": "12.0.0",
+  "deprecated_since_zapp_sdk": "",
+  "unsupported_since_zapp_sdk": "",
+  "preload": true,
+  "platform": "android",
+  "dependency_version": "0.0.3",
+  "manifest_version": "0.0.1",
+  "general": {},
+  "custom_configuration_fields": [],
+  "ui_frameworks": [
+    "quickbrick"
+  ],
+  "targets": [
+    "mobile"
+  ]
+}
