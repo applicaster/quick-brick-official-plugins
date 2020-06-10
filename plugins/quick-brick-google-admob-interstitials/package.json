@@ -1,0 +1,29 @@
+{
+  "name": "@applicaster/quick-brick-google-admob-interstitials",
+  "version": "0.0.6",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "peerDependencies": {
+    "@applicaster/zapp-react-native-bridge": "*",
+    "@applicaster/zapp-react-native-redux": "*",
+    "@applicaster/zapp-react-native-ui-components": "*",
+    "@applicaster/zapp-react-native-utils": "*",
+    "react": "16.11.0",
+    "react-native": "0.62.2",
+    "react-native-web": "0.11.5"
+  },
+  "devDependencies": {
+    "react": "16.11.0",
+    "react-native": "0.62.2",
+    "react-native-web": "0.11.5"
+  },
+  "dependencies": {
+    "@react-native-firebase/app": "^6.4.0",
+    "@react-native-firebase/admob": "^6.4.0"
+  }
+}
