@@ -8,6 +8,7 @@ import React
 import Foundation
 import AccessEnabler
 import ZappCore
+import WebKit
 
 enum AdobeFlow {
     case login
