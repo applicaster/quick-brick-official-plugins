@@ -1,0 +1,40 @@
+{
+  "api": {},
+  "dependency_repository_url": [ ],
+  "npm_dependencies": [
+    "@react-native-firebase/app@6.4.0",
+    "@react-native-firebase/admob@6.4.0"
+  ],
+  "dependency_name": "@applicaster/quick-brick-google-admob-inline-banner",
+  "author_name": "Olga Duk",
+  "author_email": "oduk@scand.com",
+  "name": "Google Admob Inline Banner Ads",
+  "description": "This plugin adds react-native-firebase-admob dependency to your project.",
+  "type": "ui_component",
+  "screen": true,
+  "react_native": true,
+  "identifier": "google-admob-inline-banner-qb",
+  "ui_builder_support": true,
+  "whitelisted_account_ids": [ ],
+  "deprecated_since_zapp_sdk": "",
+  "unsupported_since_zapp_sdk": "",
+  "preload": true,
+  "platform": "ios_for_quickbrick",
+  "dependency_version": "0.0.1",
+  "manifest_version": "0.0.1",
+  "min_zapp_sdk": "0.1.0-alpha1",
+  "general": { },
+  "custom_configuration_fields": [ ],
+  "extra_dependencies": [
+    {
+      "RNFBApp": ":path => './quick_brick/node_modules/@react-native-firebase/app/RNFBApp.podspec'",
+      "RNFBAdMob": ":path => './quick_brick/node_modules/@react-native-firebase/admob/RNFBAdMob.podspec'"
+    }
+  ],
+  "ui_frameworks": [
+    "quickbrick"
+  ],
+  "targets": [
+    "mobile"
+  ]
+}
