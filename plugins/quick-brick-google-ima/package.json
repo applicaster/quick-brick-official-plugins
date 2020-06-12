@@ -1,6 +1,6 @@
 {
-  "_from": "@applicaster/quick-brick-google-ima@0.3.2",
-  "_id": "@applicaster/quick-brick-google-ima@0.3.2",
+  "_from": "@applicaster/quick-brick-google-ima@0.3.3",
+  "_id": "@applicaster/quick-brick-google-ima@0.3.3",
   "_inBundle": false,
   "_integrity": "sha512-2pt6MlkGEcKMtFRm3VvXakeoqQIp3Jiagxc1v1fw8IJWVNJiHPPsCUVNgXboV1ruQdePvM55sQ34hd1XUx2/TA==",
   "_location": "/@applicaster/quick-brick-google-ima",
@@ -8,21 +8,21 @@
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "@applicaster/quick-brick-google-ima@0.3.2",
+    "raw": "@applicaster/quick-brick-google-ima@0.3.3",
     "name": "@applicaster/quick-brick-google-ima",
     "escapedName": "@applicaster%2fquick-brick-google-ima",
     "scope": "@applicaster",
-    "rawSpec": "0.3.2",
+    "rawSpec": "0.3.3",
     "saveSpec": null,
-    "fetchSpec": "0.3.2"
+    "fetchSpec": "0.3.3"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/@applicaster/quick-brick-google-ima/-/quick-brick-google-ima-0.3.2.tgz",
+  "_resolved": "https://registry.npmjs.org/@applicaster/quick-brick-google-ima/-/quick-brick-google-ima-0.3.3.tgz",
   "_shasum": "a5227bf851f5399698000fef0fd1a0da3fb44497",
-  "_spec": "@applicaster/quick-brick-google-ima@0.3.2",
+  "_spec": "@applicaster/quick-brick-google-ima@0.3.3",
   "_where": "/Volumes/HDD/PROJECTS/zapp/QBTest/zapp-platform-android",
   "applicaster": {
     "supportedPlatforms": [
@@ -61,5 +61,5 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "0.3.2"
+  "version": "0.3.3"
 }

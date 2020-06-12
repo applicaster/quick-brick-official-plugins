@@ -89,7 +89,7 @@ def safeExtGet(prop, fallback) {
 
 dependencies {
     // Applicaster SDK
-    def applicasterSDKPath = 'com.applicaster:applicaster-android-sdk-core:5.1.0'
+    def applicasterSDKPath = 'com.applicaster:applicaster-android-sdk-core:6.2.0'
 
     // Check if an open SDK is defined - if not use the closed one.
     def devSDK = findProject(':applicaster-android-sdk')
