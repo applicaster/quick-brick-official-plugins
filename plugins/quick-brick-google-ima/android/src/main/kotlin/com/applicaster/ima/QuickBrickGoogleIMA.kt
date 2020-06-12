@@ -1,26 +1,22 @@
 package com.applicaster.ima
 
 import android.content.Context
-import android.graphics.Color
 import android.net.Uri
 import android.util.Log
-import android.view.View
 import com.applicaster.ima.ads.*
+import com.applicaster.player_protocol.api.PlayerEventCompletionListener
 import com.applicaster.plugin_manager.dependencyplugin.playerplugin.PlayerReceiverPlugin
 import com.applicaster.plugin_manager.dependencyplugin.playerplugin.PlayerSenderPlugin
 import com.applicaster.util.OSUtil
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.uimanager.ThemedReactContext
 import com.google.ads.interactivemedia.v3.api.AdErrorEvent
-import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.ima.ImaAdsLoader
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ads.AdsMediaSource
-import com.google.android.exoplayer2.ui.DefaultTimeBar
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.ui.TimeBar
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util as exoUtil
 
@@ -46,20 +42,21 @@ class QuickBrickGoogleIMA :
 	private var ads: Ad = Ad.Empty
 	private var imaVastLoader: ImaLoader? = null
 	private var imaVmapLoader: ImaAdsLoader? = null
-	private var playerDidFinishCompletion: (Boolean) -> Unit = {}
+	private var playerDidFinishCompletion: PlayerEventCompletionListener? = null
 	private var adMarkers: Pair<LongArray, BooleanArray>? = null
 
 	init {
 		logData("init $tag")
 	}
 
-	override fun playerDidFinishPlayItem(player: PlayerSenderPlugin, completion: (finish: Boolean) -> Unit) {
+	override fun playerDidFinishPlayItem(player: PlayerSenderPlugin,
+										 completion: PlayerEventCompletionListener) {
 		this.playerDidFinishCompletion = completion
 		if (!isAdsContainPostroll) {
-			completion(true)
+			completion.onFinish(true)
 			logData("playerDidFinishPlayItem => true")
 		} else {
-			completion(false)
+			completion.onFinish(false)
 			logData("playerDidFinishPlayItem => false")
 		}
 	}
@@ -104,7 +101,7 @@ class QuickBrickGoogleIMA :
 
 	override fun onPostrollFinished() {
 		//notify the player that all ads was finished
-		playerDidFinishCompletion(true)
+		playerDidFinishCompletion?.onFinish(true)
 		logData("onPostrollFinished")
 	}
 
@@ -272,7 +269,7 @@ class QuickBrickGoogleIMA :
 		this.imaVmapLoader?.release()
 		this.imaVastLoader?.release()
 		this.player?.release()
-		playerDidFinishCompletion = {}
+		playerDidFinishCompletion = null
 		adMarkers = null
 	}
 
