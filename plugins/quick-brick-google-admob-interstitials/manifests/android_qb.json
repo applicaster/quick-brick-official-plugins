@@ -1,6 +1,20 @@
 {
-  "api": {},
-  "dependency_repository_url": [ ],
+  "api": {
+    "class_name": "com.applicaster.reactnative.plugins.APReactNativeAdapter",
+    "react_packages": [
+      "io.invertase.firebase.app.ReactNativeFirebaseAppPackage",
+      "io.invertase.firebase.admob.ReactNativeFirebaseAdmobPackage"
+    ]
+  },
+  "dependency_repository_url": [],
+  "project_dependencies": [
+    {
+      "react-native-firebase_app": "./node_modules/@react-native-firebase/app/android"
+    },
+    {
+      "react-native-firebase_admob": "./node_modules/@react-native-firebase/admob/android"
+    }
+  ],
   "npm_dependencies": [
     "@react-native-firebase/app@6.4.0",
     "@react-native-firebase/admob@6.4.0"
@@ -9,33 +23,27 @@
   "author_name": "Olga Duk",
   "author_email": "oduk@scand.com",
   "name": "Google Admob Ads",
-  "description": "This plugin adds react-native-firebase-admob dependency to your native project and provides AdMob Application Identifier configuration field",
+  "description": "This plugin adds react-native-firebase-admob dependency to your native project.",
   "type": "general",
   "screen": true,
   "react_native": true,
   "identifier": "google-admob-ads-qb",
   "ui_builder_support": true,
-  "whitelisted_account_ids": [ ],
+  "whitelisted_account_ids": [],
+  "min_zapp_sdk": "0.1.0-alpha1",
   "deprecated_since_zapp_sdk": "",
   "unsupported_since_zapp_sdk": "",
   "preload": true,
-  "platform": "ios_for_quickbrick",
+  "platform": "android_for_quickbrick",
   "dependency_version": "0.0.6",
   "manifest_version": "0.0.1",
-  "min_zapp_sdk": "0.1.0-alpha1",
-  "general": { },
+  "general": {},
   "custom_configuration_fields": [
     {
       "key": "admob_configuration_json",
       "type": "uploader",
       "label": "Admob Configuration JSON",
       "label_tooltip": "Please upload JSON file with Admob configuration."
-    }
-  ],
-  "extra_dependencies": [
-    {
-      "RNFBApp": ":path => './quick_brick/node_modules/@react-native-firebase/app/RNFBApp.podspec'",
-      "RNFBAdMob": ":path => './quick_brick/node_modules/@react-native-firebase/admob/RNFBAdMob.podspec'"
     }
   ],
   "ui_frameworks": [
