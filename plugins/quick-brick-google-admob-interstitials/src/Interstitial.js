@@ -1,30 +1,24 @@
 import { InterstitialAd, AdEventType } from '@react-native-firebase/admob';
 import React, { useEffect } from 'react';
 import session from './Configuration/Session';
+import trackEvent from './Analytics';
 
 
-function Interstitial(props) {
-  const {
-    callback,
-    payload,
-    advertisingData
-  } = props;
-
-  const targetScreenId = payload?.data?.target;
-  const targetScreenAdConfig = advertisingData[targetScreenId];
+function Interstitial({ callback, payload }) {
+  const targetScreenId = payload?.id;
 
   const {
-    display_interstitial_once: displayOnce = true,
-    interstitial_ad_unit_id: adUnitId = ''
-  } = targetScreenAdConfig;
+    advertising: {
+      display_interstitial_once: displayOnce = true,
+      interstitial_ad_unit_id: adUnitId = ''
+    } = {}
+  } = payload;
+
+  const closeHook = () => callback({ success: true, payload });
 
   const interstitial = InterstitialAd.createForAdRequest(adUnitId);
 
-  const closeHook = () => {
-    callback({ success: true, payload });
-  };
-
-  interstitial.onAdEvent((type) => {
+  const unsubscribe = interstitial.onAdEvent((type, error) => {
     const {
       LOADED,
       CLOSED,
@@ -37,7 +31,10 @@ function Interstitial(props) {
         session.displayedAds.push(targetScreenId);
         break;
       case CLOSED:
+        closeHook();
+        break;
       case ERROR:
+        trackEvent(error.code, adUnitId);
         closeHook();
     }
   });
@@ -55,9 +52,12 @@ function Interstitial(props) {
     }
   };
 
-  useEffect(() => loadInterstitials(), []);
+  useEffect(() => {
+    loadInterstitials();
+    return () => unsubscribe();
+  }, []);
 
-  return null;
+  if (!interstitial.loaded) return null;
 }
 
 export default Interstitial;
