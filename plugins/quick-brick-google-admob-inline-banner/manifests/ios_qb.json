@@ -11,7 +11,7 @@
   "name": "Google Admob Inline Banner Ads",
   "description": "This plugin adds react-native-firebase-admob dependency to your project.",
   "type": "ui_component",
-  "screen": true,
+  "screen": false,
   "react_native": true,
   "identifier": "google-admob-inline-banner-qb",
   "ui_builder_support": true,
@@ -23,7 +23,138 @@
   "dependency_version": "0.0.1",
   "manifest_version": "0.0.1",
   "min_zapp_sdk": "0.1.0-alpha1",
-  "general": { },
+  "styles": {
+    "fields": [
+      {
+        "key": "banner_ad_unit",
+        "type": "text_input",
+        "label": "Banner Ad Unit",
+        "label_tooltip": "Ad Unit. The associated banner will show on the screen according to the format and type selected.",
+        "initial_value": ""
+      },
+      {
+        "key": "banner_ad_type",
+        "type": "select",
+        "options": [
+          { "text": "Standard Banner", "value": "standard_banner" },
+          { "text": "Smart Banner", "value": "smart_banner" },
+          { "text": "Adaptive Banner", "value": "adaptive_banner" },
+          { "text": "Box Banner", "value": "box_banner" }
+        ],
+        "label": "Type",
+        "label_tooltip": "Support for Smart Banners, Standard Banners (320x50 for smartphone and 728x90 for tablet), (300x250, often referred to as \"medium rectangles\") and Adaptive Banners.",
+        "placeholder": "Select a banner type"
+      },
+      {
+        "key": "background",
+        "type": "switch",
+        "label": "Background",
+        "label_tooltip": "Determines if the banner will have a custom background. This option allows the banner to blend better with the overall design of the app.",
+        "initial_value": "false"
+      },
+      {
+        "key": "background_color",
+        "type": "color_picker_rgba",
+        "label": "Background Color",
+        "label_tooltip": "Background color for the advertisement container.",
+        "initial_value": "rgba(0, 0, 0, 1)",
+        "conditional_fields": [
+          {
+            "condition_value": [
+              true
+            ],
+            "key": "styles/background"
+          }
+        ]
+      },
+      {
+        "key": "title_text",
+        "type": "text_input",
+        "label": "Title text",
+        "label_tooltip": "This text appears at the top of the advertisement area, usually it is a localized version of the word “Advertisement”.",
+        "initial_value": "Advertisement",
+        "conditional_fields": [
+          {
+            "condition_value": [
+              true
+            ],
+            "key": "styles/background"
+          }
+        ]
+      },
+      {
+        "key": "title_font_android",
+        "type": "android_font_selector",
+        "label_tooltip": "Font for Title Text for Android.",
+        "initial_value": "Roboto-Bold",
+        "conditional_fields": [
+          {
+            "condition_value": [
+              true
+            ],
+            "key": "styles/background"
+          }
+        ]
+      },
+      {
+        "key": "title_font_ios",
+        "type": "ios_font_selector",
+        "label_tooltip": "Font for Title Text for iOS.",
+        "initial_value": "Helvetica-Bold",
+        "conditional_fields": [
+          {
+            "condition_value": [
+              true
+            ],
+            "key": "styles/background"
+          }
+        ]
+      },
+      {
+        "key": "title_fontsize",
+        "type": "number_input",
+        "label_tooltip": "Font Size for Title Text.",
+        "initial_value": "9",
+        "conditional_fields": [
+          {
+            "condition_value": [
+              true
+            ],
+            "key": "styles/background"
+          }
+        ]
+      },
+      {
+        "key": "title_fontcolor",
+        "type": "color_picker_rgba",
+        "label_tooltip": "Font Color for Title Text.",
+        "initial_value": "rgba(0, 0, 0, 1)",
+        "conditional_fields": [
+          {
+            "condition_value": [
+              true
+            ],
+            "key": "styles/background"
+          }
+        ]
+      },
+      {
+        "key": "title_tablet_fontsize",
+        "type": "number_input",
+        "label": "Tablet Font Size",
+        "label_tooltip": "Font Size for tablets.",
+        "initial_value": "12",
+        "conditional_fields": [
+          {
+            "condition_value": [
+              true
+            ],
+            "key": "styles/background"
+          }
+        ]
+      }
+    ]
+  },
   "custom_configuration_fields": [ ],
   "extra_dependencies": [
     {
@@ -31,6 +162,10 @@
       "RNFBAdMob": ":path => './quick_brick/node_modules/@react-native-firebase/admob/RNFBAdMob.podspec'"
     }
   ],
+  "characteristics": {
+    "group": false,
+    "appearance": ["group", "screen"]
+  },
   "ui_frameworks": [
     "quickbrick"
   ],
