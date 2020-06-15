@@ -1,6 +1,7 @@
 import { InterstitialAd, AdEventType } from '@react-native-firebase/admob';
 import React, { useEffect } from 'react';
 import session from './Configuration/Session';
+import trackEvent from './Analytics';
 
 
 function Interstitial(props) {
@@ -37,7 +38,10 @@ function Interstitial(props) {
         session.displayedAds.push(targetScreenId);
         break;
       case CLOSED:
+        closeHook();
+        break;
       case ERROR:
+        trackEvent(error, adUnitId);
         closeHook();
     }
   });
