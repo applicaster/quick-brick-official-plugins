@@ -56,6 +56,8 @@ import ZappCore
 
     /// Main point of interaction with the SDK. Created by the SDK as the result of an ad request.
     internal var adsManager: IMAAdsManager?
+    
+    internal var adDisplayContainer: IMAAdDisplayContainer?
 
     var avPlayer: AVPlayer? {
         return playerPlugin?.playerObject as? AVPlayer
@@ -132,6 +134,7 @@ import ZappCore
     func resumePlayback() {
         isPlaybackPaused = false
         playerPlugin?.pluggablePlayerResume()
+        adDisplayContainer?.adContainer.accessibilityIdentifier = ""
     }
     
     func pausePlayback() {
@@ -170,14 +173,16 @@ import ZappCore
         }
         setupAdsLoader()
 
-        let adDisplayContainer: IMAAdDisplayContainer = IMAAdDisplayContainer(adContainer: containerView,
-                                                                              companionSlots: nil)
+        adDisplayContainer = IMAAdDisplayContainer(adContainer: containerView, companionSlots: nil)
         if let request = IMAAdsRequest(adTagUrl: adUrl,
                                        adDisplayContainer: adDisplayContainer,
                                        contentPlayhead: contentPlayhead,
                                        userContext: nil) {
             adRequest = request
             adsLoader?.requestAds(with: adRequest)
+            
+            // Adding accessibility identifier for UI automation tests needs
+            adDisplayContainer?.adContainer.accessibilityIdentifier = adUrl
         }
     }
 }
