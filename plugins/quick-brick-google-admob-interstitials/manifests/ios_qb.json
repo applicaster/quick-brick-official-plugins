@@ -26,10 +26,10 @@
   "general": { },
   "custom_configuration_fields": [
     {
-      "key": "admob_configuration_json",
-      "type": "uploader",
-      "label": "Admob Configuration JSON",
-      "label_tooltip": "Please upload JSON file with Admob configuration."
+      "key": "plist.GADApplicationIdentifier",
+      "type": "text_input",
+      "label": "AdMob Application Identifier",
+      "label_tooltip": "AdMob Application Identifier"
     }
   ],
   "extra_dependencies": [
