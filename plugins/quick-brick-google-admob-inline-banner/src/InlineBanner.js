@@ -3,6 +3,7 @@ import { View, Text, Dimensions } from 'react-native';
 import { BannerAd } from '@react-native-firebase/admob';
 import { isAndroid, isTablet, getBannerSize } from './Utils';
 import { defaultFontSize, adaptiveBannerRatio, bannerTypes } from './Config';
+import trackEvent from './Analytics';
 
 const { width } = Dimensions.get('window');
 const adaptiveBannerHeight = width / adaptiveBannerRatio;
@@ -69,6 +70,7 @@ export default function InlineBanner(props) {
         style={[styles.banner, isAdaptive && { height: adaptiveBannerHeight, width }]}
         onAdFailedToLoad={(err) => {
           setError(err);
+          trackEvent(err, bannerAdUnit);
           console.log('Advert failed to load: ', err);
           onLoadFailed();
         }}
