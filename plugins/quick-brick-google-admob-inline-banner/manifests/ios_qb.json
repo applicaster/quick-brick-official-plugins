@@ -155,7 +155,13 @@
       }
     ]
   },
-  "custom_configuration_fields": [ ],
+  "custom_configuration_fields": [
+    {
+      "type": "text",
+      "key": "plist.GADApplicationIdentifier",
+      "tooltip_text": "AdMob Application Identifier"
+    }
+  ],
   "extra_dependencies": [
     {
       "RNFBApp": ":path => './quick_brick/node_modules/@react-native-firebase/app/RNFBApp.podspec'",
@@ -163,7 +169,7 @@
     }
   ],
   "characteristics": {
-    "group": false,
+    "group": true,
     "appearance": ["group", "screen"]
   },
   "ui_frameworks": [
