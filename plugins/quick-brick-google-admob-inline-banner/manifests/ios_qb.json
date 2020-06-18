@@ -20,7 +20,7 @@
   "unsupported_since_zapp_sdk": "",
   "preload": true,
   "platform": "ios_for_quickbrick",
-  "dependency_version": "0.0.2",
+  "dependency_version": "0.0.3",
   "manifest_version": "0.0.1",
   "min_zapp_sdk": "0.1.0-alpha1",
   "styles": {
@@ -157,9 +157,10 @@
   },
   "custom_configuration_fields": [
     {
-      "type": "text",
       "key": "plist.GADApplicationIdentifier",
-      "tooltip_text": "AdMob Application Identifier"
+      "type": "text_input",
+      "label": "AdMob Application Identifier",
+      "label_tooltip": "AdMob Application Identifier"
     }
   ],
   "extra_dependencies": [
@@ -169,7 +170,7 @@
     }
   ],
   "characteristics": {
-    "group": true,
+    "group": false,
     "appearance": ["group", "screen"]
   },
   "ui_frameworks": [

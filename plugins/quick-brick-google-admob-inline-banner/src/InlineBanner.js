@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, Dimensions } from 'react-native';
-import { BannerAd } from '@react-native-firebase/admob';
-import { isAndroid, isTablet, getBannerSize } from './Utils';
+import { Dimensions } from 'react-native';
+import { BannerAd, BannerAdSize } from '@react-native-firebase/admob';
+import {
+  isAndroid,
+  isTablet,
+  getBannerSize,
+  getBannersWithBackground
+} from './Utils';
 import { defaultFontSize, adaptiveBannerRatio, bannerTypes } from './Config';
 import trackEvent from './Analytics';
+import BannerWrapper from './BannerWrapper';
 
 const { width } = Dimensions.get('window');
 const adaptiveBannerHeight = width / adaptiveBannerRatio;
@@ -12,17 +18,16 @@ const adaptiveBannerHeight = width / adaptiveBannerRatio;
 export default function InlineBanner(props) {
   const {
     onLoadFinished,
-    onLoadFailed,
     component: {
-      styles: customStyles
-    }
+      styles: customStyles = {}
+    } = {}
   } = props;
 
   const {
     background,
     background_color: backgroundColor = '',
     banner_ad_unit: bannerAdUnit = '',
-    banner_ad_type: bannerAdType,
+    banner_ad_type: bannerAdType = '',
     title_font_android: fontAndroid = '',
     title_font_ios: fontIos = '',
     title_fontcolor: fontColor = '',
@@ -32,6 +37,7 @@ export default function InlineBanner(props) {
   } = customStyles;
 
   const [error, setError] = useState(null);
+  const [loaded, setLoaded] = useState(false);
 
   const tabletFontSize = Number(titleTabletFontSize);
   const fontSize = Number(titleFontSize);
@@ -43,52 +49,45 @@ export default function InlineBanner(props) {
   };
 
   const bannerSize = getBannerSize(bannerAdType);
-  const isAdaptive = bannerAdType === bannerTypes.adaptive;
-  const showBackground = background
-    && (bannerAdType === bannerTypes.standard
-      || bannerAdType === bannerTypes.box);
+  const isAdaptive = bannerSize === BannerAdSize.FLUID;
+  const bannersWithBackground = getBannersWithBackground(bannerAdType);
+  const showBackground = loaded && background;
+
+  const getBannerStyle = () => {
+    if (isAdaptive) {
+      return { height: adaptiveBannerHeight, width };
+    }
+    if (bannersWithBackground) {
+      return { alignSelf: 'center' };
+    }
+    return {};
+  };
+
+  const errorHandler = (err) => {
+    setError(err);
+    trackEvent(err?.code, bannerAdUnit);
+    console.log('Advert failed to load: ', err?.code);
+  };
 
   onLoadFinished();
-  if (error) return null;
+
+  if (error || !bannerAdUnit) return null;
 
   return (
-    <View style={[styles.container, showBackground && { backgroundColor }]}>
-      {
-        showBackground && (
-          <Text
-            style={titleStyle}
-            numberOfLines={2}
-            ellipsizeMode="tail"
-          >
-            {title}
-          </Text>
-        )
-      }
+    <BannerWrapper
+      bannersWithBackground={bannersWithBackground}
+      showBackground={showBackground}
+      backgroundColor={backgroundColor}
+      titleStyle={titleStyle}
+      title={title}
+    >
       <BannerAd
         unitId={bannerAdUnit}
         size={bannerSize}
-        style={[styles.banner, isAdaptive && { height: adaptiveBannerHeight, width }]}
-        onAdFailedToLoad={(err) => {
-          setError(err);
-          trackEvent(err, bannerAdUnit);
-          console.log('Advert failed to load: ', err);
-          onLoadFailed();
-        }}
+        style={getBannerStyle()}
+        onAdLoaded={() => setLoaded(true)}
+        onAdFailedToLoad={errorHandler}
       />
-    </View>
+    </BannerWrapper>
   );
 }
-
-const styles = {
-  container: {
-    flex: 1,
-    paddingTop: 13,
-    paddingBottom: 12,
-    marginBottom: 10,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  banner: {
-    alignSelf: 'center'
-  }
-};
