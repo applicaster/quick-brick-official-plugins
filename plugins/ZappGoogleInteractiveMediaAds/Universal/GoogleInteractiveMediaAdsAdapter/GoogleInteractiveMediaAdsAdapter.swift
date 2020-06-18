@@ -58,6 +58,8 @@ import ZappCore
     internal var adsManager: IMAAdsManager?
     
     internal var adDisplayContainer: IMAAdDisplayContainer?
+    
+    internal var advAccessibilityIdentifier: String?
 
     var avPlayer: AVPlayer? {
         return playerPlugin?.playerObject as? AVPlayer
@@ -134,12 +136,19 @@ import ZappCore
     func resumePlayback() {
         isPlaybackPaused = false
         playerPlugin?.pluggablePlayerResume()
-        adDisplayContainer?.adContainer.accessibilityIdentifier = ""
+        
+        if adDisplayContainer == adDisplayContainer {
+            adDisplayContainer?.adContainer.accessibilityIdentifier = ""
+        }
     }
     
     func pausePlayback() {
         isPlaybackPaused = true
         playerPlugin?.pluggablePlayerPause()
+        
+        if adDisplayContainer == adDisplayContainer {
+            adDisplayContainer?.adContainer.accessibilityIdentifier = advAccessibilityIdentifier
+        }
     }
     
     func showActivityIndicator(_ show: Bool) {
@@ -181,8 +190,8 @@ import ZappCore
             adRequest = request
             adsLoader?.requestAds(with: adRequest)
             
-            // Adding accessibility identifier for UI automation tests needs
-            adDisplayContainer?.adContainer.accessibilityIdentifier = adUrl
+            // Storing accessibility identifier for UI automation tests needs
+            advAccessibilityIdentifier = adUrl
         }
     }
 }
