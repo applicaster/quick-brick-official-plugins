@@ -5,7 +5,7 @@
 	<key>ZappGoogleInteractiveMediaAds</key>
 	<dict>
 		<key>version_id</key>
-		<string>0.10.2</string>
+		<string>0.10.3</string>
 	</dict>
 	<key>quick-brick-circle-ci-test</key>
 	<dict>
