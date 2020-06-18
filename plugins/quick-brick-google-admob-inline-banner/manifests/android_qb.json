@@ -35,7 +35,7 @@
   "unsupported_since_zapp_sdk": "",
   "preload": true,
   "platform": "android_for_quickbrick",
-  "dependency_version": "0.0.2",
+  "dependency_version": "0.0.3",
   "manifest_version": "0.0.1",
   "styles": {
     "fields": [
@@ -178,7 +178,7 @@
     }
   ],
   "characteristics": {
-    "group": true,
+    "group": false,
     "appearance": ["group", "screen"]
   },
   "ui_frameworks": [
