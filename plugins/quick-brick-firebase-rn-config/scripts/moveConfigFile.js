@@ -2,7 +2,7 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
-const targetPath = path.join('..', '..', '..', '..', 'firebase.json'); // put firebase.json to the root
+const targetPath = path.join('..', '..', '..', '..', '..', 'firebase.json'); // put firebase.json on the same level with zapp-platform-android
 const pathToRivers = path.join('..', '..', '..', '..', 'config', 'android', 'plugin_configurations.json');
 
 // eslint-disable-next-line import/no-dynamic-require
