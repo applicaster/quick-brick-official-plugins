@@ -15,7 +15,7 @@ const baseManifest = {
   },
   dependency_repository_url: [],
   dependency_name: "@applicaster/quick-brick-google-ima",
-  npm_dependencies: ["@applicaster/quick-brick-google-ima@0.1.1"],
+  npm_dependencies: ["@applicaster/quick-brick-google-ima@0.3.3"],
   author_name: "Zapp Team",
   author_email: "zapp@applicaster.com",
   name: "Google Interactive Media Ads QuickBrick,",
