@@ -1,0 +1,36 @@
+{
+  "api": {},
+  "dependency_repository_url": [],
+  "project_dependencies": [],
+  "dependency_name": "@applicaster/quick-brick-firebase-rn-config",
+  "author_name": "Olga Duk",
+  "author_email": "oduk@scand.com",
+  "name": "React Native Firebase Admob Settings",
+  "description": "This plugin adds firebase.json for Admob.",
+  "type": "general",
+  "react_native": true,
+  "identifier": "firebase-rn-config-android",
+  "ui_builder_support": true,
+  "whitelisted_account_ids": [],
+  "min_zapp_sdk": "0.1.0-alpha1",
+  "deprecated_since_zapp_sdk": "",
+  "unsupported_since_zapp_sdk": "",
+  "preload": true,
+  "platform": "android_for_quickbrick",
+  "dependency_version": "0.0.1",
+  "manifest_version": "0.0.1",
+  "custom_configuration_fields": [
+    {
+      "key": "admob_configuration_json",
+      "type": "uploader",
+      "label": "Admob Configuration JSON",
+      "label_tooltip": "Please upload JSON file with Admob configuration."
+    }
+  ],
+  "ui_frameworks": [
+    "quickbrick"
+  ],
+  "targets": [
+    "mobile"
+  ]
+}

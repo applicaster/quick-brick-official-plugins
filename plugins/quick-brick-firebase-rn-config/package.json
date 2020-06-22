@@ -1,0 +1,22 @@
+{
+  "name": "@applicaster/quick-brick-firebase-rn-config",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "postinstall": "node scripts/moveConfigFile.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "peerDependencies": {
+    "react": "16.11.0",
+    "react-native": "0.62.2",
+    "react-native-web": "0.11.5"
+  },
+  "devDependencies": {
+    "react": "16.11.0",
+    "react-native": "0.62.2",
+    "react-native-web": "0.11.5"
+  }
+}
