@@ -7,7 +7,7 @@
   "dependency_repository_url": [],
   "dependency_name": "@applicaster/quick-brick-applicaster2-playback-prehook",
   "dependency_version": "0.0.3",
-  "platform": "android",
+  "platform": "ios",
   "author_name": "Olga Duk",
   "author_email": "oduk@scand.com",
   "manifest_version": "0.0.1",
