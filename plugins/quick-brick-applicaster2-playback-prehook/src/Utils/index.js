@@ -2,12 +2,35 @@ import md5 from 'md5';
 import * as R from 'ramda';
 import { stringify } from 'query-string';
 import jwt from 'react-native-jwt-io';
+import moment from 'moment';
 import { mapKeys } from '@applicaster/zapp-react-native-utils/objectUtils';
 import CONFIG from '../Config';
 
 const prefixParamKeys = mapKeys((key) => `api[${key}]`);
 const createRequestSignature = R.compose(md5, R.reduce(R.concat, ''));
 
+
+function getExpTime(adobeToken) {
+  // Adobe issues fresh token every time the item is clicked
+  // Keep expiryTime for applicaster2 only
+  const issueTime = findInXml('issueTime', adobeToken);
+  const [date, time, offset] = issueTime.split(' ');
+  const utcDate = `${date}T${time}${offset}`;
+  const issueMs = moment(utcDate).valueOf();
+
+  const expiryTime = issueMs + CONFIG.ADOBE_EXP_IN;
+  return Math.floor(expiryTime / 1000);
+}
+
+function findInXml(value, str) {
+  const startVal = `<${value}>`;
+  const endVal = `</${value}>`;
+
+  return str.substring(
+    str.lastIndexOf(startVal) + startVal.length,
+    str.indexOf(endVal)
+  );
+}
 
 function signRequest(url, apiSecretKey, params) {
   const prefixedParams = prefixParamKeys(params);
@@ -31,43 +54,22 @@ function getAuthProviderId(props) {
   return R.path(CONFIG.CONFIG_AUTH_PROVIDER_ID_PATH, props);
 }
 
-function createJWT(data, header, props) {
+function createJWT(data, props) {
   const jwtSecret = R.path(CONFIG.JWT_SECRET_PATH, props);
 
-  if (!jwtSecret) console.warn(CONFIG.NO_JWT_MESSAGE);
+  if (!jwtSecret) throw new Error(CONFIG.NO_JWT_MESSAGE);
   return jwt.encode(data, jwtSecret);
 }
 
 function getHeaders(adobeToken, uuid, props) {
   if (!adobeToken) return {};
 
-  const { expires, userId, requestor, mvpd } = R.tryCatch(
-    JSON.parse,
-    R.flip(R.identity)
-  )(adobeToken);
+  const exp = getExpTime(adobeToken);
+  const iss = findInXml('mvpdId', adobeToken);
 
-  /**
-   * This is where we can decide what the jwt token includes
-   * pass an object to `this.create JWT` and it will sign it and return the
-   * token signed with the apiSecretKey of the app in applicaster2
-   */
+  const data = { iss, exp, uuid };
 
-  const exp = Math.floor(Number(expires) / 1000, 0);
-
-  const header = {
-    alg: CONFIG.HS256,
-    typ: CONFIG.JWT
-  };
-
-  const data = {
-    iss: mvpd,
-    exp,
-    requestor,
-    userId,
-    uuid
-  };
-
-  const jwtToken = createJWT(data, header, props);
+  const jwtToken = createJWT(data, props);
   const authProviderId = getAuthProviderId(props);
 
   return {
@@ -104,6 +106,5 @@ export {
   signRequest,
   getHeaders,
   uuidv4,
-  removeUnneededQuotes,
   removeAllQuotes
 };
