@@ -68,7 +68,7 @@ const isHomeScreen = (navigator, homeScreen) => {
 };
 
 const isPlayerHook = (payload) => R.pathSatisfies(
-  (value) => value === 'video',
+  (value) => value === 'video' || value === 'channel',
   ['type', 'value'],
   payload
 );
