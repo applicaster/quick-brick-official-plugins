@@ -1,0 +1,33 @@
+{
+  "name": "@applicaster/quick-brick-applicaster2-playback-prehook",
+  "version": "0.0.3",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "peerDependencies": {
+    "@applicaster/zapp-react-native-bridge": "*",
+    "@applicaster/zapp-react-native-redux": "*",
+    "@applicaster/zapp-react-native-ui-components": "*",
+    "@applicaster/zapp-react-native-utils": "*",
+    "react": "16.8.3",
+    "react-native": "0.59.10",
+    "react-native-web": "0.11.5"
+  },
+  "devDependencies": {
+    "react": "16.8.3",
+    "react-native": "0.59.10",
+    "react-native-web": "0.11.5"
+  },
+  "dependencies": {
+    "ramda": "^0.27.0",
+    "axios": "^0.19.2",
+    "md5": "^2.2.1",
+    "react-native-jwt-io": "^1.0.3",
+    "query-string": "^6.13.1",
+    "moment": "^2.27.0"
+  }
+}
