@@ -2,15 +2,15 @@
   "api": {},
   "dependency_repository_url": [ ],
   "npm_dependencies": [
-    "@react-native-firebase/app@6.4.0",
-    "@react-native-firebase/admob@6.4.0"
+    "@react-native-firebase/app@7.3.0",
+    "@react-native-firebase/admob@7.2.1"
   ],
   "dependency_name": "@applicaster/quick-brick-google-admob-interstitials",
   "author_name": "Olga Duk",
   "author_email": "oduk@scand.com",
   "name": "Google Admob Ads",
   "description": "This plugin adds react-native-firebase-admob dependency to your native project and provides AdMob Application Identifier configuration field",
-  "type": "general",
+  "type": "advertisement",
   "screen": true,
   "react_native": true,
   "identifier": "google-admob-ads-qb",
@@ -20,7 +20,7 @@
   "unsupported_since_zapp_sdk": "",
   "preload": true,
   "platform": "ios_for_quickbrick",
-  "dependency_version": "0.1.0",
+  "dependency_version": "0.1.1",
   "manifest_version": "0.1.0",
   "min_zapp_sdk": "0.1.0-alpha1",
   "general": { },
