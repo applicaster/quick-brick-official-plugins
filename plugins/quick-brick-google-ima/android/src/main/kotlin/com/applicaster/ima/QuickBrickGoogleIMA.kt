@@ -144,7 +144,9 @@ class QuickBrickGoogleIMA :
 
 	private fun initImaVmapLoader() {
 		context?.let {
-			imaVmapLoader = ImaAdsLoader(it, getAdsTagUrl())
+			imaVmapLoader = ImaAdsLoader.Builder(it)
+            					.setAdEventListener(AdsEventListenerWrapper())
+            					.buildForAdTag(getAdsTagUrl())
 			imaVmapLoader?.setPlayer(this.player)
 		}
 	}
