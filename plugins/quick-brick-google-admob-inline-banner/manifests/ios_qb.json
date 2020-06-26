@@ -2,8 +2,8 @@
   "api": {},
   "dependency_repository_url": [ ],
   "npm_dependencies": [
-    "@react-native-firebase/app@6.4.0",
-    "@react-native-firebase/admob@6.4.0"
+    "@react-native-firebase/app@7.3.0",
+    "@react-native-firebase/admob@7.2.1"
   ],
   "dependency_name": "@applicaster/quick-brick-google-admob-inline-banner",
   "author_name": "Olga Duk",
@@ -20,8 +20,8 @@
   "unsupported_since_zapp_sdk": "",
   "preload": true,
   "platform": "ios_for_quickbrick",
-  "dependency_version": "0.0.3",
-  "manifest_version": "0.0.1",
+  "dependency_version": "0.0.6",
+  "manifest_version": "0.0.3",
   "min_zapp_sdk": "0.1.0-alpha1",
   "styles": {
     "fields": [
@@ -50,7 +50,17 @@
         "type": "switch",
         "label": "Background",
         "label_tooltip": "Determines if the banner will have a custom background. This option allows the banner to blend better with the overall design of the app.",
-        "initial_value": "false"
+        "initial_value": "false",
+        "conditional_fields": [
+          {
+            "condition_value": "standard_banner",
+            "key": "styles/banner_ad_type"
+          },
+          {
+            "condition_value": "box_banner",
+            "key": "styles/banner_ad_type"
+          }
+        ]
       },
       {
         "key": "background_color",

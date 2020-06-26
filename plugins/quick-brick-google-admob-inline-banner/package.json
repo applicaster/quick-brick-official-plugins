@@ -1,10 +1,11 @@
 {
   "name": "@applicaster/quick-brick-google-admob-inline-banner",
-  "version": "0.0.3",
+  "version": "0.0.6",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "node scripts/moveFirebaseFile.js"
   },
   "author": "",
   "license": "ISC",
@@ -23,7 +24,7 @@
     "react-native-web": "0.11.5"
   },
   "dependencies": {
-    "@react-native-firebase/app": "^6.4.0",
-    "@react-native-firebase/admob": "^6.4.0"
+    "@react-native-firebase/app": "^7.3.0",
+    "@react-native-firebase/admob": "^7.2.1"
   }
 }
