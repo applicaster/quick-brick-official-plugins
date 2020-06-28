@@ -8,6 +8,7 @@ import com.google.ads.interactivemedia.v3.api.*
 import com.google.ads.interactivemedia.v3.api.player.ContentProgressProvider
 import com.google.ads.interactivemedia.v3.api.player.VideoAdPlayer
 import com.google.ads.interactivemedia.v3.api.player.VideoProgressUpdate
+import com.google.ads.interactivemedia.v3.impl.data.c
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
@@ -84,6 +85,12 @@ class ImaLoader(private val context: Context,
 			AdEvent.AdEventType.CONTENT_RESUME_REQUESTED -> {
 				resumeContent()
 				Log.d(TAG, "${event.type?.name}")
+			}
+			AdEvent.AdEventType.STARTED -> {
+				adDisplayContainer?.adContainer?.contentDescription = (event.ad as c).clickThruUrl
+			}
+			AdEvent.AdEventType.COMPLETED -> {
+				adDisplayContainer?.adContainer?.contentDescription = ""
 			}
 			AdEvent.AdEventType.ALL_ADS_COMPLETED -> {
 				if (isPostrollExists) {
