@@ -11,6 +11,8 @@ import com.applicaster.util.OSUtil
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.uimanager.ThemedReactContext
 import com.google.ads.interactivemedia.v3.api.AdErrorEvent
+import com.google.ads.interactivemedia.v3.api.AdEvent
+import com.google.ads.interactivemedia.v3.impl.data.c
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.ima.ImaAdsLoader
@@ -24,6 +26,7 @@ import com.google.android.exoplayer2.util.Util as exoUtil
 class QuickBrickGoogleIMA :
 		PlayerReceiverPlugin,
 		Player.EventListener,
+		AdEvent.AdEventListener,
 		AdErrorEvent.AdErrorListener,
 		ImaLoader.VideoPlayerEventsListener,
 		LifecycleEventListener {
@@ -144,7 +147,9 @@ class QuickBrickGoogleIMA :
 
 	private fun initImaVmapLoader() {
 		context?.let {
-			imaVmapLoader = ImaAdsLoader(it, getAdsTagUrl())
+			imaVmapLoader = ImaAdsLoader.Builder(it)
+            					.setAdEventListener(this)
+            					.buildForAdTag(getAdsTagUrl())
 			imaVmapLoader?.setPlayer(this.player)
 		}
 	}
@@ -275,5 +280,13 @@ class QuickBrickGoogleIMA :
 
 	private fun logData(message: String) {
 		Log.d(tag, message)
+	}
+
+	override fun onAdEvent(event: AdEvent?) {
+
+		when (event?.type) {
+			AdEvent.AdEventType.COMPLETED -> playerView?.contentDescription = ""
+			AdEvent.AdEventType.STARTED -> playerView?.contentDescription = getAdsTagUrl().toString()
+		}
 	}
 }
