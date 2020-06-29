@@ -67,11 +67,7 @@
         "initial_value": "false",
         "conditional_fields": [
           {
-            "condition_value": "standard_banner",
-            "key": "styles/banner_ad_type"
-          },
-          {
-            "condition_value": "box_banner",
+            "condition_value": ["standard_banner", "box_banner"],
             "key": "styles/banner_ad_type"
           }
         ]
@@ -82,12 +78,15 @@
         "label": "Background Color",
         "label_tooltip": "Background color for the advertisement container.",
         "initial_value": "rgba(0, 0, 0, 1)",
+        "rules": "all_conditions",
         "conditional_fields": [
           {
-            "condition_value": [
-              true
-            ],
+            "condition_value": [true],
             "key": "styles/background"
+          },
+          {
+            "condition_value": ["standard_banner", "box_banner"],
+            "key": "styles/banner_ad_type"
           }
         ]
       },
@@ -97,12 +96,15 @@
         "label": "Title text",
         "label_tooltip": "This text appears at the top of the advertisement area, usually it is a localized version of the word “Advertisement”.",
         "initial_value": "Advertisement",
+        "rules": "all_conditions",
         "conditional_fields": [
           {
-            "condition_value": [
-              true
-            ],
+            "condition_value": [true],
             "key": "styles/background"
+          },
+          {
+            "condition_value": ["standard_banner", "box_banner"],
+            "key": "styles/banner_ad_type"
           }
         ]
       },
@@ -111,12 +113,15 @@
         "type": "android_font_selector",
         "label_tooltip": "Font for Title Text for Android.",
         "initial_value": "Roboto-Bold",
+        "rules": "all_conditions",
         "conditional_fields": [
           {
-            "condition_value": [
-              true
-            ],
+            "condition_value": [true],
             "key": "styles/background"
+          },
+          {
+            "condition_value": ["standard_banner", "box_banner"],
+            "key": "styles/banner_ad_type"
           }
         ]
       },
@@ -125,12 +130,15 @@
         "type": "ios_font_selector",
         "label_tooltip": "Font for Title Text for iOS.",
         "initial_value": "Helvetica-Bold",
+        "rules": "all_conditions",
         "conditional_fields": [
           {
-            "condition_value": [
-              true
-            ],
+            "condition_value": [true],
             "key": "styles/background"
+          },
+          {
+            "condition_value": ["standard_banner", "box_banner"],
+            "key": "styles/banner_ad_type"
           }
         ]
       },
@@ -139,12 +147,15 @@
         "type": "number_input",
         "label_tooltip": "Font Size for Title Text.",
         "initial_value": "9",
+        "rules": "all_conditions",
         "conditional_fields": [
           {
-            "condition_value": [
-              true
-            ],
+            "condition_value": [true],
             "key": "styles/background"
+          },
+          {
+            "condition_value": ["standard_banner", "box_banner"],
+            "key": "styles/banner_ad_type"
           }
         ]
       },
@@ -153,12 +164,15 @@
         "type": "color_picker_rgba",
         "label_tooltip": "Font Color for Title Text.",
         "initial_value": "rgba(0, 0, 0, 1)",
+        "rules": "all_conditions",
         "conditional_fields": [
           {
-            "condition_value": [
-              true
-            ],
+            "condition_value": [true],
             "key": "styles/background"
+          },
+          {
+            "condition_value": ["standard_banner", "box_banner"],
+            "key": "styles/banner_ad_type"
           }
         ]
       },
@@ -168,12 +182,15 @@
         "label": "Tablet Font Size",
         "label_tooltip": "Font Size for tablets.",
         "initial_value": "12",
+        "rules": "all_conditions",
         "conditional_fields": [
           {
-            "condition_value": [
-              true
-            ],
+            "condition_value": [true],
             "key": "styles/background"
+          },
+          {
+            "condition_value": ["standard_banner", "box_banner"],
+            "key": "styles/banner_ad_type"
           }
         ]
       }
