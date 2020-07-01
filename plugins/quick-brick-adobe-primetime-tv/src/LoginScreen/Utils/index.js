@@ -3,6 +3,8 @@ import { localStorage as storage } from '@applicaster/zapp-react-native-bridge/Z
 import { sessionStorage } from '@applicaster/zapp-react-native-bridge/ZappStorage/SessionStorage';
 import { fontsize, fontcolor } from '../Config/DefaultStyles';
 import session from '../Config/Session';
+import { parseJsonIfNeeded } from "@applicaster/zapp-react-native-utils/functionUtils";
+import { uuidv4 } from '../../Adobe/Utils';
 
 
 function getPluginData(screenData) {
@@ -14,6 +16,30 @@ function getPluginData(screenData) {
   }
 
   return pluginData;
+}
+
+async function getFromLocalStorage(key, namespace) {
+  return storage.getItem(key, namespace);
+}
+
+async function isValueInStorage(key, namespace) {
+  try {
+    let token = await getFromLocalStorage(key, namespace);
+
+    if (token === null) return false;
+
+    if (typeof token === 'string') {
+      token = parseJsonIfNeeded(token);
+    }
+
+    if (Array.isArray(token)) return !!token.length;
+    if (typeof token === 'object') return !R.isEmpty(token);
+
+    return !!token;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
 }
 
 async function setToLocalStorage(key, value, namespace) {
@@ -100,10 +126,29 @@ const isHook = (navigator) => {
   return !!R.propOr(false, 'hookPlugin')(navigator.routeData());
 };
 
+async function getDeviceId() {
+  try {
+    const isDeviceIdInStorage = await isValueInStorage('deviceId');
+
+    if (isDeviceIdInStorage) return getFromLocalStorage('deviceId');
+
+    const advertisingId = await getFromSessionStorage(
+      'advertisingIdentifier', 'applicaster.v2'
+    );
+
+    const deviceId = advertisingId || uuidv4();
+    await setToLocalStorage('deviceId', deviceId);
+
+    return deviceId;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 export {
   getPluginData,
   setToLocalStorage,
-  getFromSessionStorage,
+  getDeviceId,
   removeFromLocalStorage,
   isHomeScreen,
   isPlayerHook,

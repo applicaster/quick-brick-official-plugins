@@ -8,8 +8,8 @@ import { getRegistrationCode } from '../../LoginPluginInterface';
 import { PluginContext } from '../Config/PluginData';
 import {
   hideMenu,
-  getFromSessionStorage,
-  showMenu
+  showMenu,
+  getDeviceId
 } from '../Utils';
 import trackEvent from '../../Analytics';
 import EVENTS from '../../Analytics/Events';
@@ -43,7 +43,7 @@ function SignInScreen(props) {
 
   const signIn = async () => {
     try {
-      const deviceId = await getFromSessionStorage('uuid');
+      const deviceId = await getDeviceId();
       trackEvent(
         EVENTS.authN.registrationActivated,
         { credentials, payload, deviceId }
