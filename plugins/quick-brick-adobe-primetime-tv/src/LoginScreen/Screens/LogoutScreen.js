@@ -3,7 +3,7 @@ import Layout from '../Components/Layout';
 import LogoutComponent from '../Components/LogoutComponent';
 import { PluginContext } from '../Config/PluginData';
 import { logOut } from '../../LoginPluginInterface';
-import { getFromSessionStorage, hideMenu, showMenu } from '../Utils';
+import { getDeviceId, hideMenu, showMenu } from '../Utils';
 
 
 function LogoutScreen(props) {
@@ -29,7 +29,7 @@ function LogoutScreen(props) {
     try {
       setLoading(true);
 
-      const deviceId = await getFromSessionStorage('uuid');
+      const deviceId = await getDeviceId();
       await logOut(deviceId, credentials);
 
       setLoading(false);

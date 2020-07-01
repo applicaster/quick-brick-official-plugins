@@ -9,7 +9,7 @@ import SignInScreen from './LoginScreen/Screens/SignInScreen';
 import LogoutScreen from './LoginScreen/Screens/LogoutScreen';
 import {
   isHomeScreen,
-  getFromSessionStorage,
+  getDeviceId,
   isPlayerHook,
   hideMenu,
   setToLocalStorage,
@@ -113,7 +113,7 @@ function AdobeLoginComponent(props) {
   const startAuthNFlow = async () => {
     try {
       setError(null);
-      const deviceId = await getFromSessionStorage('uuid');
+      const deviceId = await getDeviceId();
       const userId = await checkDeviceStatus(deviceId, credentials);
 
       if (userId && !isHook(navigator)) return startLogoutFlow();

@@ -17,6 +17,7 @@ async function logOut(deviceId, credentials) {
   if (status === 204) {
     await removeFromLocalStorage('idToken');
     await removeFromLocalStorage('userId');
+    await removeFromLocalStorage('deviceId');
   }
 }
 
