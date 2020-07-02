@@ -16,7 +16,7 @@ jobs:
                         PROJECT_PATH: "QuickBrickOfficialPlugins"
                         HOMEBREW_NO_AUTO_UPDATE: "1"
 
-                working_directory: ~/AppleApplicasterFrameworks
+                working_directory: ~/QuickBrickOfficialPlugins
                 steps:
                         #Hack general caching until circle does not support global env variables
                         - run: echo "$GENERAL_CACHE_KEY" > ~/_caching_file
@@ -39,22 +39,6 @@ jobs:
                                   key: GIT-{{ checksum "~/_caching_file" }}-{{ .Branch }}-{{ .Revision }}
                                   paths:
                                           - ".git"
-
-                        # Prepare Bundler
-                        - restore_cache:
-                                  name: Bundler - restore cache
-                                  key: Bundler-{{ checksum "~/_caching_file" }}-{{ checksum "Gemfile.lock" }}
-
-                        - run:
-                                  name: Bundler - update dependencies
-                                  command: bundle check --path=.bundle || bundle install --path=.bundle
-
-                        - save_cache:
-                                  name: Bundler - save cache
-                                  key: Bundler-{{ checksum "~/_caching_file" }}-{{ checksum "Gemfile.lock" }}
-                                  paths:
-                                          - /Users/distiller/.rubies/ruby-2.4.2/lib/ruby/gems/2.4.0/gems
-                                          - ./.bundle
 
                         - restore_cache:
                                   name: Restore npm dependencies
