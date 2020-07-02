@@ -10,11 +10,14 @@ import { PluginContext } from '../Config/PluginData';
 
 
 export default function ProviderCell({ item, setProviderID }) {
-  const { id, logoURL, title } = item;
+  var logoURL = null;
+  const { title } = item;
   const { listItemStyle } = useContext(PluginContext);
 
+  logoURL = typeof item.list_logo !== 'undefined' ? item.list_logo : item.logoURL;
+
   return (
-    <TouchableOpacity onPress={() => setProviderID(id)}>
+    <TouchableOpacity onPress={() => setProviderID(item)}>
       <View style={styles.cellContainer}>
         <Text style={[listItemStyle, { fontWeight: 'bold' }]}>{title}</Text>
         <Image
