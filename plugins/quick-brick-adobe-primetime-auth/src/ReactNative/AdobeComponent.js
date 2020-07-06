@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as R from 'ramda';
+import axios from 'axios';
 import {
   NativeModules,
   StyleSheet,
@@ -8,6 +9,7 @@ import {
   View,
   Alert
 } from 'react-native';
+import { localStorage as defaultStorage } from "@applicaster/zapp-react-native-bridge/ZappStorage/LocalStorage";
 import { connectToStore } from '@applicaster/zapp-react-native-redux';
 import ProvidersList from './Components/ProvidersList';
 import NavbarComponent from './Components/NavbarComponent';
@@ -40,7 +42,9 @@ class AdobeComponent extends Component {
     super(props);
     this.state = {
       loading: true,
-      dataSource: null
+      dataSource: null,
+      customLogosData: null,
+      pickedProvider: null
     };
   }
 
@@ -71,6 +75,10 @@ class AdobeComponent extends Component {
   initPlugin = async (navigator, data) => {
     const isToken = await isTokenInStorage('idToken');
 
+    if (data.enable_custom_logos === true) {
+      await this.prepareCustomMVPDLogos(data);
+    }
+
     // Core initiates plugin 2 times - that breaks the flow in case of logout
     if (!session.isStarted) {
       if (!isHook(navigator) && isToken) { // if logout flow is invoked for the first time
@@ -78,6 +86,18 @@ class AdobeComponent extends Component {
       }
       this.initAdobeAccessEnabler(data);
       return this.startFlow();
+    }
+  }
+
+  prepareCustomMVPDLogos = async ({ custom_logos_json_file: fileUrl = '' }) => {
+    try{
+      if (!fileUrl) return;
+
+      const { data = {} } = await axios.get(fileUrl);
+      const { MVPD_list: mvpdList } = data;
+      this.setState({ customLogosData: mvpdList });
+    } catch (err) {
+      console.log(err)
     }
   }
 
@@ -89,12 +109,24 @@ class AdobeComponent extends Component {
 
     // subscribe on update of mvpds
     this.subscription = adobeEventsListener.addListener(
-      'showProvidersList',
-      (response) => {
-        this.setState({ loading: false, dataSource: response });
-      }
+        'showProvidersList',
+        (response) => {
+          const providersList = this.state.customLogosData
+              ? this.updateProvidersList(response)
+              : response;
+          this.setState({ loading: false, dataSource: providersList });
+        }
     );
   };
+
+  updateProvidersList = (providersList) => {
+    return R.map(provider => this.mergeProviders(provider, this.state.customLogosData), providersList);
+  }
+
+  mergeProviders = (provider, customProviders) => {
+    const customProvider =  customProviders[provider.id];
+    return customProvider ? R.mergeDeepRight(provider, customProvider) : provider;
+  }
 
   startFlow = async () => {
     try {
@@ -145,7 +177,7 @@ class AdobeComponent extends Component {
       const hasToken = R.propOr(false, 'token');
       const hasError = R.propOr(false, 'errorMessage');
 
-      if (hasToken(response)) return this.successHook();
+      if (hasToken(response)) return this.handleSuccessLoginResponse();
       if (hasError(response)) return this.handleErrorLoginResponse(response.errorMessage);
 
       return this.closeHook();
@@ -153,6 +185,14 @@ class AdobeComponent extends Component {
       console.log(err);
     }
   };
+
+  handleSuccessLoginResponse = async () => {
+    const pickedProvider = this.state.pickedProvider;
+    if (pickedProvider !== null) {
+      await defaultStorage.setItem('authProviderID', pickedProvider);
+    }
+    return this.successHook();
+  }
 
   handleErrorLoginResponse = async (errorMessage) => {
     const { payload = {} } = this.props;
@@ -185,9 +225,9 @@ class AdobeComponent extends Component {
     }
   };
 
-  setProviderID = (id) => {
-    this.setState({ loading: true });
-    this.accessEnabler.setProviderID(id);
+  setProviderID = (item) => {
+    this.setState({ loading: true , pickedProvider: item });
+    this.accessEnabler.setProviderID(item.id);
   };
 
   closeHook = () => {
