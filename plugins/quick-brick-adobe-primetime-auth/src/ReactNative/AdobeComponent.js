@@ -89,20 +89,16 @@ class AdobeComponent extends Component {
     }
   }
 
-  prepareCustomMVPDLogos = async (data) => {
-    const fileUrl = data.custom_logos_json_file;
-    if (fileUrl == null) {
-      return;
+  prepareCustomMVPDLogos = async ({ custom_logos_json_file: fileUrl = '' }) => {
+    try{
+      if (!fileUrl) return;
+
+      const { data = {} } = await axios.get(fileUrl);
+      const { MVPD_list: mvpdList } = data;
+      this.setState({ customLogosData: mvpdList });
+    } catch (err) {
+      console.log(err)
     }
-    const self = this;
-    await axios.get(fileUrl)
-        .then(function (response) {
-          const { MVPD_list } = response.data;
-          self.setState({customLogosData: MVPD_list});
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
   }
 
   initAdobeAccessEnabler = (data) => {
@@ -113,29 +109,24 @@ class AdobeComponent extends Component {
 
     // subscribe on update of mvpds
     this.subscription = adobeEventsListener.addListener(
-      'showProvidersList',
-      (response) => {
-
-        var providersList = response;
-        if (this.state.customLogosData !== null) {
-          providersList = this.updateProvidersList(providersList);
+        'showProvidersList',
+        (response) => {
+          const providersList = this.state.customLogosData
+              ? this.updateProvidersList(response)
+              : response;
+          this.setState({ loading: false, dataSource: providersList });
         }
-        this.setState({ loading: false, dataSource: providersList });
-      }
     );
   };
 
   updateProvidersList = (providersList) => {
-    if (this.state.customLogosData !== null) {
-      var providersById = R.groupBy(R.prop('id'), this.state.customLogosData);
-      return R.map(provider => this.mergeProviders(provider, providersById), providersList);
-    }
+    return R.map(provider => this.mergeProviders(provider, this.state.customLogosData), providersList);
   }
 
   mergeProviders = (provider, customProviders) => {
-    const pretenders =  customProviders[provider.id];
-    if (typeof pretenders !== 'undefined') {
-      return R.mergeDeepRight(provider, pretenders[0]);
+    const customProvider =  customProviders[provider.id];
+    if (typeof customProvider !== 'undefined') {
+      return R.mergeDeepRight(provider, customProvider);
     } else {
       return provider;
     }
