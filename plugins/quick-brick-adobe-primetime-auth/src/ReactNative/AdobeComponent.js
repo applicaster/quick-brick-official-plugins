@@ -125,11 +125,7 @@ class AdobeComponent extends Component {
 
   mergeProviders = (provider, customProviders) => {
     const customProvider =  customProviders[provider.id];
-    if (typeof customProvider !== 'undefined') {
-      return R.mergeDeepRight(provider, customProvider);
-    } else {
-      return provider;
-    }
+    return customProvider ? R.mergeDeepRight(provider, customProvider) : provider;
   }
 
   startFlow = async () => {
