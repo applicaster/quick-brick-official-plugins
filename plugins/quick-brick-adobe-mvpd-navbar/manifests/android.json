@@ -1,0 +1,31 @@
+{
+    "api": {},
+    "dependency_repository_url": [],
+    "dependency_name": "@applicaster/quick-brick-adobe-mvpd-navbar",
+    "author_name": "Egor Brel",
+    "author_email": "ebrel@applicaster.com",
+    "name": "Adobe MVPD Nav Bar Icon",
+    "description": "",
+    "type": "nav_item",
+    "preload": true,
+    "screen": true,
+    "react_native": true,
+    "identifier": "adobe_mvpd_navbar_icon",
+    "ui_builder_support": true,
+    "whitelisted_account_ids": [],
+    "general": {},
+    "custom_configuration_fields": [],
+    "styles": {},
+    "data": {},
+    "targets": [
+        "mobile"
+    ],
+    "ui_frameworks": [
+        "quickbrick"
+    ],
+    "platform": "android",
+    "dependency_version": "0.0.1",
+    "manifest_version": "0.0.1",
+    "min_zapp_sdk": "11.3.1",
+    "npm_dependencies": []
+}
