@@ -6,7 +6,8 @@ import {
     Image,
     StyleSheet,
     Dimensions,
-    Platform
+    Platform,
+    Linking
 } from "react-native";
 
 import { useNavigation } from "@applicaster/zapp-react-native-utils/reactHooks/navigation";
@@ -95,9 +96,13 @@ function AdobeMvpdButtonComponent({
             return;
         }
     }
+    
+    async function openWebLink(link) {
+        const supported = await Linking.canOpenURL(url);
 
-    function openWebLink(link) {
-
+        if (supported) {
+            await Linking.openURL(url);
+        }
     }
 
     function pushScreen(riverId) {
