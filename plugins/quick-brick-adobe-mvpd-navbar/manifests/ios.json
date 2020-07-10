@@ -16,7 +16,16 @@
     "general": {},
     "custom_configuration_fields": [],
     "styles": {},
-    "data": {},
+    "data": {
+        "fields": [
+            {
+                "key": "source",
+                "label": "Screen",
+                "type": "react_select",
+                "options": []
+            }
+        ]
+    },
     "targets": [
         "mobile"
     ],
