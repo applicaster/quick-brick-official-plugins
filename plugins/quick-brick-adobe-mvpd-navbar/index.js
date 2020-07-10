@@ -1,5 +1,6 @@
 // @flow
 import * as React from "react";
+import { useState, useEffect }from "react";
 import * as R from "ramda";
 import {
     TouchableHighlight,
@@ -12,6 +13,7 @@ import {
 
 import { useNavigation } from "@applicaster/zapp-react-native-utils/reactHooks/navigation";
 import { connectToStore } from "@applicaster/zapp-react-native-redux";
+import { getFromLocalStorage, isItemInStorage } from "./src/Utils";
 
 type Props = {
     navItem: {
@@ -37,25 +39,34 @@ const isMobile = !Platform.isTV;
 const isPad = isMobile && aspectRatio < 1.6;
 
 function AdobeMvpdButtonComponent({
-                                    navItem,
-                                    closeMenu,
-                                }: Props) {
+                                      navItem,
+                                      rivers,
+                                      closeMenu,
+                                  }: Props) {
+
+    const [isLoggedIn, setIsLoggedIn] = useState(null);
     const [actionLink, setActionLink] = useState(null);
     const [providerLogo, setProviderLogo] = useState(null);
     const navigator = useNavigation();
     const { target } = navItem.data;
 
     useEffect(() => {
-        fectchProviderData();
-    }, []);
+        start();
+    }, [navigator.previousAction]);
+
+    const start = async () => {
+        const token = await isItemInStorage('idToken');
+        await fectchProviderData();
+        token ? setIsLoggedIn(true) : setIsLoggedIn(false);
+    };
 
     const fectchProviderData = async () => {
-        const authProviderItem = await getFromLocalStorage("authProviderID");
-        if (!authProviderItem) {
-            return null;
+        const isAuthProviderExist = await isItemInStorage('authProviderID');
+        if (isAuthProviderExist) {
+            const authProviderItem = await getFromLocalStorage('authProviderID');
+            fetchProviderLogo(authProviderItem);
+            fetchActionLink(authProviderItem);
         }
-        fetchProviderLogo(authProviderItem);
-        fetchActionLink(authProviderItem);
     }
 
     function fetchActionLink(authProviderItem) {
@@ -96,8 +107,8 @@ function AdobeMvpdButtonComponent({
             return;
         }
     }
-    
-    async function openWebLink(link) {
+
+    async function openWebLink(url) {
         const supported = await Linking.canOpenURL(url);
 
         if (supported) {
@@ -123,14 +134,12 @@ function AdobeMvpdButtonComponent({
                 testID={navItem.id}
                 accessibilityLabel={navItem.id}
             >
-                <Image source={{ uri: icon }} style={css.mvpd_icon} />
+                <Image source={{ uri: providerLogo }} style={css.mvpd_icon} />
             </TouchableHighlight>
         );
     }
 
-    return providerLogo ? renderNavButton() : null;
+    return isLoggedIn ? renderNavButton() : null;
 }
 
-export const AdobeMvpdButton = connectToStore(
-    R.pick(["rivers", "plugins", "localizations"])
-)(AdobeMvpdButtonComponent);
+export default connectToStore(R.pick(["rivers"]))(AdobeMvpdButtonComponent);
