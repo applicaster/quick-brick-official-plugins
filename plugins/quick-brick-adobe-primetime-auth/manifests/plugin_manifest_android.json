@@ -20,8 +20,8 @@
   "dependency_name": "@applicaster/quick-brick-adobe-primetime-auth",
   "whitelisted_account_ids": [],
   "preload": true,
-  "dependency_version": "1.2.3",
-  "manifest_version": "1.2.3",
+  "dependency_version": "1.3.3",
+  "manifest_version": "1.3.3",
   "min_zapp_sdk": "20.0.0",
   "general": {
     "fields": [

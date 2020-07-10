@@ -19,7 +19,8 @@ import {
   isTriggerOnAppLaunch,
   isHook,
   goBack,
-  isTokenInStorage
+  isTokenInStorage,
+  removeFromLocalStorage
 } from './Utils';
 
 
@@ -216,7 +217,8 @@ class AdobeComponent extends Component {
     try {
       this.setState({ loading: true });
 
-      this.accessEnabler.logout(() => {
+      this.accessEnabler.logout(async () => {
+        await removeFromLocalStorage('authProviderID');
         this.setState({ loading: false });
         goBack(navigator);
       });

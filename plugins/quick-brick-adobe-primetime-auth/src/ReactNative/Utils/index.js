@@ -9,6 +9,10 @@ const isTriggerOnAppLaunch = (navigator) => {
   return R.pathOr(false, ['payload', 'home'], navigator.routeData());
 };
 
+export async function removeFromLocalStorage(key, namespace) {
+  return storage.setItem(key, JSON.stringify({}), namespace);
+}
+
 function getPluginData(screenData) {
   let pluginData = {};
 
