@@ -128,13 +128,13 @@
           {
             "type": "number_input",
             "key": "mvpd_logo_width",
-            "label": "MVPD Custom Logo width",
+            "label": "MVPD Logo width",
             "initial_value": "100"
           },
           {
             "type": "number_input",
             "key": "mvpd_logo_height",
-            "label": "MVPD Custom Logo height",
+            "label": "MVPD Logo height",
             "initial_value": "33"
           }
         ]
