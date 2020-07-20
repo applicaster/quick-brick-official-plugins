@@ -14,7 +14,9 @@ export function getCustomPluginData(screenData) {
     instructions_text_color: instructionsTextColor,
     list_item_fontsize: listItemFontsize,
     list_item_color: listItemColor,
-    logout_dialog_message_text: logoutDialogMessageText
+    logout_dialog_message_text: logoutDialogMessageText,
+    mvpd_logo_width: logoWidth,
+    mvpd_logo_height: logoHeight
   } = getPluginData(screenData);
 
   const titleTextStyle = {
@@ -44,12 +46,18 @@ export function getCustomPluginData(screenData) {
     listSeparatorColor
   };
 
+  const logoStyle = {
+    logoHeight,
+    logoWidth
+  };
+
   return {
     titleTextStyle,
     instructionsTextStyle,
     listItemStyle,
     customText,
-    customStyle
+    customStyle,
+    logoStyle
   };
 }
 
