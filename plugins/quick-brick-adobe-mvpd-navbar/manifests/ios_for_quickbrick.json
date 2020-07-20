@@ -14,7 +14,22 @@
     "ui_builder_support": true,
     "whitelisted_account_ids": ["5a4516fa41442c000b0195d6"],
     "general": {},
-    "custom_configuration_fields": [],
+    "custom_configuration_fields": [
+        {
+          "type": "number_input",
+          "key": "icon_width",
+          "label": "Icon Width",
+          "tooltip_text": "Defines the width for the Icon",
+          "initial_value": "44"
+        },
+        {
+          "type": "number_input",
+          "key": "icon_right_margin",
+          "label": "Icon Right Margin",
+          "tooltip_text": "Defines the margin between the icon and the right edge of the screen",
+          "initial_value": "10"
+        }
+    ],
     "styles": {},
     "data": {
         "fields": [
@@ -33,8 +48,8 @@
         "quickbrick"
     ],
     "platform": "ios_for_quickbrick",
-    "dependency_version": "0.0.1",
-    "manifest_version": "0.0.1",
+    "dependency_version": "0.0.3",
+    "manifest_version": "0.0.3",
     "min_zapp_sdk": "0.1.0-alpha1",
     "npm_dependencies": []
 }

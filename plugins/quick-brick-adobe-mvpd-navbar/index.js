@@ -15,40 +15,32 @@ import { useNavigation } from "@applicaster/zapp-react-native-utils/reactHooks/n
 import { connectToStore } from "@applicaster/zapp-react-native-redux";
 import { getFromLocalStorage, isItemInStorage } from "./src/Utils";
 
-type Props = {
-    navItem: {
-        id: string,
-        data: {
-            target: string,
-        }
-    },
-    rivers: [],
-    plugins: [],
-    localizations: {},
-    isMenuToggled: Number,
-    closeMenu: () => void,
-};
-
-const css = StyleSheet.create({
-    mvpd_icon: { width: 44, height: 44 },
-});
-
 const { height, width } = Dimensions.get('window');
 const aspectRatio = height / width;
 const isMobile = !Platform.isTV;
 const isPad = isMobile && aspectRatio < 1.6;
 
-function AdobeMvpdButtonComponent({
-                                      navItem,
-                                      rivers,
-                                      closeMenu,
-                                  }: Props) {
+const storeConnector = connectToStore((state) => { // Store connector entity to obtain screen data
+    const values = Object.values(state.pluginConfigurations);
+    const plugin = values.find(
+        ({ plugin }) => plugin.identifier === 'adobe_mvpd_navbar_icon'
+    );
+    const pluginConfig = plugin.configuration_json;
+    return { pluginConfig };
+});
+
+function AdobeMvpdButtonComponent(props) {
 
     const [isLoggedIn, setIsLoggedIn] = useState(null);
     const [actionLink, setActionLink] = useState(null);
     const [providerLogo, setProviderLogo] = useState(null);
     const navigator = useNavigation();
-    const { target } = navItem.data;
+    const { target } = props.navItem.data;
+    const {
+        icon_width: iconWidth,
+        icon_right_margin: iconRightMargin
+    } = props.pluginConfig;
+
 
     useEffect(() => {
         start();
@@ -126,15 +118,25 @@ function AdobeMvpdButtonComponent({
         }
     }
 
+    function imageStyle() {
+        const width = iconWidth ? Number(iconWidth) : 44;
+        return {
+            width: width,
+            height: 44,
+            resizeMode: 'contain'
+        };
+    }
+
     function renderNavButton() {
         return (
             <TouchableHighlight
                 onPress={() => actionLink ? openWebLink(actionLink) : pushScreen(target)}
                 accessible
-                testID={navItem.id}
-                accessibilityLabel={navItem.id}
+                testID={props.navItem.id}
+                accessibilityLabel={props.navItem.id}
+                style={{marginRight: iconRightMargin ? Number(iconRightMargin) : 10}}
             >
-                <Image source={{ uri: providerLogo }} style={css.mvpd_icon} />
+                <Image source={{ uri: providerLogo }} style={imageStyle()} />
             </TouchableHighlight>
         );
     }
@@ -142,4 +144,4 @@ function AdobeMvpdButtonComponent({
     return isLoggedIn ? renderNavButton() : null;
 }
 
-export default connectToStore(R.pick(["rivers"]))(AdobeMvpdButtonComponent);
+export default storeConnector(AdobeMvpdButtonComponent);
