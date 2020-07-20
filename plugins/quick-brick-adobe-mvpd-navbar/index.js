@@ -21,12 +21,14 @@ const isMobile = !Platform.isTV;
 const isPad = isMobile && aspectRatio < 1.6;
 
 const storeConnector = connectToStore((state) => { // Store connector entity to obtain screen data
+    const rivers = state.rivers;
     const values = Object.values(state.pluginConfigurations);
     const plugin = values.find(
         ({ plugin }) => plugin.identifier === 'adobe_mvpd_navbar_icon'
     );
     const pluginConfig = plugin.configuration_json;
-    return { pluginConfig };
+    return { pluginConfig,
+             rivers };
 });
 
 function AdobeMvpdButtonComponent(props) {
@@ -36,17 +38,16 @@ function AdobeMvpdButtonComponent(props) {
     const [providerLogo, setProviderLogo] = useState(null);
     const navigator = useNavigation();
     const { target } = props.navItem.data;
-    const {
-        icon_width: iconWidth,
-        icon_right_margin: iconRightMargin
-    } = props.pluginConfig;
-
-
+    const { icon_width: iconWidth,
+            icon_right_margin: iconRightMargin } = props.pluginConfig;
+    
     useEffect(() => {
         start();
     }, [navigator.previousAction]);
 
     const start = async () => {
+        setActionLink(null);
+        setProviderLogo(null);
         const token = await isItemInStorage('idToken');
         await fectchProviderData();
         token ? setIsLoggedIn(true) : setIsLoggedIn(false);
@@ -109,9 +110,9 @@ function AdobeMvpdButtonComponent(props) {
     }
 
     function pushScreen(riverId) {
-        closeMenu();
+        props.closeMenu();
         if (riverId) {
-            const targetRiver = R.values(rivers).find(
+            const targetRiver = R.values(props.rivers).find(
                 (river) => river.id === riverId
             );
             navigator.push(targetRiver);
@@ -141,7 +142,7 @@ function AdobeMvpdButtonComponent(props) {
         );
     }
 
-    return isLoggedIn ? renderNavButton() : null;
+    return (isLoggedIn && providerLogo) ? renderNavButton() : null;
 }
 
 export default storeConnector(AdobeMvpdButtonComponent);
