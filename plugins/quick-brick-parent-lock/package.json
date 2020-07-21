@@ -1,0 +1,28 @@
+{
+  "name": "@applicaster/quick-brick-parent-lock",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Egor Brel",
+  "license": "ISC",
+  "peerDependencies": {
+    "@applicaster/zapp-react-native-bridge": "3.0.1-rc.11",
+    "@applicaster/zapp-react-native-redux": "3.0.1-rc.11",
+    "@applicaster/zapp-react-native-ui-components": "3.0.1-rc.11",
+    "@applicaster/zapp-react-native-utils": "3.0.1-rc.11",
+    "react": "16.8.3",
+    "react-native": "0.59.10",
+    "react-native-web": "0.11.5"
+  },
+  "devDependencies": {
+    "react": "16.8.3",
+    "react-native": "0.59.10",
+    "react-native-web": "0.11.5"
+  },
+  "dependencies": {
+    "ramda": "^0.27.0"
+  }
+}
