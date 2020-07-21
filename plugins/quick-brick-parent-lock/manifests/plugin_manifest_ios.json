@@ -41,7 +41,7 @@
             "key": "instructions_text_font_ios",
             "label": "Instructions Text Font ios",
             "label_tooltip": "Font for the instructions text.",
-            "initial_value": "SF Pro Text Bold"
+            "initial_value": "SFProText-Bold"
           },
           {
             "type": "android_font_selector",
@@ -101,7 +101,7 @@
             "key": "challenge_text_font_ios",
             "label": "Challenge Text Font ios",
             "label_tooltip": "Font for the dynamically generated code/challenge.",
-            "initial_value": "SF Pro Text Bold"
+            "initial_value": "SFProText-Bold"
           },
           {
             "type": "android_font_selector",
@@ -168,7 +168,7 @@
             "key": "error_message_text_font_ios",
             "label": "Error Message Text Font ios",
             "label_tooltip": "Font for the wrong answer message.",
-            "initial_value": "SF Pro Text Bold"
+            "initial_value": "SFProText-Bold"
           },
           {
             "type": "android_font_selector",
@@ -228,7 +228,7 @@
             "key": "math_answer_text_font_ios",
             "label": "Math Answer Text Font ios",
             "label_tooltip": "Font for the answer section.",
-            "initial_value": "SF Pro Text Medium"
+            "initial_value": "SFProText-Medium"
           },
           {
             "type": "android_font_selector",
@@ -283,7 +283,7 @@
             "key": "keypad_font_ios",
             "label": "Keypad Font Font ios",
             "label_tooltip": "Font for the numbers presented in the numeric keyboard.",
-            "initial_value": "SF Pro Text Medium"
+            "initial_value": "SFProText-Medium"
           },
           {
             "type": "android_font_selector",
@@ -397,12 +397,11 @@
           "initial_value": "rgba(22, 27, 38, 1)",
           "conditional_fields": [
             {
-              "condition_value": [
-                "Color"
-              ],
+              "condition_value": "Color",
               "key": "custom_configuration_fields/background_type"
             }
-          ]
+          ],
+          "rules": "all_conditions"
         },
         {
           "type": "uploader",
@@ -411,12 +410,11 @@
           "label_tooltip": "Image for the screen background.",
           "conditional_fields": [
             {
-              "condition_value": [
-                "Image"
-              ],
+              "condition_value": "Image",
               "key": "custom_configuration_fields/background_type"
             }
-          ]
+          ],
+          "rules": "all_conditions"
         },
         {
           "type": "uploader",
