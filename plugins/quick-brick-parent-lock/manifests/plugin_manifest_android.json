@@ -394,27 +394,13 @@
           "key": "background_color",
           "label": "Background Color",
           "label_tooltip": "Color for the screen background.",
-          "initial_value": "rgba(22, 27, 38, 1)",
-          "conditional_fields": [
-            {
-              "condition_value": "Color",
-              "key": "custom_configuration_fields/background_type"
-            }
-          ],
-          "rules": "all_conditions"
+          "initial_value": "rgba(22, 27, 38, 1)"
         },
         {
           "type": "uploader",
           "key": "background_image",
           "label": "Background Image",
-          "label_tooltip": "Image for the screen background.",
-          "conditional_fields": [
-            {
-              "condition_value": "Image",
-              "key": "custom_configuration_fields/background_type"
-            }
-          ],
-          "rules": "all_conditions"
+          "label_tooltip": "Image for the screen background."
         },
         {
           "type": "uploader",
