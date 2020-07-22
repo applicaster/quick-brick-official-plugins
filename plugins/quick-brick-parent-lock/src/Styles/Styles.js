@@ -75,6 +75,7 @@ export function getStyles(pluginData) {
             height: 40,
             resizeMode: 'contain'
         }
+
     });
 
     return styles;

@@ -301,13 +301,6 @@
           },
           {
             "type": "color_picker_rgba",
-            "key": "keypad_font_color",
-            "label": "Keypad Font Color",
-            "label_tooltip": "Font color for the numbers presented in the numeric keyboard.",
-            "initial_value": "rgba(255, 255, 255, 1)"
-          },
-          {
-            "type": "color_picker_rgba",
             "key": "keypad_default_color",
             "label": "Keypad Default Color",
             "label_tooltip": "Color for the keypad number.",

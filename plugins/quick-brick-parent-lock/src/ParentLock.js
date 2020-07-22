@@ -4,7 +4,7 @@ import { connectToStore } from '@applicaster/zapp-react-native-redux';
 import { getCustomPluginData, PluginContext } from "./PluginData/PluginData";
 import { getStyles } from "./Styles/Styles";
 import { createChallenge } from "./Utils/Utils";
-import { PinKeyboard} from "./Components/PinKeyboard";
+import { Keyboard} from "./Components/Keyboard";
 import {
     ImageBackground,
     Image,
@@ -145,7 +145,6 @@ function ParentLock(props) {
     function renderDeleteButton() {
         const imageUrl = pluginData.deleteIconURL;
         if (inputArray.length > 0) {
-            debugger;
             return (
                 <TouchableOpacity style={styles.deleteButtonContainer}>
                     <Image source={{ uri: imageUrl }} style={styles.deleteIconURL}/>
@@ -155,7 +154,10 @@ function ParentLock(props) {
     }
 
     function renderKeyboard() {
-        return PinKeyboard();
+        return Keyboard({
+            keypad: pluginData.keypad,
+            styles: styles
+        });
     }
 
     function closeHook() {

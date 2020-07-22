@@ -3,16 +3,24 @@ import * as R from 'ramda';
 import {
     StyleSheet,
     View,
-    Text
+    Text,
+    TouchableHighlight
 } from "react-native";
 
-export function PinKeyboard(props) {
+
+export function Keyboard(props) {
+
+    function addInput() {
+
+    }
 
     function renderButton(num) {
-        return (<Text
-                      style={styles.btn}>{num}
-        </Text>);
+        return KeyButton({
+            num: num,
+            styles: props.style
+        })
     }
+
     function renderKeyboard() {
         return (
             <View>
@@ -49,15 +57,5 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    btn: {
-        color: 'white',
-        fontSize: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingVertical: 10,
-        paddingHorizontal: 35,
-        textAlign: 'center',
-        margin: 10,
     }
 });

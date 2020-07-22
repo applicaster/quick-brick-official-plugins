@@ -42,7 +42,6 @@ export function getCustomPluginData(screenData, configuration) {
         keypad_font_ios: keypadFontIOS,
         keypad_font_android: keypadFontAndroid,
         keypad_font_size: keypadFontSize,
-        keypad_font_color: keypadTextColor,
 
         keypad_default_color: keypadDefaultColor,
         keypad_active_color: keypadActiveColor,
@@ -114,18 +113,17 @@ export function getCustomPluginData(screenData, configuration) {
     const keypad = {
         font: Platform.OS === 'ios' ? keypadFontIOS : keypadFontAndroid,
         fontSize: keypadFontSize,
-        color: keypadTextColor,
+        defaultColor: keypadDefaultColor,
+        defaultBackground: keypadDefaultBackground,
 
-        keypad_default_color: keypadDefaultColor,
-        keypad_active_color: keypadActiveColor,
-        keypad_default_background_color: keypadDefaultBackground,
-        keypad_active_background_color: keypadActiveBackground,
+        activeColor: keypadActiveColor,
+        activeBackground: keypadActiveBackground,
 
-        keypad_default_border_color: keypadDefaultBorderColor,
-        keypad_active_border_color: keypadActiveBorderColor,
+        defaultBorderColor: keypadDefaultBorderColor,
+        activeBorderColor: keypadActiveBorderColor,
 
-        keypad_border_width: keypadBorderWidth,
-        keypad_corener_radius: keypadCornerRadius
+        borderWidth: keypadBorderWidth,
+        keypadCornerRadius: keypadCornerRadius
     }
 
     return {
@@ -135,7 +133,8 @@ export function getCustomPluginData(screenData, configuration) {
         errorMessage,
         challenge,
         mathAnswer,
-        deleteIconURL
+        deleteIconURL,
+        keypad
     };
 }
 
