@@ -53,7 +53,7 @@ export function getCustomPluginData(screenData, configuration) {
         keypad_active_border_color: keypadActiveBorderColor,
 
         keypad_border_width: keypadBorderWidth,
-        keypad_corenerRadius: keypadCornerRadius
+        keypad_corner_radius: keypadCornerRadius
 
     } = getPluginData(screenData);
 
@@ -101,12 +101,41 @@ export function getCustomPluginData(screenData, configuration) {
         bottomMargin: challengeTextMargin || 16
     }
 
+    const mathAnswer = {
+        font: Platform.OS === 'ios' ? mathAnswerFontIOS : mathAnswerFontAndroid,
+        fontSize: mathAnswerFontSize,
+        color: mathAnswerTextColor,
+
+        underlineColor: mathAnswerUnderlineColor,
+        underlineHeight: mathAnswerUnderlineHeight,
+        bottomMargin: mathAnswerBottomMargin || 16
+    }
+
+    const keypad = {
+        font: Platform.OS === 'ios' ? keypadFontIOS : keypadFontAndroid,
+        fontSize: keypadFontSize,
+        color: keypadTextColor,
+
+        keypad_default_color: keypadDefaultColor,
+        keypad_active_color: keypadActiveColor,
+        keypad_default_background_color: keypadDefaultBackground,
+        keypad_active_background_color: keypadActiveBackground,
+
+        keypad_default_border_color: keypadDefaultBorderColor,
+        keypad_active_border_color: keypadActiveBorderColor,
+
+        keypad_border_width: keypadBorderWidth,
+        keypad_corener_radius: keypadCornerRadius
+    }
+
     return {
         instructionsStyle,
         backgroundStyle,
         closeButtonStyle,
         errorMessage,
-        challenge
+        challenge,
+        mathAnswer,
+        deleteIconURL
     };
 }
 

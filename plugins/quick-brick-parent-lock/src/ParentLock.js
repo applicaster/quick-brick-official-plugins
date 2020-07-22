@@ -4,6 +4,7 @@ import { connectToStore } from '@applicaster/zapp-react-native-redux';
 import { getCustomPluginData, PluginContext } from "./PluginData/PluginData";
 import { getStyles } from "./Styles/Styles";
 import { createChallenge } from "./Utils/Utils";
+import { PinKeyboard} from "./Components/PinKeyboard";
 import {
     ImageBackground,
     Image,
@@ -23,7 +24,7 @@ const storeConnector = connectToStore((state) => { // Store connector entity to 
 
 function ParentLock(props) {
 
-    const inputArray = [];
+    const inputArray = ['1'];
     const [challengeNumber, setChallengeNumber] = useState(0);
     const [challengeString, setChallengeString] = useState("");
 
@@ -69,6 +70,8 @@ function ParentLock(props) {
                     {renderInstructions()}
                     {renderError()}
                     {renderChallenge()}
+                    {renderInput()}
+                    {renderKeyboard()}
                 </View>
             </SafeAreaView>
         )
@@ -118,6 +121,41 @@ function ParentLock(props) {
                 </Text>
             );
         }
+    }
+
+    function renderInput() {
+        return(
+            <View>
+                <View style={styles.inputContainer}>
+                    <View style={styles.inputLabelsContainer}>
+                        <View style={styles.mathLabel}>
+                            <Text style={styles.mathText}>{1}</Text>
+                        </View>
+                        <View style={styles.mathLabel}>
+                            <Text style={styles.mathText}>{1}</Text>
+                        </View>
+                    </View>
+                    {renderDeleteButton()}
+                </View>
+
+            </View>
+        );
+    }
+
+    function renderDeleteButton() {
+        const imageUrl = pluginData.deleteIconURL;
+        if (inputArray.length > 0) {
+            debugger;
+            return (
+                <TouchableOpacity style={styles.deleteButtonContainer}>
+                    <Image source={{ uri: imageUrl }} style={styles.deleteIconURL}/>
+                </TouchableOpacity>
+            );
+        }
+    }
+
+    function renderKeyboard() {
+        return PinKeyboard();
     }
 
     function closeHook() {

@@ -16,7 +16,6 @@ export function getStyles(pluginData) {
         },
         closeButton: closeButtonStyle(pluginData),
         controlsContainer: {
-            backgroundColor: 'red',
             flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
@@ -44,8 +43,38 @@ export function getStyles(pluginData) {
             fontFamily: pluginData.challenge.font,
             textAlign: 'center',
             marginBottom: Number(pluginData.challenge.bottomMargin) || 20
+        },
+        inputContainer: {
+            flexDirection: 'row',
+            marginBottom: Number(pluginData.mathAnswer.bottomMargin) || 20
+        },
+        inputLabelsContainer: {
+            width: '50%',
+            flexDirection: 'row',
+            justifyContent: 'flex-end'
+        },
+        deleteButtonContainer: {
+            flexDirection: 'row',
+            width: '36%',
+            justifyContent: 'flex-start'
+        },
+        mathLabel: {
+            borderBottomWidth: Number(pluginData.mathAnswer.underlineHeight) || 2,
+            borderBottomColor: pluginData.mathAnswer.underlineColor,
+            width: 30,
+            marginHorizontal: 10
+        },
+        mathText: {
+            color: pluginData.mathAnswer.color,
+            fontSize: Number(pluginData.mathAnswer.fontSize) || 20,
+            fontFamily: pluginData.mathAnswer.font,
+            textAlign: 'center'
+        },
+        deleteIcon: {
+            width: 40,
+            height: 40,
+            resizeMode: 'contain'
         }
-
     });
 
     return styles;
