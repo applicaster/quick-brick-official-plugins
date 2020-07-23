@@ -31,6 +31,7 @@ export function getStyles(pluginData) {
             marginBottom: pluginData.instructionsStyle.bottomMargin
         },
         errorMessage: {
+            height: 30,
             color: pluginData.errorMessage.color,
             fontSize: pluginData.errorMessage.fontSize,
             fontFamily: pluginData.errorMessage.font,
@@ -48,21 +49,30 @@ export function getStyles(pluginData) {
             flexDirection: 'row',
             marginBottom: pluginData.mathAnswer.bottomMargin
         },
-        inputLabelsContainer: {
+        leftSideContainer: {
             width: '50%',
             flexDirection: 'row',
-            justifyContent: 'flex-end'
+            justifyContent: 'flex-end',
+        },
+        rightSideContainer: {
+            width: '50%',
+            flexDirection: 'row',
+            justifyContent: 'flex-start'
         },
         deleteButtonContainer: {
-            flexDirection: 'row',
-            width: '36%',
-            justifyContent: 'flex-start'
+            height: 60,
+            marginHorizontal: 30,
+            justifyContent: 'center',
+            alignItems: 'center'
         },
         mathLabel: {
             borderBottomWidth: pluginData.mathAnswer.underlineHeight,
             borderBottomColor: pluginData.mathAnswer.underlineColor,
-            width: 30,
-            marginHorizontal: 10
+            height: 60,
+            width: 40,
+            marginHorizontal: 10,
+            justifyContent: 'center',
+            alignItems: 'center'
         },
         mathText: {
             color: pluginData.mathAnswer.color,
@@ -75,7 +85,6 @@ export function getStyles(pluginData) {
             height: 40,
             resizeMode: 'contain'
         }
-
     });
 
     return styles;

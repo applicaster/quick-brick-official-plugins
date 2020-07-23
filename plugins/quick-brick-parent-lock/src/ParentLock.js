@@ -77,6 +77,10 @@ function ParentLock(props) {
         }
     }
 
+    function deleteNumber() {
+        setInputArray([]);
+    }
+
     function renderBackground() {
         const type = pluginData.backgroundStyle.type;
         const imageUrl = pluginData.backgroundStyle.image;
@@ -160,15 +164,17 @@ function ParentLock(props) {
         return(
             <View>
                 <View style={styles.inputContainer}>
-                    <View style={styles.inputLabelsContainer}>
+                    <View style={styles.leftSideContainer}>
                         <View style={styles.mathLabel}>
                             <Text style={styles.mathText}>{inputArray[0] || ''}</Text>
                         </View>
+                    </View>
+                    <View style={styles.rightSideContainer}>
                         <View style={styles.mathLabel}>
                             <Text style={styles.mathText}>{inputArray[1] || ''}</Text>
                         </View>
+                        {renderDeleteButton()}
                     </View>
-                    {renderDeleteButton()}
                 </View>
 
             </View>
@@ -179,8 +185,10 @@ function ParentLock(props) {
         const imageUrl = pluginData.deleteIconURL;
         if (inputArray.length > 0) {
             return (
-                <TouchableOpacity style={styles.deleteButtonContainer}>
-                    <Image source={{ uri: imageUrl }} style={styles.deleteIconURL}/>
+                <TouchableOpacity
+                    onPress={() => deleteNumber()}
+                    style={styles.deleteButtonContainer}>
+                    <Image source={{ uri: imageUrl }} style={styles.deleteIcon}/>
                 </TouchableOpacity>
             );
         }
