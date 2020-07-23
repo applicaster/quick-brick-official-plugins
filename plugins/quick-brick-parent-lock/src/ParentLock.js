@@ -11,7 +11,6 @@ import {
     View,
     Text,
     SafeAreaView,
-    StyleSheet,
     TouchableOpacity
 } from "react-native";
 
@@ -30,7 +29,7 @@ function ParentLock(props) {
     const [challengeString, setChallengeString] = useState("");
     const [error, setError] = useState(false);
 
-    const pluginData = getCustomPluginData(props.screenData, props.configuration);
+    const pluginData = getCustomPluginData(props.screenData);
     const styles = getStyles(pluginData);
 
     useEffect(() => {
@@ -65,7 +64,7 @@ function ParentLock(props) {
         setError(false);
         setInputArray(newArray);
         if (newArray.length == 2) {
-            const resultNumber = Number(inputArray[0]) * 10 + Number(inputArray[1]);
+            const resultNumber = inputArray[0] * 10 + inputArray[1];
             if (resultNumber != challengeNumber) {
                 setError(true);
                 setInputArray([]);
@@ -101,8 +100,8 @@ function ParentLock(props) {
 
     function renderContent() {
         return (
-            <SafeAreaView style = {{ flex: 1 }}>
-                <View>{renderCloseButton()}</View>
+            <SafeAreaView  style={{flex: 1}}>
+                {renderCloseButton()}
                 <View style = {styles.controlsContainer}>
                     {renderInstructions()}
                     {renderError()}
@@ -117,10 +116,12 @@ function ParentLock(props) {
     function renderCloseButton() {
         const imageUrl = pluginData.closeButtonStyle.image;
         return (
-            <TouchableOpacity onPress={() => closeHook()}>
-                <Image source={{ uri: imageUrl }} style={styles.closeButton}/>
-            </TouchableOpacity>
-        )
+            <View style={styles.closeButtonContainer}>
+                <TouchableOpacity onPress={() => closeHook()}>
+                    <Image source={{ uri: imageUrl }} style={styles.closeButton}/>
+                </TouchableOpacity>
+            </View>
+        );
     }
 
     function renderInstructions() {
@@ -132,7 +133,7 @@ function ParentLock(props) {
             >
                 {pluginData.instructionsStyle.text}
             </Text>
-        )
+        );
     }
 
     function renderError() {
@@ -161,17 +162,19 @@ function ParentLock(props) {
     }
 
     function renderInput() {
+        const valueOne = typeof inputArray[0] !== 'undefined' ? inputArray[0] : '';
+        const valueTwo = typeof inputArray[1] !== 'undefined' ? inputArray[1] : '';
         return(
             <View>
                 <View style={styles.inputContainer}>
                     <View style={styles.leftSideContainer}>
                         <View style={styles.mathLabel}>
-                            <Text style={styles.mathText}>{inputArray[0] || ''}</Text>
+                            <Text style={styles.mathText}>{valueOne}</Text>
                         </View>
                     </View>
                     <View style={styles.rightSideContainer}>
                         <View style={styles.mathLabel}>
-                            <Text style={styles.mathText}>{inputArray[1] || ''}</Text>
+                            <Text style={styles.mathText}>{valueTwo}</Text>
                         </View>
                         {renderDeleteButton()}
                     </View>

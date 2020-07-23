@@ -3,7 +3,7 @@ import { getPluginData } from '../Utils/Utils';
 import { Platform } from "react-native";
 import { updateString } from "../Utils/Utils";
 
-export function getCustomPluginData(screenData, configuration) {
+export function getCustomPluginData(screenData) {
     const {
         instructions_text: instructionsText,
         instructions_text_font_ios: instructionsFontIOS,
@@ -52,17 +52,14 @@ export function getCustomPluginData(screenData, configuration) {
         keypad_active_border_color: keypadActiveBorderColor,
 
         keypad_border_width: keypadBorderWidth,
-        keypad_corner_radius: keypadCornerRadius
+        keypad_corner_radius: keypadCornerRadius,
 
-    } = getPluginData(screenData);
-
-    const {
         background_type: backgroundType,
         background_color: backgroundColor,
         background_image: backgroundImageURL,
         close_button_image: closeButtonImageURL,
         close_button_position: closeButtonPosition
-    } = configuration;
+    } = getPluginData(screenData);
 
 
     const closeButtonStyle = {

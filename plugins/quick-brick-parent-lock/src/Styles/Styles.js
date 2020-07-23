@@ -14,12 +14,20 @@ export function getStyles(pluginData) {
             resizeMode: 'cover',
             justifyContent: 'center'
         },
-        closeButton: closeButtonStyle(pluginData),
+        closeButtonContainer: {
+            width: '100%',
+            flexDirection: 'row',
+            justifyContent: pluginData.closeButtonStyle.position == 'Left' ? 'flex-start' : 'flex-end'
+        },
+        closeButton: {
+            width: 50,
+            height: 50,
+            resizeMode: 'contain'
+        },
         controlsContainer: {
             flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
-            top: 50,
             paddingLeft: 30,
             paddingRight: 30
         },
@@ -31,7 +39,7 @@ export function getStyles(pluginData) {
             marginBottom: pluginData.instructionsStyle.bottomMargin
         },
         errorMessage: {
-            height: 30,
+            height: 25,
             color: pluginData.errorMessage.color,
             fontSize: pluginData.errorMessage.fontSize,
             fontFamily: pluginData.errorMessage.font,
@@ -60,7 +68,7 @@ export function getStyles(pluginData) {
             justifyContent: 'flex-start'
         },
         deleteButtonContainer: {
-            height: 60,
+            height: 50,
             marginHorizontal: 30,
             justifyContent: 'center',
             alignItems: 'center'
@@ -68,7 +76,7 @@ export function getStyles(pluginData) {
         mathLabel: {
             borderBottomWidth: pluginData.mathAnswer.underlineHeight,
             borderBottomColor: pluginData.mathAnswer.underlineColor,
-            height: 60,
+            height: 50,
             width: 40,
             marginHorizontal: 10,
             justifyContent: 'center',
@@ -88,27 +96,4 @@ export function getStyles(pluginData) {
     });
 
     return styles;
-}
-
-function closeButtonStyle(pluginData) {
-    const position = pluginData.closeButtonStyle.position;
-    if (position == "Right") {
-        return {
-            position: 'absolute',
-            top: 10,
-            right: 10,
-            width: 50,
-            height: 50,
-            resizeMode: 'contain'
-        }
-    } else {
-        return {
-            position: 'absolute',
-            top: 10,
-            left: 10,
-            width: 50,
-            height: 50,
-            resizeMode: 'contain'
-        }
-    }
 }
