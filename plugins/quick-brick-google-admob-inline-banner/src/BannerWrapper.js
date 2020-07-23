@@ -9,7 +9,8 @@ export default function BannerWrapper(props) {
     backgroundColor,
     titleStyle,
     title,
-    children
+    children,
+    accessibilityLabel
   } = props;
 
   const bannerBackground = showBackground ? backgroundColor : '';
@@ -23,7 +24,11 @@ export default function BannerWrapper(props) {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: bannerBackground }]}>
+    <View
+      style={[styles.container, { backgroundColor: bannerBackground }]}
+      accessibilityLabel={accessibilityLabel}
+      testID={accessibilityLabel}
+    >
       {
         showBackground && (
           <Text

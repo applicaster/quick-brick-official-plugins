@@ -80,6 +80,8 @@ export default function InlineBanner(props) {
       backgroundColor={backgroundColor}
       titleStyle={titleStyle}
       title={title}
+      accessible={false}
+      accessibilityLabel={bannerAdUnit}
     >
       <BannerAd
         unitId={bannerAdUnit}
