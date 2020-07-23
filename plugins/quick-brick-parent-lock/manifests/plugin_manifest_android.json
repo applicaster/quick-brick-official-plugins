@@ -18,8 +18,8 @@
   "unsupported_since_zapp_sdk": "",
   "preload": true,
   "platform": "android",
-  "dependency_version": "0.0.1",
-  "manifest_version": "0.0.1",
+  "dependency_version": "0.0.2",
+  "manifest_version": "0.0.2",
   "min_zapp_sdk": "20.0.0",
   "general": {
     "fields": [
@@ -318,7 +318,7 @@
             "key": "keypad_default_background_color",
             "label": "Keypad Default Background Color",
             "label_tooltip": "Color for the keypad background.",
-            "initial_value": "rgba(255, 255, 255, 1)"
+            "initial_value": "rgba(255, 255, 255, 0.3)"
           },
           {
             "type": "color_picker_rgba",
