@@ -24,7 +24,11 @@ export default function BannerWrapper(props) {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: bannerBackground }, accessibilityLabel]}>
+    <View
+      style={[styles.container, { backgroundColor: bannerBackground }]}
+      accessibilityLabel={accessibilityLabel}
+      testID={accessibilityLabel}
+    >
       {
         showBackground && (
           <Text
@@ -36,10 +40,7 @@ export default function BannerWrapper(props) {
           </Text>
         )
       }
-      <View
-        accessibilityLabel={accessibilityLabel}
-        testID={accessibilityLabel}
-      >
+      <View>
         {children}
       </View>
     </View>
