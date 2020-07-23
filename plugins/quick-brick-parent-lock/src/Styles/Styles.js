@@ -7,7 +7,7 @@ export function getStyles(pluginData) {
     const styles = StyleSheet.create({
         backgroundColor: {
             flex: 1,
-            backgroundColor: pluginData.backgroundStyle.color || 'black'
+            backgroundColor: pluginData.backgroundStyle.color
         },
         backgroundImage: {
             flex: 1,
@@ -25,28 +25,28 @@ export function getStyles(pluginData) {
         },
         instructions: {
             color: pluginData.instructionsStyle.color,
-            fontSize: Number(pluginData.instructionsStyle.fontSize) || 20,
+            fontSize: pluginData.instructionsStyle.fontSize,
             fontFamily: pluginData.instructionsStyle.font,
             textAlign: 'center',
-            marginBottom: Number(pluginData.instructionsStyle.bottomMargin) || 20
+            marginBottom: pluginData.instructionsStyle.bottomMargin
         },
         errorMessage: {
             color: pluginData.errorMessage.color,
-            fontSize: Number(pluginData.errorMessage.fontSize) || 20,
+            fontSize: pluginData.errorMessage.fontSize,
             fontFamily: pluginData.errorMessage.font,
             textAlign: 'center',
-            marginBottom: Number(pluginData.errorMessage.bottomMargin) || 20
+            marginBottom: pluginData.errorMessage.bottomMargin
         },
         challenge: {
             color: pluginData.challenge.color,
-            fontSize: Number(pluginData.challenge.fontSize) || 20,
+            fontSize: pluginData.challenge.fontSize,
             fontFamily: pluginData.challenge.font,
             textAlign: 'center',
-            marginBottom: Number(pluginData.challenge.bottomMargin) || 20
+            marginBottom: pluginData.challenge.bottomMargin
         },
         inputContainer: {
             flexDirection: 'row',
-            marginBottom: Number(pluginData.mathAnswer.bottomMargin) || 20
+            marginBottom: pluginData.mathAnswer.bottomMargin
         },
         inputLabelsContainer: {
             width: '50%',
@@ -59,14 +59,14 @@ export function getStyles(pluginData) {
             justifyContent: 'flex-start'
         },
         mathLabel: {
-            borderBottomWidth: Number(pluginData.mathAnswer.underlineHeight) || 2,
+            borderBottomWidth: pluginData.mathAnswer.underlineHeight,
             borderBottomColor: pluginData.mathAnswer.underlineColor,
             width: 30,
             marginHorizontal: 10
         },
         mathText: {
             color: pluginData.mathAnswer.color,
-            fontSize: Number(pluginData.mathAnswer.fontSize) || 20,
+            fontSize: pluginData.mathAnswer.fontSize,
             fontFamily: pluginData.mathAnswer.font,
             textAlign: 'center'
         },

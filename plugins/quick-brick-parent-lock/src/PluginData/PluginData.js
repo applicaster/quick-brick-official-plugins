@@ -79,40 +79,40 @@ export function getCustomPluginData(screenData, configuration) {
     const instructionsStyle = {
         text: updateString(instructionsText, instructionsTextTransform),
         font: Platform.OS === 'ios' ? instructionsFontIOS : instructionsFontAndroid,
-        fontSize: instructionsFontSize,
+        fontSize: Number(instructionsFontSize) || 20,
         color: instructionsTextColor,
-        bottomMargin: instructionsTextMargin || 16
+        bottomMargin: Number(instructionsTextMargin) || 16
     };
 
     const errorMessage = {
         text: updateString(errorMessageText,errorMessageTextTransform),
         font: Platform.OS === 'ios' ? errorMessageFontIOS : errorMessageFontAndroid,
-        fontSize: errorMessageFontSize,
+        fontSize: Number(errorMessageFontSize) || 20,
         color: errorMessageTextColor,
-        bottomMargin: errorMessageTextMargin || 16
+        bottomMargin: Number(errorMessageTextMargin) || 16
     }
 
     const challenge = {
         font: Platform.OS === 'ios' ? challengeFontIOS : challengeFontAndroid,
-        fontSize: challengeFontSize,
+        fontSize: Number(challengeFontSize) || 20,
         color: challengeTextColor,
         transform: challengeTextTransform,
-        bottomMargin: challengeTextMargin || 16
+        bottomMargin: Number(challengeTextMargin) || 16
     }
 
     const mathAnswer = {
         font: Platform.OS === 'ios' ? mathAnswerFontIOS : mathAnswerFontAndroid,
-        fontSize: mathAnswerFontSize,
+        fontSize: Number(mathAnswerFontSize) || 20,
         color: mathAnswerTextColor,
 
         underlineColor: mathAnswerUnderlineColor,
-        underlineHeight: mathAnswerUnderlineHeight,
-        bottomMargin: mathAnswerBottomMargin || 16
+        underlineHeight: Number(mathAnswerUnderlineHeight) || 5,
+        bottomMargin: Number(mathAnswerBottomMargin) || 16
     }
 
     const keypad = {
         font: Platform.OS === 'ios' ? keypadFontIOS : keypadFontAndroid,
-        fontSize: keypadFontSize,
+        fontSize: Number(keypadFontSize) || 20,
         defaultColor: keypadDefaultColor,
         defaultBackground: keypadDefaultBackground,
 
@@ -122,8 +122,8 @@ export function getCustomPluginData(screenData, configuration) {
         defaultBorderColor: keypadDefaultBorderColor,
         activeBorderColor: keypadActiveBorderColor,
 
-        borderWidth: keypadBorderWidth,
-        keypadCornerRadius: keypadCornerRadius
+        borderWidth: Number(keypadBorderWidth) || 2,
+        keypadCornerRadius: Number(keypadCornerRadius) || 34
     }
 
     return {

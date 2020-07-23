@@ -1,85 +1,70 @@
 import React from 'react';
-import * as R from 'ramda';
+import { useState } from "react";
 import {
-    StyleSheet,
-    View,
     Text,
     TouchableHighlight
 } from "react-native";
 
 export function KeyButton(props) {
 
-    let isClicked = false;
+    const keypad = props.keypad;
+    const [isClicked, setIsClicked] = useState(false);
+
+    function onPress() {
+        props.callback(2);
+    }
 
     function onHideUnderlay() {
-        isClicked = false;
+        setIsClicked(false);
     }
 
     function onShowUnderlay() {
-        isClicked = true;
+        setIsClicked(true);
+    }
+
+    function buttonStyle() {
+        return {
+            width: 68,
+            height: 68,
+            borderRadius: keypad.keypadCornerRadius,
+            backgroundColor: keypad.defaultBackground,
+            borderWidth: keypad.borderWidth,
+            borderColor: isClicked ? keypad.activeBorderColor : keypad.defaultBorderColor,
+            paddingVertical: 10,
+            paddingHorizontal: 35,
+            margin: 10,
+            alignItems: 'center',
+            justifyContent: 'center'
+        }
+    }
+
+    function numberStyle() {
+        return {
+            width: 68,
+            color: isClicked ? keypad.activeColor : keypad.defaultColor,
+            fontSize: Number(keypad.fontSize) || 20,
+            fontFamily: keypad.font,
+            textAlign: 'center',
+            textAlignVertical: 'center'
+        }
     }
 
     function renderButton() {
         return (
             <TouchableHighlight
                 activeOpacity={1}
-                style={
-                    isClicked
-                        ? styles.circleDefault
-                        : styles.circleActive
-                }
-                underlayColor="green"
-                onHideUnderlay={() => onHideUnderlay()}
+                underlayColor={keypad.activeBackground}
+                style={buttonStyle()}
                 onShowUnderlay={() => onShowUnderlay()}
-                onPress={() => addInput()}
+                onHideUnderlay={() => onHideUnderlay()}
+                onPress={() => onPress()}
             >
-                <Text style={
-                    isClicked
-                        ? styles.keyNumberActive
-                        : styles.keyNumberDefault
-                }
-                >
-                    {num}
+                <Text style={numberStyle()}>
+                    {props.num}
                 </Text>
             </TouchableHighlight>
         );
     }
-}
 
-const styles = StyleSheet.create({
-    circleActive: {
-        width: 100,
-        height: 100,
-        backgroundColor:'red',
-        borderWidth: 5,
-        borderRadius: 30,
-        borderColor: 'green',
-        paddingVertical: 10,
-        paddingHorizontal: 35,
-        margin: 10,
-    },
-    circleDefault: {
-        width: 100,
-        height: 100,
-        backgroundColor:'white',
-        borderWidth: 5,
-        borderRadius: 30,
-        borderColor: 'blue',
-        alignItems: 'center',
-        paddingVertical: 10,
-        paddingHorizontal: 35,
-        margin: 10
-    },
-    keyNumberActive: {
-        width: 100,
-        height: 100,
-        color: 'red',
-        fontSize: 50
-    },
-    keyNumberDefault: {
-        width: 100,
-        height: 100,
-        color: 'white',
-        fontSize: 50
-    }
-});
+    return renderButton();
+}

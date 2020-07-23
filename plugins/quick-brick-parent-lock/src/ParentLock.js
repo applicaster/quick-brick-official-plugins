@@ -24,24 +24,49 @@ const storeConnector = connectToStore((state) => { // Store connector entity to 
 
 function ParentLock(props) {
 
-    const inputArray = ['1'];
-    const [challengeNumber, setChallengeNumber] = useState(0);
-    const [challengeString, setChallengeString] = useState("");
+    let challengeNumber = null;
 
+    const [inputArray, setInputArray] = useState([]);
+    const [challengeString, setChallengeString] = useState("");
     const [error, setError] = useState(false);
+
     const pluginData = getCustomPluginData(props.screenData, props.configuration);
     const styles = getStyles(pluginData);
 
     useEffect(() => {
         generateChallenge();
-    });
+    }, []);
 
     function generateChallenge() {
         const transform = pluginData.challenge.transform;
         const result = createChallenge(transform);
 
         setChallengeString(result.string);
-        setChallengeNumber(result.number);
+        challengeNumber = result.number;
+    }
+
+    function closeHook() {
+        const { callback, payload, navigator } = props;
+        return callback
+            ? callback({ success: false, payload })
+            : navigator.goBack();
+    }
+
+    function inputNumber(number) {
+        debugger;
+        number = 1;
+        const newArray = inputArray + number;
+        setError(false);
+        setInputArray(newArray);
+        if (newArray.length == 2) {
+            const resultNumber = Number(inputArray[0]) * 10 + Number(inputArray[1]);
+            if (resultNumber != challengeNumber) {
+                setError(true);
+                setInputArray([]);
+                challengeNumber = null;
+                generateChallenge();
+            }
+        }
     }
 
     function renderBackground() {
@@ -129,10 +154,10 @@ function ParentLock(props) {
                 <View style={styles.inputContainer}>
                     <View style={styles.inputLabelsContainer}>
                         <View style={styles.mathLabel}>
-                            <Text style={styles.mathText}>{1}</Text>
+                            <Text style={styles.mathText}>{inputArray[0] || ''}</Text>
                         </View>
                         <View style={styles.mathLabel}>
-                            <Text style={styles.mathText}>{1}</Text>
+                            <Text style={styles.mathText}>{inputArray[1] || ''}</Text>
                         </View>
                     </View>
                     {renderDeleteButton()}
@@ -155,19 +180,11 @@ function ParentLock(props) {
 
     function renderKeyboard() {
         return Keyboard({
+            callback: () => inputNumber(),
             keypad: pluginData.keypad,
             styles: styles
         });
     }
-
-    function closeHook() {
-        debugger;
-        const { callback, payload, navigator } = props;
-        return callback
-            ? callback({ success: false, payload })
-            : navigator.goBack();
-    }
-
 
     return renderBackground();
 }

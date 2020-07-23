@@ -1,23 +1,18 @@
 import React from 'react';
-import * as R from 'ramda';
 import {
     StyleSheet,
     View,
-    Text,
-    TouchableHighlight
 } from "react-native";
-
+import {KeyButton} from "./KeyButton";
 
 export function Keyboard(props) {
 
-    function addInput() {
-
-    }
-
     function renderButton(num) {
         return KeyButton({
+            callback: props.callback,
             num: num,
-            styles: props.style
+            styles: props.styles,
+            keypad: props.keypad
         })
     }
 
@@ -56,6 +51,6 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
     }
 });
