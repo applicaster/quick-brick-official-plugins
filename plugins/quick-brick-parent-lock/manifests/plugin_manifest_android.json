@@ -18,8 +18,8 @@
   "unsupported_since_zapp_sdk": "",
   "preload": true,
   "platform": "android",
-  "dependency_version": "0.0.2",
-  "manifest_version": "0.0.2",
+  "dependency_version": "0.0.3",
+  "manifest_version": "0.0.3",
   "min_zapp_sdk": "20.0.0",
   "general": {
     "fields": [
@@ -29,6 +29,59 @@
         "tooltip": "These fields affect the design of the main screen plugin.",
         "folded": true,
         "fields": [
+            {
+              "type": "select",
+              "key": "background_type",
+              "label": "Background type",
+              "tooltip_text": "Defines whether the background will use an image or a solid color.",
+              "options": [
+                {
+                  "text": "Color",
+                  "value": "Color"
+                },
+                {
+                  "text": "Image",
+                  "value": "Image"
+                }
+              ],
+              "initial_value": "Image"
+            },
+            {
+              "type": "color_picker_rgba",
+              "key": "background_color",
+              "label": "Background Color",
+              "label_tooltip": "Color for the screen background.",
+              "initial_value": "rgba(22, 27, 38, 1)"
+            },
+            {
+              "type": "uploader",
+              "key": "background_image",
+              "label": "Background Image",
+              "label_tooltip": "Image for the screen background."
+            },
+            {
+              "type": "uploader",
+              "key": "close_button_image",
+              "label": "Close Button Image",
+              "label_tooltip": "Image for the screen background."
+            },
+            {
+              "type": "select",
+              "key": "close_button_position",
+              "label": "Close Button Position",
+              "tooltip_text": "Determines the corner side of the screen where the button is placed.",
+              "options": [
+                {
+                  "text": "Left",
+                  "value": "Left"
+                },
+                {
+                  "text": "Right",
+                  "value": "Right"
+                }
+              ],
+              "initial_value": "Right"
+            },
           {
             "type": "text_input",
             "key": "instructions_text",
