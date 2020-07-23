@@ -11,7 +11,7 @@ export function KeyButton(props) {
     const [isClicked, setIsClicked] = useState(false);
 
     function onPress() {
-        props.callback(2);
+        props.callback(props.num);
     }
 
     function onHideUnderlay() {
@@ -42,7 +42,7 @@ export function KeyButton(props) {
         return {
             width: 68,
             color: isClicked ? keypad.activeColor : keypad.defaultColor,
-            fontSize: Number(keypad.fontSize) || 20,
+            fontSize: keypad.fontSize,
             fontFamily: keypad.font,
             textAlign: 'center',
             textAlignVertical: 'center'

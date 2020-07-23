@@ -11,6 +11,7 @@ import {
     View,
     Text,
     SafeAreaView,
+    StyleSheet,
     TouchableOpacity
 } from "react-native";
 
@@ -24,8 +25,7 @@ const storeConnector = connectToStore((state) => { // Store connector entity to 
 
 function ParentLock(props) {
 
-    let challengeNumber = null;
-
+    const [challengeNumber, setChallengeNumber] = useState(0);
     const [inputArray, setInputArray] = useState([]);
     const [challengeString, setChallengeString] = useState("");
     const [error, setError] = useState(false);
@@ -42,7 +42,14 @@ function ParentLock(props) {
         const result = createChallenge(transform);
 
         setChallengeString(result.string);
-        challengeNumber = result.number;
+        setChallengeNumber(result.number);
+    }
+
+    function successHook() {
+        const { callback, payload, navigator } = props;
+        return callback
+            ? callback({ success: true, payload })
+            : navigator.goBack();
     }
 
     function closeHook() {
@@ -53,9 +60,8 @@ function ParentLock(props) {
     }
 
     function inputNumber(number) {
-        debugger;
-        number = 1;
-        const newArray = inputArray + number;
+        const newArray = inputArray;
+        newArray.push(number);
         setError(false);
         setInputArray(newArray);
         if (newArray.length == 2) {
@@ -63,8 +69,10 @@ function ParentLock(props) {
             if (resultNumber != challengeNumber) {
                 setError(true);
                 setInputArray([]);
-                challengeNumber = null;
+                setChallengeNumber(0);
                 generateChallenge();
+            } else {
+                successHook();
             }
         }
     }
@@ -180,7 +188,7 @@ function ParentLock(props) {
 
     function renderKeyboard() {
         return Keyboard({
-            callback: () => inputNumber(),
+            callback: (number) => inputNumber(number),
             keypad: pluginData.keypad,
             styles: styles
         });

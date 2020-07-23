@@ -9,7 +9,7 @@ export function Keyboard(props) {
 
     function renderButton(num) {
         return KeyButton({
-            callback: props.callback,
+            callback: (number) => props.callback(number),
             num: num,
             styles: props.styles,
             keypad: props.keypad
