@@ -30,8 +30,6 @@ export function KeyButton(props) {
             backgroundColor: keypad.defaultBackground,
             borderWidth: keypad.borderWidth,
             borderColor: isClicked ? keypad.activeBorderColor : keypad.defaultBorderColor,
-            paddingVertical: 10,
-            paddingHorizontal: 35,
             margin: 10,
             alignItems: 'center',
             justifyContent: 'center'

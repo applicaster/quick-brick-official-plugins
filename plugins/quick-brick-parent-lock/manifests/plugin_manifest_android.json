@@ -18,8 +18,8 @@
   "unsupported_since_zapp_sdk": "",
   "preload": true,
   "platform": "android",
-  "dependency_version": "0.0.3",
-  "manifest_version": "0.0.3",
+  "dependency_version": "0.0.4",
+  "manifest_version": "0.0.4",
   "min_zapp_sdk": "20.0.0",
   "general": {
     "fields": [
@@ -101,7 +101,7 @@
             "key": "instructions_text_font_android",
             "label": "Instructions Text Font Android",
             "label_tooltip": "Font for the instructions text.",
-            "initial_value": "Roboto-Dark"
+            "initial_value": "Roboto-Black"
           },
           {
             "type": "number_input",
@@ -161,7 +161,7 @@
             "key": "challenge_text_font_android",
             "label": "Challenge Text Font Android",
             "label_tooltip": "Font for the dynamically generated code/challenge.",
-            "initial_value": "Roboto-Dark"
+            "initial_value": "Roboto-Black"
           },
           {
             "type": "number_input",
@@ -228,7 +228,7 @@
             "key": "error_message_text_font_android",
             "label": "Error Message Text Font Android",
             "label_tooltip": "Font for the wrong answer message.",
-            "initial_value": "Roboto-Dark"
+            "initial_value": "Roboto-Black"
           },
           {
             "type": "number_input",
@@ -371,7 +371,7 @@
             "key": "keypad_default_background_color",
             "label": "Keypad Default Background Color",
             "label_tooltip": "Color for the keypad background.",
-            "initial_value": "rgba(255, 255, 255, 0.3)"
+            "initial_value": "rgba(255, 255, 255, 0.25)"
           },
           {
             "type": "color_picker_rgba",
