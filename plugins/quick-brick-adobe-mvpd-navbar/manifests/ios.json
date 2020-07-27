@@ -8,7 +8,7 @@
     "description": "",
     "type": "nav_item",
     "preload": true,
-    "screen": true,
+    "screen": false,
     "react_native": true,
     "identifier": "adobe_mvpd_navbar_icon",
     "ui_builder_support": true,
