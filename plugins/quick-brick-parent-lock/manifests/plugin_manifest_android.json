@@ -19,7 +19,7 @@
   "preload": true,
   "platform": "android",
   "dependency_version": "0.0.4",
-  "manifest_version": "0.0.4",
+  "manifest_version": "0.0.5",
   "min_zapp_sdk": "20.0.0",
   "general": {
     "fields": [
@@ -33,7 +33,7 @@
               "type": "select",
               "key": "background_type",
               "label": "Background type",
-              "tooltip_text": "Defines whether the background will use an image or a solid color.",
+              "label_tooltip": "Defines whether the background will use an image or a solid color.",
               "options": [
                 {
                   "text": "Color",
@@ -69,7 +69,7 @@
               "type": "select",
               "key": "close_button_position",
               "label": "Close Button Position",
-              "tooltip_text": "Determines the corner side of the screen where the button is placed.",
+              "label_tooltip": "Determines the corner side of the screen where the button is placed.",
               "options": [
                 {
                   "text": "Left",
@@ -407,7 +407,14 @@
             "label": "Keypad Corner Radius",
             "label_tooltip": "Corner Radius for the keypad",
             "initial_value": "34"
-          }
+          },
+          {
+            "type": "switch",
+            "key": "import_parent_lock",
+            "label": "Import Parent Lock",
+            "label_tooltip": "Import Parent lock in other supported plugins.",
+            "initial_value": "true"
+          },
         ]
       }
     ]
@@ -424,6 +431,30 @@
             "key": "preload_plugins",
             "type": "preload_plugins_selector",
             "label": "Select Plugins"
+          }
+        ]
+      }
+    ]
+  },
+  "export": {
+    "allowed_list": [
+      {
+        "identifier": "quick-brick-inplayer",
+        "group": {
+          "label": "Parent Lock Import",
+          "folded": true
+        },
+        "section": "styles",
+        "allowed_fields": [
+          {
+            "section": "general",
+            "key": "import_parent_lock",
+            "min_zapp_sdk": {
+              "ios": "20.2.0-Dev",
+              "android": "20.0.0",
+              "ios_for_quickbrick": "0.1.0-alpha1",
+              "android_for_quickbrick": "0.1.0-alpha1"
+            }
           }
         ]
       }
