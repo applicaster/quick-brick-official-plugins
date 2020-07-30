@@ -164,7 +164,7 @@ const InPlayer = (props) => {
   const shouldShowParentLock = (parentLockWasPresented) => {
     switch (hookType) {
       case HookTypeData.PLAYER_HOOK:
-        if (parentLockWasPresented || !showParentLock) {
+        if (parentLockWasPresented || !true) {
           return false;
         }
         return true;
