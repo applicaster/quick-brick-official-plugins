@@ -439,12 +439,12 @@
   "export": {
     "allowed_list": [
       {
-        "identifier": "quick-brick-inplayer",
+        "identifier": "quick-brick-inplayer-parent-lock",
         "group": {
           "label": "Parent Lock Import",
           "folded": true
         },
-        "section": "general",
+        "section": "styles",
         "allowed_fields": [
           {
             "section": "general",
