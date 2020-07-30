@@ -24,6 +24,13 @@
   "general": {
     "fields": [
       {
+        "type": "switch",
+        "key": "import_parent_lock",
+        "label": "Import Parent Lock",
+        "label_tooltip": "Import Parent lock in other supported plugins.",
+        "initial_value": "true"
+      },
+      {
         "group": true,
         "label": "Screen Design and Text",
         "tooltip": "These fields affect the design of the main screen plugin.",
@@ -407,14 +414,7 @@
             "label": "Keypad Corner Radius",
             "label_tooltip": "Corner Radius for the keypad",
             "initial_value": "34"
-          },
-          {
-            "type": "switch",
-            "key": "import_parent_lock",
-            "label": "Import Parent Lock",
-            "label_tooltip": "Import Parent lock in other supported plugins.",
-            "initial_value": "true"
-          },
+          }
         ]
       }
     ]
@@ -444,7 +444,7 @@
           "label": "Parent Lock Import",
           "folded": true
         },
-        "section": "styles",
+        "section": "general",
         "allowed_fields": [
           {
             "section": "general",
