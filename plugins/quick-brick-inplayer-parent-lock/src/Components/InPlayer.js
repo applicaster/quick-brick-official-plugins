@@ -17,7 +17,7 @@ import { isHook, isTokenInStorage } from "../Utils/UserAccount";
 
 const getScreenStyles = R.compose(
   R.prop("styles"),
-  R.find(R.propEq("type", "quick-brick-inplayer")),
+  R.find(R.propEq("type", "quick-brick-inplayer-parent-lock")),
   R.values,
   R.prop("rivers")
 );
