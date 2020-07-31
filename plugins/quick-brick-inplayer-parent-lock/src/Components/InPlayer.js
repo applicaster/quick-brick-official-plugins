@@ -162,19 +162,10 @@ const InPlayer = (props) => {
   };
 
   const shouldShowParentLock = (parentLockWasPresented) => {
-    switch (hookType) {
-      case HookTypeData.PLAYER_HOOK:
-        if (parentLockWasPresented || !true) {
-          return false;
-        }
-        return true;
-      case HookTypeData.SCREEN_HOOK:
-        return false;
-      case HookTypeData.USER_ACCOUNT:
-        return false;
-      case HookTypeData.UNDEFINED:
-        return false;
+    if (parentLockWasPresented || !true) {
+      return false;
     }
+    return true;
   };
 
   const renderFlow = () => {
