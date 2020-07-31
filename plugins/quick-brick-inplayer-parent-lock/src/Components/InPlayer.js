@@ -140,6 +140,9 @@ const InPlayer = (props) => {
   const renderScreenHook = () => {
     return (
       <AccountFlow
+        setParentLockWasPresented={setParentLockWasPresented}
+        parentLockWasPresented = {parentLockWasPresented}
+        shouldShowParentLock={shouldShowParentLock}
         accountFlowCallback={accountFlowCallback}
         backButton={!isHomeScreen(navigator)}
         screenStyles={screenStyles}
