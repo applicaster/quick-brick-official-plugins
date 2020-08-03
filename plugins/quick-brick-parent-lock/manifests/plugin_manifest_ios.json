@@ -439,7 +439,7 @@
   "export": {
     "allowed_list": [
       {
-        "identifier": "quick-brick-inplayer-parent-lock",
+        "identifier": "quick-brick-inplayer",
         "group": {
           "label": "Parent Lock Import",
           "folded": true
