@@ -37,10 +37,12 @@ export default function PlaybackComponent(props) {
       const token = await localStorage.getItem('idToken');
       const storage = await sessionStorage.getAllItems();
 
-      const applicasterData = R.path(CONFIG.PATH_TO_APPLICASTER2_NAMESPACE, storage);
+      const applicasterData = R.path(CONFIG.PATH_TO_APPLICASTER2_NAMESPACE, storage) || storage;
       if (applicasterData) {
         const updatedData = removeAllQuotes(applicasterData);
         callApplicaster2(updatedData, token);
+      } else {
+        throw new Error('applicaster data is missing from storage');
       }
     } catch (err) {
       console.log(err);
