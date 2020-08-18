@@ -13,13 +13,8 @@
     "@applicaster/zapp-react-native-redux": "3.0.1-rc.11",
     "@applicaster/zapp-react-native-ui-components": "3.0.1-rc.11",
     "@applicaster/zapp-react-native-utils": "3.0.1-rc.11",
-    "react": "16.8.3",
-    "react-native": "0.59.10",
-    "react-native-web": "0.11.5"
-  },
-  "devDependencies": {
-    "react": "16.8.3",
-    "react-native": "0.59.10",
+    "react": "16.11.0",
+    "react-native": "0.62.2",
     "react-native-web": "0.11.5"
   },
   "dependencies": {
