@@ -35,9 +35,8 @@ export default function PlaybackComponent(props) {
     try {
       if (!requireAuth) return successHook();
       const token = await localStorage.getItem('idToken');
-      const storage = await sessionStorage.getAllItems();
+      const applicasterData = await sessionStorage.getAllItems(CONFIG.APPLICASTER2_NAMESPACE);
 
-      const applicasterData = R.path(CONFIG.PATH_TO_APPLICASTER2_NAMESPACE, storage) || storage;
       if (applicasterData) {
         const updatedData = removeAllQuotes(applicasterData);
         callApplicaster2(updatedData, token);

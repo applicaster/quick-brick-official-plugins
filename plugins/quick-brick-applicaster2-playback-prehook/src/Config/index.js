@@ -12,6 +12,7 @@ const CONFIG = {
   CONFIG_AUTH_PROVIDER_ID_PATH: ['configuration', 'auth_provider_id'],
   PAYLOAD_REQUIRE_AUTH_PATH: ['extensions', 'requires_authentication'],
   PATH_TO_APPLICASTER2_NAMESPACE: ['zapp', 'applicaster.v2'],
+  APPLICASTER2_NAMESPACE: 'applicaster.v2',
   JWT_SECRET_PATH: ['configuration', 'jwt_secret'],
   REQUEST_TO_APPLICASTER2_FAILED_ERROR_MESSAGE: 'request to applicaster failed',
   NO_JWT_MESSAGE: 'no jwt secret found in configuration'
