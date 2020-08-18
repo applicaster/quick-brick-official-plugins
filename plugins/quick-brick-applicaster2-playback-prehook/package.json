@@ -1,6 +1,6 @@
 {
   "name": "@applicaster/quick-brick-applicaster2-playback-prehook",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -24,5 +24,16 @@
     "react-native-jwt-io": "^1.0.3",
     "query-string": "^6.13.1",
     "moment": "^2.27.0"
+  },
+  "applicaster": {
+    "supportedPlatforms": [
+      "ios",
+      "android",
+      "ios_for_quickbrick",
+      "android_for_quickbrick",
+      "tvos",
+      "tvos_for_quickbrick"
+    ],
+    "zappOwnerAccountId": "5e12fe6948ca8800083c4116"
   }
 }

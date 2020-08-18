@@ -6,11 +6,11 @@
   "react_native": true,
   "dependency_repository_url": [],
   "dependency_name": "@applicaster/quick-brick-applicaster2-playback-prehook",
-  "dependency_version": "0.0.3",
+  "dependency_version": "0.0.4",
   "platform": "android",
   "author_name": "Olga Duk",
   "author_email": "oduk@scand.com",
-  "manifest_version": "0.0.1",
+  "manifest_version": "0.0.4",
   "name": "Quickbrick Adobe Authorization for Applicaster2",
   "description": "This plugin provides Authorization flow on Applicaster for the Quickbrick Adobe plugin",
   "type": "general",
@@ -32,10 +32,6 @@
       "tooltip_text": "The Secret Key for the Auth Provider, with which the JWT token is generated"
     }
   ],
-  "ui_frameworks": [
-    "quickbrick"
-  ],
-  "targets": [
-    "mobile"
-  ]
+  "ui_frameworks": ["quickbrick"],
+  "targets": ["mobile"]
 }
