@@ -9,6 +9,7 @@
     "development-app"
   ],
   "scripts": {
+    "reset_dev_app": "rm -rf ./development-app/*",
     "zapplicaster": "node_modules/.bin/zapplicaster-cli prepare --yarn --destination-path development-app",
     "zapplicaster:prepare": "node_modules/.bin/zapplicaster-cli prepare -y -d development-app",
     "zapplicaster:reload": "node_modules/.bin/zapplicaster-cli reload_config -d development-app",
@@ -46,6 +47,12 @@
     "react-dom": "16.8.3",
     "ramda": "^0.27.0",
     "typescript": "^3.9.2"
+  },
+  "resolutions": {
+    "lodash": "^4.17.19",
+    "jsrsasign": "^8.0.19",
+    "minimist": "^0.2.1",
+    "mem": "^4.0.0"
   },
   "applicaster": {
     "moduleMap": {
