@@ -1,6 +1,6 @@
 {
   "name": "@applicaster/quick-brick-parent-lock",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -19,5 +19,14 @@
   },
   "dependencies": {
     "ramda": "^0.27.0"
+  },
+  "applicaster": {
+    "supportedPlatforms": [
+      "ios_for_quickbrick",
+      "android_for_quickbrick",
+      "ios",
+      "android"
+    ],
+    "zappOwnerAccountId": "5e12fe6948ca8800083c4116"
   }
 }
