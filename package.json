@@ -17,7 +17,7 @@
     "start": "./node_modules/.bin/react-native start --projectRoot ./development-app",
     "start:web": "yarn workspace quick-brick-app start",
     "run:ios": "node_modules/.bin/zapplicaster-cli run ios & yarn start",
-    "publish:plugin": "node_modules/.bin/zapplicaster-cli publish_plugin"
+    "publish:plugin": "node_modules/.bin/zapplicaster-cli publish_plugin -y"
   },
   "keywords": [],
   "author": "Alex Khomich",
