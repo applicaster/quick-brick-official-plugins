@@ -43,7 +43,7 @@ export function createChallenge(textTranform) {
   } else {
     secondNum = getRandomInt(10, minimalValue);
   }
-  let resultString = names[firstNum - 1] + " x " + names[secondNum - 1];
+  let resultString = `${names[firstNum - 1]} x ${names[secondNum - 1]} = ?`;
   resultString = updateString(resultString, textTranform);
   const result = firstNum * secondNum;
   return { string: resultString, number: result };
