@@ -29,6 +29,13 @@ const baseManifest = {
   general: {
     fields: [
       {
+        type: "switch",
+        key: "import_parent_lock",
+        label: "Import Parent Lock",
+        label_tooltip: "Import Parent lock in other supported plugins.",
+        initial_value: "true",
+      },
+      {
         group: true,
         label: "Screen Design and Text",
         tooltip: "These fields affect the design of the main screen plugin.",
@@ -38,7 +45,7 @@ const baseManifest = {
             type: "select",
             key: "background_type",
             label: "Background type",
-            tooltip_text:
+            label_tooltip:
               "Defines whether the background will use an image or a solid color.",
             options: [
               {
@@ -69,13 +76,13 @@ const baseManifest = {
             type: "uploader",
             key: "close_button_image",
             label: "Close Button Image",
-            label_tooltip: "Image for the screen background.",
+            label_tooltip: "Image for the close button of the screen.",
           },
           {
             type: "select",
             key: "close_button_position",
             label: "Close Button Position",
-            tooltip_text:
+            label_tooltip:
               "Determines the corner side of the screen where the button is placed.",
             options: [
               {
@@ -129,7 +136,7 @@ const baseManifest = {
             type: "select",
             key: "instructions_text_transform",
             label: "Instructions Text Transform",
-            tooltip_text: "Reformats the Instructions Text if needed.",
+            label_tooltip: "Reformats the Instructions Text if needed.",
             options: [
               {
                 text: "None",
@@ -192,7 +199,7 @@ const baseManifest = {
             type: "select",
             key: "challenge_text_transform",
             label: "Challenge Text Transform",
-            tooltip_text: "Reformats the Code/Challenge Text if needed.",
+            label_tooltip: "Reformats the Code/Challenge Text if needed.",
             options: [
               {
                 text: "None",
@@ -218,7 +225,7 @@ const baseManifest = {
             key: "challenge_text_margin",
             label: "Challenge Text Margin",
             label_tooltip:
-              "Margin between the Instructions section and the Code/Challenge section.",
+              "Margin between the Code/Challenge section and the Indicators/Answer section.",
             initial_value: "16",
           },
           {
@@ -260,7 +267,7 @@ const baseManifest = {
             type: "select",
             key: "error_message_text_transform",
             label: "Error Message Text Transform",
-            tooltip_text: "Reformats the Error Message Text if needed.",
+            label_tooltip: "Reformats the Error Message Text if needed.",
             options: [
               {
                 text: "None",
@@ -448,9 +455,30 @@ const baseManifest = {
       },
     ],
   },
-  styles: {},
-  data: {},
-  localizations: {},
+  export: {
+    allowed_list: [
+      {
+        identifier: "quick-brick-inplayer",
+        group: {
+          label: "Parent Lock Import",
+          folded: true,
+        },
+        section: "styles",
+        allowed_fields: [
+          {
+            section: "general",
+            key: "import_parent_lock",
+            min_zapp_sdk: {
+              ios: "20.2.0-Dev",
+              android: "20.0.0",
+              ios_for_quickbrick: "0.1.0-alpha1",
+              android_for_quickbrick: "0.1.0-alpha1",
+            },
+          },
+        ],
+      },
+    ],
+  },
   targets: ["mobile"],
   ui_frameworks: ["quickbrick"],
 };
