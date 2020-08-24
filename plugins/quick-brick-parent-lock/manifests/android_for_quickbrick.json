@@ -435,8 +435,8 @@
     "quickbrick"
   ],
   "platform": "android_for_quickbrick",
-  "dependency_version": "0.0.7",
-  "manifest_version": "0.0.7",
+  "dependency_version": "0.0.8",
+  "manifest_version": "0.0.8",
   "min_zapp_sdk": "0.1.0-alpha1",
   "npm_dependencies": []
 }
