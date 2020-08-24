@@ -56,10 +56,6 @@ import ZappCore
 
     /// Main point of interaction with the SDK. Created by the SDK as the result of an ad request.
     internal var adsManager: IMAAdsManager?
-    
-    internal var adDisplayContainer: IMAAdDisplayContainer?
-    
-    internal var advAccessibilityIdentifier: String?
 
     var avPlayer: AVPlayer? {
         return playerPlugin?.playerObject as? AVPlayer
@@ -126,9 +122,17 @@ import ZappCore
     }
     
     override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        print("sendEvent form observeValue rate")
         if keyPath == MediaAdsConstants.playerPlaybackRate {
-            if let player = avPlayer, player.rate > 0 && isPlaybackPaused {
-                avPlayer?.pause()
+//             if let player = self.avPlayer, player.rate > 0 && self.isPlaybackPaused {
+//                               print("sendEvent form observeValue rate pause")
+//                               self.avPlayer?.pause()
+//                }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                if let player = self.avPlayer, player.rate > 0 && self.isPlaybackPaused {
+                    print("sendEvent form observeValue rate pause")
+                    self.avPlayer?.pause()
+                }
             }
         }
     }
@@ -136,19 +140,11 @@ import ZappCore
     func resumePlayback() {
         isPlaybackPaused = false
         playerPlugin?.pluggablePlayerResume()
-        
-        if adDisplayContainer == adDisplayContainer {
-            adDisplayContainer?.adContainer.accessibilityIdentifier = ""
-        }
     }
     
     func pausePlayback() {
         isPlaybackPaused = true
         playerPlugin?.pluggablePlayerPause()
-        
-        if adDisplayContainer == adDisplayContainer {
-            adDisplayContainer?.adContainer.accessibilityIdentifier = advAccessibilityIdentifier
-        }
     }
     
     func showActivityIndicator(_ show: Bool) {
@@ -182,16 +178,15 @@ import ZappCore
         }
         setupAdsLoader()
 
-        adDisplayContainer = IMAAdDisplayContainer(adContainer: containerView, companionSlots: nil)
+        let adDisplayContainer: IMAAdDisplayContainer = IMAAdDisplayContainer(adContainer: containerView,
+                                                                              companionSlots: nil)
         if let request = IMAAdsRequest(adTagUrl: adUrl,
                                        adDisplayContainer: adDisplayContainer,
                                        contentPlayhead: contentPlayhead,
                                        userContext: nil) {
             adRequest = request
             adsLoader?.requestAds(with: adRequest)
-            
-            // Storing accessibility identifier for UI automation tests needs
-            advAccessibilityIdentifier = adUrl
+            adDisplayContainer.adContainer.accessibilityIdentifier = adUrl
         }
     }
 }

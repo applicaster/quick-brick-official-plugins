@@ -9,6 +9,7 @@
 import AVFoundation
 import Foundation
 import GoogleInteractiveMediaAds
+import ZappCore
 
 // MARK: - IMAAdsLoaderDelegate
 
@@ -35,6 +36,7 @@ extension GoogleInteractiveMediaAdsAdapter: IMAAdsLoaderDelegate {
         let errorType = adErrorData.adError.type.rawValue
         debugPrint("Error loading ads: \(errorMessage), \(errorCode), \(errorType)")
         isPrerollAdLoading = false
+        FacadeConnector.connector?.playerDependant?.playerOnAdSkiped(player: playerPlugin!)
         if let completion = postrollCompletion {
             completion(true)
             postrollCompletion = nil
