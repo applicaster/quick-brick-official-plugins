@@ -17,7 +17,6 @@ extension GoogleInteractiveMediaAdsAdapter: IMAAdsManagerDelegate {
     }
 
     public func adsManager(_ adsManager: IMAAdsManager?, didReceive event: IMAAdEvent?) {
-        print("adsManager", event?.type.rawValue)
         switch event?.type {
         case .LOADED:
             adsManager?.start()
@@ -53,8 +52,6 @@ extension GoogleInteractiveMediaAdsAdapter: IMAAdsManagerDelegate {
         } else {
             resumePlayback()
         }
-        
-        FacadeConnector.connector?.playerDependant?.playerOnAdSkiped(player: playerPlugin!)
     }
 
     public func adsManagerDidRequestContentResume(_ adsManager: IMAAdsManager!) {
