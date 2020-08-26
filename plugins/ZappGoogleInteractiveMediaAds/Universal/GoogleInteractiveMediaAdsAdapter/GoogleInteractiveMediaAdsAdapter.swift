@@ -122,15 +122,9 @@ import ZappCore
     }
     
     override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        print("sendEvent form observeValue rate")
         if keyPath == MediaAdsConstants.playerPlaybackRate {
-//             if let player = self.avPlayer, player.rate > 0 && self.isPlaybackPaused {
-//                               print("sendEvent form observeValue rate pause")
-//                               self.avPlayer?.pause()
-//                }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 if let player = self.avPlayer, player.rate > 0 && self.isPlaybackPaused {
-                    print("sendEvent form observeValue rate pause")
                     self.avPlayer?.pause()
                 }
             }
