@@ -4,7 +4,8 @@ import { connectToStore } from '@applicaster/zapp-react-native-redux';
 import { getCustomPluginData, PluginContext } from "./PluginData/PluginData";
 import { getStyles } from "./Styles/Styles";
 import { createChallenge } from "./Utils/Utils";
-import { Keyboard} from "./Components/Keyboard";
+import { Keyboard } from "./Components/Keyboard";
+import LoadingComponent from "./Components/LoadingComponent";
 import {
     ImageBackground,
     Image,
@@ -28,6 +29,7 @@ function ParentLock(props) {
     const [inputArray, setInputArray] = useState([]);
     const [challengeString, setChallengeString] = useState("");
     const [error, setError] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const pluginData = getCustomPluginData(props.screenData);
     const styles = getStyles(pluginData);
@@ -63,16 +65,24 @@ function ParentLock(props) {
         newArray.push(number);
         setError(false);
         setInputArray(newArray);
-        if (newArray.length == 2) {
+        if (newArray.length === 2) {
             const resultNumber = inputArray[0] * 10 + inputArray[1];
-            if (resultNumber != challengeNumber) {
-                setError(true);
-                setInputArray([]);
-                setChallengeNumber(0);
-                generateChallenge();
-            } else {
-                successHook();
-            }
+            setLoading(true);
+            setTimeout(() => {
+                validateAnswer(resultNumber);
+            }, 1000)
+        }
+    }
+
+    function validateAnswer(resultNumber) {
+        if (resultNumber !== challengeNumber) {
+            setLoading(false);
+            setError(true);
+            setInputArray([]);
+            setChallengeNumber(0);
+            generateChallenge();
+        } else {
+            successHook();
         }
     }
 
@@ -87,12 +97,14 @@ function ParentLock(props) {
             return (
                 <ImageBackground source={{ uri: imageUrl }} style={styles.backgroundImage}>
                     {renderContent()}
+                    {loading && <LoadingComponent />}
                 </ImageBackground>
             );
         } else {
             return (
                 <View style={styles.backgroundColor}>
                     {renderContent()}
+                    {loading && <LoadingComponent />}
                 </View>
             );
         }
