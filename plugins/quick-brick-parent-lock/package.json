@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest"
   },
-  "author": "Egor Brel",
+  "author": "Olga Duk",
   "license": "ISC",
   "peerDependencies": {
     "@applicaster/zapp-react-native-bridge": "3.0.1-rc.11",

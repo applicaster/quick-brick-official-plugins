@@ -11,8 +11,8 @@ const baseManifest = {
   api: {},
   dependency_repository_url: [],
   dependency_name: "@applicaster/quick-brick-parent-lock",
-  author_name: "ebrel@applicaster.com",
-  author_email: "ebrel@applicaster.com",
+  author_name: "Olga Duk",
+  author_email: "oduk@scand.com",
   name: "Quick Brick Parent Lock",
   description: "Parent Lock Screen",
   type: "general",
@@ -31,7 +31,7 @@ const baseManifest = {
       {
         type: "switch",
         key: "import_parent_lock",
-        label: "Import Parent Lock",
+        label: "Use Parent Lock",
         label_tooltip: "Import Parent lock in other supported plugins.",
         initial_value: "true",
       },
@@ -460,7 +460,7 @@ const baseManifest = {
       {
         identifier: "quick-brick-inplayer",
         group: {
-          label: "Parent Lock Import",
+          label: "Allow Compatible Plugins",
           folded: true,
         },
         section: "styles",
