@@ -123,8 +123,8 @@ import ZappCore
     
     override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == MediaAdsConstants.playerPlaybackRate {
-            if let player = self.avPlayer, player.rate > 0 && self.isPlaybackPaused {
-                self.avPlayer?.pause()
+            if let player = avPlayer, player.rate > 0 && isPlaybackPaused {
+                avPlayer?.pause()
             }
         }
     }
