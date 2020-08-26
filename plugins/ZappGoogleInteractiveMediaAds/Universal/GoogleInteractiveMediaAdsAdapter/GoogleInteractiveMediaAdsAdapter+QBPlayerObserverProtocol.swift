@@ -10,24 +10,6 @@ import Foundation
 import ZappCore
 
 extension GoogleInteractiveMediaAdsAdapter: PlayerObserverProtocol {
-    public func playerOnAdProgressUpdate(player: PlayerProtocol, currentTime: TimeInterval, duration: TimeInterval) {
-         // nothing
-    }
-    
-    
-    public func playerOnAdStarted(player: PlayerProtocol) {
-        // nothing
-    }
-    
-    public func playerOnAdCompleted(player: PlayerProtocol) {
-        // nothing
-    }
-    
-    public func playerOnAdSkiped(player: PlayerProtocol) {
-           // nothing
-       }
-    
-    
     public func playerDidFinishPlayItem(player: PlayerProtocol,
                                         completion: @escaping (_ finished: Bool) -> Void) {
         adsLoader?.contentComplete()
