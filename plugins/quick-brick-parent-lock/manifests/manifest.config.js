@@ -460,7 +460,7 @@ const baseManifest = {
       {
         identifier: "quick-brick-inplayer",
         group: {
-          label: "Allow Compatible Plugins",
+          label: "Use Parent Lock",
           folded: true,
         },
         section: "styles",
