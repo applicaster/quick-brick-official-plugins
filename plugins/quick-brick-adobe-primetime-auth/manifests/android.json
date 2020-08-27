@@ -1,15 +1,8 @@
 {
-  "api": {
-    "require_startup_execution": false,
-    "modules": [],
-    "plist": {
-      "NSVideoSubscriberAccountUsageDescription": "This app accesses your TV provider information in order to enable you to watch your TV shows inside the app."
-    }
-  },
   "dependency_repository_url": [],
   "dependency_name": "@applicaster/quick-brick-adobe-primetime-auth",
-  "author_name": "ebrel@applicaster.com",
-  "author_email": "ebrel@applicaster.com",
+  "author_name": "Olga Duk",
+  "author_email": "oduk@scand.com",
   "name": "Adobe Primetime Authentication QuickBrick",
   "description": "Adobe Access enabler library implementation for use for SSO with TV Providers - supporting Apple SSO and TVE SSO",
   "type": "login",
@@ -21,10 +14,6 @@
   "deprecated_since_zapp_sdk": "",
   "unsupported_since_zapp_sdk": "",
   "preload": true,
-  "platform": "ios",
-  "dependency_version": "1.4.3",
-  "manifest_version": "1.4.3",
-  "min_zapp_sdk": "20.0.0",
   "general": {
     "fields": [
       {
@@ -141,6 +130,45 @@
       }
     ]
   },
+  "hooks": {
+    "fields": [
+      {
+        "group": true,
+        "label": "Before Load",
+        "folded": true,
+        "fields": [
+          {
+            "key": "preload_plugins",
+            "type": "preload_plugins_selector",
+            "label": "Select Plugins"
+          }
+        ]
+      }
+    ]
+  },
+  "targets": [
+    "mobile"
+  ],
+  "ui_frameworks": [
+    "quickbrick"
+  ],
+  "platform": "android",
+  "dependency_version": "1.4.8",
+  "manifest_version": "1.4.8",
+  "api": {
+    "require_startup_execution": false,
+    "class_name": "com.applicaster.adobe.login.AdobePassPackage",
+    "react_packages": [
+      "com.applicaster.adobe.login.AdobePassPackage"
+    ]
+  },
+  "project_dependencies": [
+    {
+      "quick-brick-adobe-primetime-auth": "quick_brick/node_modules/@applicaster/quick-brick-adobe-primetime-auth/android"
+    }
+  ],
+  "extra_dependencies": [],
+  "min_zapp_sdk": "20.0.0",
   "custom_configuration_fields": [
     {
       "group": true,
@@ -149,8 +177,8 @@
       "fields": [
         {
           "type": "text_input",
-          "key": "base_url_ios",
-          "label": "Base URL iOS",
+          "key": "base_url_android",
+          "label": "Base URL android",
           "label_tooltip": "Determines which Adobe’s backend environment the plugin should use.",
           "placeholder": "Enter your base url here"
         },
@@ -183,35 +211,15 @@
           "key": "custom_logos_json_file",
           "label": "Custom logos json file",
           "label_tooltip": "Json file with custom logos"
+        },
+        {
+          "type": "text_input",
+          "key": "deep_link",
+          "label": "Deep Link (Android)",
+          "label_tooltip": "Redirect uri assigned by adobe for the specific client's application"
         }
       ]
     }
   ],
-  "hooks": {
-    "fields": [
-      {
-        "group": true,
-        "label": "Before Load",
-        "folded": true,
-        "fields": [
-          {
-            "key": "preload_plugins",
-            "type": "preload_plugins_selector",
-            "label": "Select Plugins"
-          }
-        ]
-      }
-    ]
-  },
-  "extra_dependencies": [
-    {
-      "AdobePrimetimeAuthQB": ":path => './quick_brick/node_modules/@applicaster/quick-brick-adobe-primetime-auth/ios/AdobePrimetimeAuthQB.podspec'"
-    }
-  ],
-  "ui_frameworks": [
-    "quickbrick"
-  ],
-  "targets": [
-    "mobile"
-  ]
+  "npm_dependencies": []
 }
