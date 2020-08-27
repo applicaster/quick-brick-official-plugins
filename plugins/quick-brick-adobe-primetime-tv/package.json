@@ -1,6 +1,6 @@
 {
   "name": "@applicaster/quick-brick-adobe-primetime-tv",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,15 +11,15 @@
   "license": "ISC",
   "peerDependencies": {
     "@applicaster/zapp-react-native-bridge": "*",
-    "@applicaster/zapp-react-native-ui-components": "*",
-    "@applicaster/zapp-react-native-utils": "*",
     "@applicaster/zapp-react-native-redux": "*",
     "@applicaster/zapp-react-native-tvos-ui-components": "*",
+    "@applicaster/zapp-react-native-ui-components": "*",
+    "@applicaster/zapp-react-native-utils": "*",
     "axios": "^0.19.0",
+    "ramda": "^0.26.1",
     "react": "16.11.0",
     "react-native": "0.62.2",
-    "react-native-web": "0.11.5",
-    "ramda": "^0.26.1"
+    "react-native-web": "0.11.5"
   },
   "dependencies": {
     "axios": "0.19.0",
