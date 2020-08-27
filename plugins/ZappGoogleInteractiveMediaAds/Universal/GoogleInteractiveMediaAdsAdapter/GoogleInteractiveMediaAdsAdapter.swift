@@ -56,6 +56,10 @@ import ZappCore
 
     /// Main point of interaction with the SDK. Created by the SDK as the result of an ad request.
     internal var adsManager: IMAAdsManager?
+    
+    internal var adDisplayContainer: IMAAdDisplayContainer?
+
+    internal var advAccessibilityIdentifier: String?
 
     var avPlayer: AVPlayer? {
         return playerPlugin?.playerObject as? AVPlayer
@@ -132,11 +136,19 @@ import ZappCore
     func resumePlayback() {
         isPlaybackPaused = false
         playerPlugin?.pluggablePlayerResume()
+        
+        if adDisplayContainer == adDisplayContainer {
+            adDisplayContainer?.adContainer.accessibilityIdentifier = ""
+        }
     }
     
     func pausePlayback() {
         isPlaybackPaused = true
         playerPlugin?.pluggablePlayerPause()
+        
+        if adDisplayContainer == adDisplayContainer {
+            adDisplayContainer?.adContainer.accessibilityIdentifier = advAccessibilityIdentifier
+        }
     }
     
     func showActivityIndicator(_ show: Bool) {
@@ -170,15 +182,16 @@ import ZappCore
         }
         setupAdsLoader()
 
-        let adDisplayContainer: IMAAdDisplayContainer = IMAAdDisplayContainer(adContainer: containerView,
-                                                                              companionSlots: nil)
+        adDisplayContainer = IMAAdDisplayContainer(adContainer: containerView, companionSlots: nil)
         if let request = IMAAdsRequest(adTagUrl: adUrl,
                                        adDisplayContainer: adDisplayContainer,
                                        contentPlayhead: contentPlayhead,
                                        userContext: nil) {
             adRequest = request
             adsLoader?.requestAds(with: adRequest)
-            adDisplayContainer.adContainer.accessibilityIdentifier = adUrl
+            
+            // Storing accessibility identifier for UI automation tests needs
+            advAccessibilityIdentifier = adUrl
         }
     }
 }
