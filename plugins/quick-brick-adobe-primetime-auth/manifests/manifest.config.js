@@ -181,6 +181,22 @@ const baseManifest = {
       }
     ]
   },
+  hooks: {
+    fields: [
+      {
+        group: true,
+        label: "Before Load",
+        folded: true,
+        fields: [
+          {
+            key: "preload_plugins",
+            type: "preload_plugins_selector",
+            label: "Select Plugins"
+          }
+        ]
+      }
+    ]
+  },
   targets: ["mobile"],
   ui_frameworks: ["quickbrick"],
 };
@@ -189,65 +205,66 @@ const getConfiguration = (basePlatform) => {
   const isAndroid = basePlatform === "android";
   const key = isAndroid ? "android" : "ios";
 
-  const deepLinkField = {
+  const additionalFields = [{
     type: "text_input",
     key: "deep_link",
     label: "Deep Link (Android)",
     label_tooltip: "Redirect uri assigned by adobe for the specific client's application"
-  };
+  }];
 
-  const configuration = [
+  const configFields = [
+    {
+      type: "text_input",
+      key: `base_url_${key}`,
+      label: `Base URL ${key}`,
+      label_tooltip: "Determines which Adobe’s backend environment the plugin should use.",
+      placeholder: "Enter your base url here"
+    },
+    {
+      type: "text_input",
+      key: "software_statement",
+      label: "Software Statement",
+      label_tooltip: "JWT token issued by Adobe for the specific client’s application."
+    },
+    {
+      type: "text_input",
+      key: "requestor_id",
+      label: "Requestor ID",
+      label_tooltip: "The ID assigned for the client by Adobe."
+    },
+    {
+      type: "text_input",
+      key: "resource_id",
+      label: "Resource ID",
+      label_tooltip: "The ID assigned for the client’s resource by Adobe."
+    },
+    {
+      type: "switch",
+      key: "enable_custom_logos",
+      label: "Enable custom logos",
+      label_tooltip: "Enable custom logos for auth providers"
+    },
+    {
+      type: "uploader",
+      key: "custom_logos_json_file",
+      label: "Custom logos json file",
+      label_tooltip: "Json file with custom logos"
+    }
+  ];
+
+  return [
     {
       group: true,
       label: "Adobe Authentication Settings",
       folded: true,
-      fields: [
-        {
-          type: "text_input",
-          key: `base_url_${key}`,
-          label: `Base URL ${key}`,
-          label_tooltip: "Determines which Adobe’s backend environment the plugin should use.",
-          placeholder: "Enter your base url here"
-        },
-        {
-          type: "text_input",
-          key: "software_statement",
-          label: "Software Statement",
-          label_tooltip: "JWT token issued by Adobe for the specific client’s application."
-        },
-        {
-          type: "text_input",
-          key: "requestor_id",
-          label: "Requestor ID",
-          label_tooltip: "The ID assigned for the client by Adobe."
-        },
-        {
-          type: "text_input",
-          key: "resource_id",
-          label: "Resource ID",
-          label_tooltip: "The ID assigned for the client’s resource by Adobe."
-        },
-        {
-          type: "switch",
-          key: "enable_custom_logos",
-          label: "Enable custom logos",
-          label_tooltip: "Enable custom logos for auth providers"
-        },
-        {
-          type: "uploader",
-          key: "custom_logos_json_file",
-          label: "Custom logos json file",
-          label_tooltip: "Json file with custom logos"
-        }
-      ]
+      fields: addFieldsIfNeeded(configFields, additionalFields, isAndroid)
     }
   ];
-  if (isAndroid) {
-    const androidConfig = JSON.parse(JSON.stringify(configuration));
-    return androidConfig.push(deepLinkField);
-  }
-  return configuration;
 };
+
+function addFieldsIfNeeded(baseFields, additionalFields, condition) {
+  return condition ? baseFields.concat(additionalFields) : baseFields;
+}
 
 function createManifest({ version, platform }) {
   const basePlatform = R.includes(platform, androidPlatforms)
