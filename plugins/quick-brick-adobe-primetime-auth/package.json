@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest"
   },
-  "author": "ebrel@applicaster.com",
+  "author": "oduk@scand.com",
   "license": "ISC",
   "peerDependencies": {
     "@applicaster/zapp-react-native-bridge": "3.0.1-rc.11",
@@ -19,5 +19,14 @@
   },
   "dependencies": {
     "ramda": "^0.27.0"
+  },
+  "applicaster": {
+    "supportedPlatforms": [
+      "ios_for_quickbrick",
+      "android_for_quickbrick",
+      "ios",
+      "android"
+    ],
+    "zappOwnerAccountId": "5e12fe6948ca8800083c4116"
   }
 }
