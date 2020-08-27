@@ -130,6 +130,22 @@
       }
     ]
   },
+  "hooks": {
+    "fields": [
+      {
+        "group": true,
+        "label": "Before Load",
+        "folded": true,
+        "fields": [
+          {
+            "key": "preload_plugins",
+            "type": "preload_plugins_selector",
+            "label": "Select Plugins"
+          }
+        ]
+      }
+    ]
+  },
   "targets": [
     "mobile"
   ],
@@ -137,8 +153,8 @@
     "quickbrick"
   ],
   "platform": "ios_for_quickbrick",
-  "dependency_version": "1.4.6",
-  "manifest_version": "1.4.6",
+  "dependency_version": "1.4.8",
+  "manifest_version": "1.4.8",
   "api": {
     "require_startup_execution": false,
     "modules": [],
