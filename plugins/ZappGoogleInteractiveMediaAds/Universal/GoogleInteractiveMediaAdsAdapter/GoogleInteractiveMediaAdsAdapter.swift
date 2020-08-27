@@ -58,7 +58,7 @@ import ZappCore
     internal var adsManager: IMAAdsManager?
     
     internal var adDisplayContainer: IMAAdDisplayContainer?
-
+    
     internal var advAccessibilityIdentifier: String?
 
     var avPlayer: AVPlayer? {
