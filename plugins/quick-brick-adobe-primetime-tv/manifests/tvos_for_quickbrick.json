@@ -6,11 +6,8 @@
   "react_native": true,
   "dependency_repository_url": [],
   "dependency_name": "@applicaster/quick-brick-adobe-primetime-tv",
-  "dependency_version": "0.1.0",
-  "platform": "android",
   "author_name": "Olga Duk",
   "author_email": "oduk@scand.com",
-  "manifest_version": "0.1.0",
   "name": "Quickbrick Adobe Primetime Authentication TV",
   "description": "Cable Operator Authentication using Adobe Pass Authentication",
   "cover_image": "https://assets-secure.applicaster.com/zapp/plugins/gallery_previews/1568027636112/adobe_pass_authentification.png",
@@ -22,7 +19,6 @@
     "5a4516fa41442c000b0195d6",
     "5c85455842b06d000836d041"
   ],
-  "min_zapp_sdk": "1.0.0",
   "deprecated_since_zapp_sdk": "",
   "unsupported_since_zapp_sdk": "",
   "preload": true,
@@ -666,13 +662,21 @@
       }
     ]
   },
-  "custom_configuration_fields": [
-    {
-      "key": "android_assets_bundle",
-      "type": "uploader",
-      "label": "Android TV Design Assets",
-      "label_tooltip": "Please upload a zip file to provide the design assets for this plugin. For guidance and proper naming of the assets, please refer to this <a href='https://assets-production.applicaster.com.s3.amazonaws.com/applicaster-employees/marketplace/OPT/Login%20Plugin%20-%20Designer%20Documentation.sketch'>resource</a>."
-    }
+  "targets": [
+    "tv"
   ],
-  "targets": ["tv"]
+  "ui_frameworks": [
+    "quickbrick"
+  ],
+  "custom_configuration_fields": {
+    "key": "ios_assets_bundle",
+    "type": "uploader",
+    "label": "tvOS Design Assets",
+    "label_tooltip": "Please upload a zip file to provide the design assets for this plugin. For guidance and proper naming of the assets, please refer to this <a href='https://assets-production.applicaster.com.s3.amazonaws.com/applicaster-employees/marketplace/OPT/Login%20Plugin%20-%20Designer%20Documentation.sketch'>resource</a>."
+  },
+  "platform": "tvos_for_quickbrick",
+  "dependency_version": "0.1.1",
+  "manifest_version": "0.1.1",
+  "min_zapp_sdk": "0.1.0-alpha1",
+  "npm_dependencies": []
 }

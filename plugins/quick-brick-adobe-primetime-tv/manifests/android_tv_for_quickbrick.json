@@ -668,10 +668,15 @@
   "ui_frameworks": [
     "quickbrick"
   ],
-  "custom_configuration_fields": [],
-  "platform": "samsung_tv",
+  "custom_configuration_fields": {
+    "key": "android_assets_bundle",
+    "type": "uploader",
+    "label": "Android TV Design Assets",
+    "label_tooltip": "Please upload a zip file to provide the design assets for this plugin. For guidance and proper naming of the assets, please refer to this <a href='https://assets-production.applicaster.com.s3.amazonaws.com/applicaster-employees/marketplace/OPT/Login%20Plugin%20-%20Designer%20Documentation.sketch'>resource</a>."
+  },
+  "platform": "android_tv_for_quickbrick",
   "dependency_version": "0.1.1",
   "manifest_version": "0.1.1",
-  "min_zapp_sdk": "1.0.0",
+  "min_zapp_sdk": "0.1.0-alpha1",
   "npm_dependencies": []
 }
