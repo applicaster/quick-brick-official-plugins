@@ -93,7 +93,6 @@ import ZappCore
 
         if let urlToPresent = urlTagData?.prerollUrlString() {
             isPrerollAdLoading = true
-            pausePlayback()
             requestAd(adUrl: urlToPresent)
         }
         
