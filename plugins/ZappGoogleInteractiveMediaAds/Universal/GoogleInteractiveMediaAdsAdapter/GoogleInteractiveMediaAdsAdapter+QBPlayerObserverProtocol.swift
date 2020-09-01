@@ -64,10 +64,6 @@ extension GoogleInteractiveMediaAdsAdapter: PlayerObserverProtocol {
     }
 
     public func playerDidCreate(player: PlayerProtocol) {
-    
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
-            self.prepareGoogleIMA()
-        }
+        self.prepareGoogleIMA()
     }
-    
 }
