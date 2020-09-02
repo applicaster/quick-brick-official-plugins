@@ -2,11 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>ZappGoogleInteractiveMediaAds</key>
-	<dict>
-		<key>version_id</key>
-		<string>0.12.1</string>
-	</dict>
 	<key>quick-brick-circle-ci-test</key>
 	<dict>
 		<key>version_id</key>
