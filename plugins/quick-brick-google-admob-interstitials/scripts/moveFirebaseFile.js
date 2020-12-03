@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const {device_target = null} = process.env;
+
 const pluginIdentifier = 'google-admob-ads-qb';
 
 // put firebase.json to the root of zapp-platform-android
@@ -58,6 +60,7 @@ function writeConfig(dest) {
   });
 }
 
-// todo: call only for Android
+if (device_target.includes("android")) {
+  writeConfig(targetRootPath);
+}
 
-writeConfig(targetRootPath);
