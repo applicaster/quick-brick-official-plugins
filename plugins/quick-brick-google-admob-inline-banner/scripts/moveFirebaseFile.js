@@ -60,6 +60,6 @@ function writeConfig(dest) {
   });
 }
 
-if (device_target.includes("android)) {
+if (device_target.includes("android")) {
   writeConfig(targetRootPath);
 }
