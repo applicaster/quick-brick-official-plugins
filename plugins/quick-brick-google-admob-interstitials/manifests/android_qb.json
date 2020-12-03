@@ -40,10 +40,9 @@
   "general": {},
   "custom_configuration_fields": [
     {
-      "key": "admob_configuration_json",
-      "type": "uploader",
-      "label": "Admob Configuration JSON",
-      "label_tooltip": "Please upload JSON file with Admob configuration."
+      "key": "admob_android_app_id",
+      "type": "text_input",
+      "label": "Admob Android application id"
     }
   ],
   "ui_frameworks": [
